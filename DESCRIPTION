@@ -1,0 +1,48 @@
+Package: HISTA
+Title: The Human Infertility Single-cell Testis Atlas Shiny App.
+Version: 1.0.0
+Authors@R: 
+    person(given = "eisamahyari",
+           role = c("aut", "cre"),
+           email = "mahyarie@ohsu.edu")
+Description: The goal of this app is to explore the Human Infertility Single-cell Testis Atlas.
+License: `use_gpl3_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.0
+Depends:
+    R (>= 3.5.0)
+biocViews:
+Imports:
+    AnnotationHub,
+    BiocParallel,
+    biomaRt,
+    clusterProfiler,
+    data.table,
+    dplyr,
+    ggplot2,
+    ggforce,
+    ggthemes,
+    ggrepel,
+    ggnewscale,
+    ggpubr,
+    grid,
+    gridExtra,
+    org.Hs.eg.db,
+    org.Mmu.eg.db,
+    RColorBrewer,
+    rclipboard,
+    shiny,
+    shinydashboard,
+    shinyWidgets,
+    shinyFiles,
+    stringr,
+    SDAtools,
+    viridis
+Suggests:
+    ggvis,
+    devtools
+Remotes:
+    marchinilab/SDAtools
+
