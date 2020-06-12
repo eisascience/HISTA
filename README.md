@@ -24,9 +24,9 @@ Produced by: @eisamahyari
 ## Install : 
 
 
-    devtools::install_github(repo = 'bimberlabinternal/ShinySDA', dependencies = T, upgrade = 'always')
+    devtools::install_github(repo = 'eisascience/HISTA', dependencies = T, upgrade = 'always')
 
 ## Launch : 
 
-    ShinySDA::launchShinySDA()
+    HISTA::launchHISTA()
   
