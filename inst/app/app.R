@@ -45,10 +45,16 @@ library(ggpubr)
 library("BiocParallel")
 register(MulticoreParam(4))
 
-source("./Fxs.R")
 
+source(system.file('app/Fxs.R', package = 'ShinySDA', mustWork = TRUE), local = TRUE)
 
-list2env(readRDS( "./data/ShinyServerLSV3.rds"), envir = globalenv())
+if (Sys.getenv("SCRATCH_DIR") != "") {
+  init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
+}  else {
+  init.path = getwd()
+}
+
+list2env(readRDS(paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3.rds" )), envir = globalenv())
 
 datat <- as.data.frame(datat)
 rownames(datat) <- datat$barcode
