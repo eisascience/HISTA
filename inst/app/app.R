@@ -46,7 +46,7 @@ library("BiocParallel")
 register(MulticoreParam(4))
 
 
-source(system.file('app/Fxs.R', package = 'ShinySDA', mustWork = TRUE), local = TRUE)
+source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
