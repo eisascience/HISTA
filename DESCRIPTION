@@ -1,6 +1,6 @@
 Package: HISTA
-Title: The Human Infertility Single-cell Testis Atlas Shiny App.
-Version: 1.0.0
+Title: The Human Infertility Single-cell Testis Atlas Shiny App. Sep.17.2020
+Version: 1.0.1
 Authors@R: 
     person(given = "eisamahyari",
            role = c("aut", "cre"),
@@ -25,6 +25,7 @@ Imports:
     ggforce,
     ggthemes,
     ggrepel,
+    ggrastr,
     ggnewscale,
     ggpubr,
     grid,

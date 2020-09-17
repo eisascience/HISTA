@@ -39,39 +39,45 @@ library(RColorBrewer)
 library(grid)
 library(gridExtra) 
 require(dplyr)
+library(ggrastr)
 
 library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
+LocalRun=F
 
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
+  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3.rds" )
 }  else {
-  init.path = getwd()
+  if(LocalRun) init.path = "/Volumes/Maggie/Work/OHSU/Conrad/R/TestisII/HISTA_orig/data" else init.path = getwd()
+  
+  load.data.path = paste0(init.path, "/ShinyServerLSV3_Sep2020.rds" )
+  
 }
 
-list2env(readRDS(paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3.rds" )), envir = globalenv())
+list2env(readRDS(load.data.path), envir = globalenv())
 
-datat <- as.data.frame(datat)
-rownames(datat) <- datat$barcode
-
-datat$donor <- factor(datat$donor,levels=c("UtahD1", "UtahD2", "UtahD3", "AdHu173", "AdHu174", "AdHu175", "UtahI1",  "UtahI2",  "UtahK1",  "UtahK2", "Juv1", "Juv2"))
-
-datat$donor2 <- as.character(datat$donor)
-
-datat$donor2[which(datat$donor %in% c("UtahD1", "UtahD2", "UtahD3", "AdHu173", "AdHu174", "AdHu175"))] <-"CNT"
-datat$donor2[which(datat$donor %in% c("Juv1", "Juv2"))] <-"JUV"
-datat$donor2[which(datat$donor %in% c("UtahK1",  "UtahK2"))] <-"KS"
-datat$donor2[which(datat$donor %in% c("UtahI1"))] <-"INF1"
-datat$donor2[which(datat$donor %in% c("UtahI2"))] <-"INF2"
-datat$donor2 <- factor(datat$donor2,
-                              levels=c("CNT", "INF1", "INF2", "KS", "JUV"))
-
-datat$experiment <- datat$donor2
+# datat <- as.data.frame(datat)
+# rownames(datat) <- datat$barcode
+# 
+# datat$donor <- factor(datat$donor,levels=c("UtahD1", "UtahD2", "UtahD3", "AdHu173", "AdHu174", "AdHu175", "UtahI1",  "UtahI2",  "UtahK1",  "UtahK2", "Juv1", "Juv2"))
+# 
+# datat$donor2 <- as.character(datat$donor)
+# 
+# datat$donor2[which(datat$donor %in% c("UtahD1", "UtahD2", "UtahD3", "AdHu173", "AdHu174", "AdHu175"))] <-"CNT"
+# datat$donor2[which(datat$donor %in% c("Juv1", "Juv2"))] <-"JUV"
+# datat$donor2[which(datat$donor %in% c("UtahK1",  "UtahK2"))] <-"KS"
+# datat$donor2[which(datat$donor %in% c("UtahI1"))] <-"INF1"
+# datat$donor2[which(datat$donor %in% c("UtahI2"))] <-"INF2"
+# datat$donor2 <- factor(datat$donor2,
+#                               levels=c("CNT", "INF1", "INF2", "KS", "JUV"))
+# 
+# datat$experiment <- datat$donor2
 
 
 # 
@@ -99,7 +105,7 @@ colnames(SDA_Top100neg) <- paste0(colnames(SDA_Top100neg), "_" , StatFac$Lab)
 
 ui <- dashboardPage(
   dashboardHeader(title = "HISTA"
-   ),
+  ),
   
   
   
@@ -115,8 +121,10 @@ ui <- dashboardPage(
       #          badgeLabel = "soon", badgeColor = "red"),
       # menuItem("Soma Only", tabName = "somadash", icon = icon("allergies"),
       #          badgeLabel = "soon", badgeColor = "red"),
-      menuItem("Pseudotime SDA Comps", tabName = "pseudotimeSDA", icon = icon("arrows-alt"),
-               badgeLabel = "soon", badgeColor = "red"),
+      menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("arrows-alt"),
+               badgeLabel = "underconst.", badgeColor = "red"),
+      menuItem("Pseudotime (Germ-Only)", tabName = "pseudotimeSDA", icon = icon("arrows-alt"),
+               badgeLabel = "underconst.", badgeColor = "red"),
       menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("dashboard"),
                badgeLabel = "underconst.", badgeColor = "yellow"),
       menuItem("Conrad Lab", icon = icon("file-code-o"), 
@@ -126,7 +134,7 @@ ui <- dashboardPage(
   
   dashboardBody(
     tabItems(
-      # First tab content
+      # First
       tabItem(tabName = "combodash",
               fluidRow(
                 
@@ -144,7 +152,7 @@ ui <- dashboardPage(
                                  #"DromSim-Normalized-DGE" = "DGEnorm",
                                  #"tSNE - Seurat-Norm. DGE" = "tsneSNDGE",
                                  "tSNE - Batch-removed-Imputed-DGE" = "tsneImpDGE"
-                                 )),
+                               )),
                   radioButtons("metaselect", "Metadata Selection:",
                                c("Cell types" = "celltype",
                                  "Donor-replicates" = "donrep",
@@ -159,7 +167,7 @@ ui <- dashboardPage(
                   actionButton("NextSDA", "Next SDA"),
                   width = 3
                 ),
-               
+                
                 
                 valueBoxOutput("CellType1", width = 3),
                 
@@ -194,7 +202,7 @@ ui <- dashboardPage(
                 width = 5
               ),
               
-             
+              
               
               box(
                 title = "Cell Scores Across", status = "primary", solidHeader = TRUE,
@@ -261,7 +269,7 @@ ui <- dashboardPage(
                   radioButtons("metaselect2", "Metadata Selection:",
                                c("Experiments" = "experiment"
                                ))
-                  ),
+                ),
                 box(
                   title = "Inputs 2", status = "warning", solidHeader = TRUE,
                   #"Box content here", br(), "More box content",
@@ -288,10 +296,10 @@ ui <- dashboardPage(
                   plotOutput("GeneExprSigMeta"),
                   width = 10
                 )
-            
                 
-                    
-                )
+                
+                
+              )
       ),
       
       
@@ -301,7 +309,7 @@ ui <- dashboardPage(
       tabItem(tabName = "celltypestatsig",
               h2("Cell type Expression Stat. Sig."),
               fluidRow(
-
+                
                 box(
                   title = "Inputs", status = "warning", solidHeader = TRUE,
                   #"Box content here", br(), "More box content",
@@ -318,27 +326,27 @@ ui <- dashboardPage(
                   plotOutput("GeneExprSigMeta2"),
                   width = 10
                 )
-
-
-
+                
+                
+                
               )
       ),
       
       
       
-      # # Germ tab content
+      # # Germ
       # tabItem(tabName = "germdash",
-      #         h2("Germ only tab content")
+      #         h2("Germ only")
       # ),
       # 
-      # # Soma tab content
+      # # Soma
       # tabItem(tabName = "somadash",
-      #         h2("Soma only tab content")
+      #         h2("Soma only")
       # ),
       
-      # pseudotime tab content
-      tabItem(tabName = "pseudotimeSDA",
-              h2("Pseudotime tab content"),
+      # CellScoreOrdering
+      tabItem(tabName = "CellScoreOrderingSDA",
+              h2("Cell Score Ordering"),
               fluidRow(
                 box(
                   title = "Inputs", status = "warning", solidHeader = TRUE,
@@ -364,16 +372,44 @@ ui <- dashboardPage(
                                  "All" = "all"
                                ))
                 ),
-                box(title = "SDA comp as pseudotime", status = "primary", solidHeader = TRUE,
+                box(title = "SDA comp scores ordered", status = "primary", solidHeader = TRUE,
                     collapsible = TRUE,
-                    plotOutput("PseudoSDA", height = 800),
+                    plotOutput("CellScoreOrderSDA", height = 800),
                     width = 10
-                    )
+                )
                 
               )
       ),
       
-      # Enrichment tab content
+      # pseudotime
+      tabItem(tabName = "pseudotimeSDA",
+              h2("Pseudotime of Germ Cells Only"),
+              fluidRow(
+                box(title = "Inputs", status = "warning", solidHeader = TRUE,
+                    textInput("ComponentNtext3", "Numerical input:", "1"),
+                    radioButtons("metaselect4", "Metadata Selection:",
+                                 c("Pseudotime" = "pseudotime",
+                                   "Cell types" = "celltype",
+                                   "Donor-replicates" = "donrep",
+                                   "Donors" = "donor",
+                                   "Condition" = "COND.ID",
+                                   "Experiments" = "experiment"
+                                 )),
+                    width = 3),
+                box(title = "Germ Cell Only tSNE", status = "primary", solidHeader = TRUE,
+                    collapsible = TRUE,
+                    plotOutput("tSNEPseudoSDA", height = 400),
+                ),
+                box(title = "Pseudotime", status = "primary", solidHeader = TRUE,
+                    collapsible = TRUE,
+                    plotOutput("PseudotimeSDA", height = 800),
+                    width = 10
+                )
+                
+              )
+      ),
+      
+      # Enrichment
       tabItem(tabName = "Enrichment",
               fluidRow(
                 box(
@@ -417,7 +453,7 @@ server <- function(input, output, session) {
   
   ColFac_DONR.ID  <- as.data.frame(datat)[rownames(results$scores), ]$donor
   
-
+  
   
   
   datat <- data.table(datat)
@@ -436,24 +472,43 @@ server <- function(input, output, session) {
     if(input$data == "tsneBrSDACS") {
       tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
     } else {
-        if(input$data == "tsneDSNDGE") {
-          tempDF <- as.data.frame(datat)[, c("Tsne1", "Tsne2")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
-         } else {
-            if(input$data == "tsneImpDGE"){
-              tempDF <- as.data.frame(datat)[, c("Tsne1_imputed", "Tsne2_imputed")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
-              tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
-              tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
-              
-         }
+      if(input$data == "tsneDSNDGE") {
+        tempDF <- as.data.frame(datat)[, c("Tsne1", "Tsne2")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+      } else {
+        if(input$data == "tsneImpDGE"){
+          tempDF <- as.data.frame(datat)[, c("Tsne1_imputed", "Tsne2_imputed")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+          tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
+          tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
+          
+        }
         
       }
     }
     
+    
+    
     rownames(tempDF) <- datat$barcode
     
-
+    
     tempDF$GeneExpr <- rep(0, nrow(tempDF))
-
+    
+    return(tempDF)
+  })
+  
+  #germ soma
+  tDF_GS <- reactive({
+    # data, tsneBrSDACS, tsneDSNDGE, tsneSNDGE
+    # print(input$data)
+    
+    tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4sperm", "Tsne2_SDAQC4sperm")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+    
+    
+    rownames(tempDF) <- datat$barcode
+    
+    # tempDF <- tempDF[!is.na(tempDF$tSNE1), ]
+    
+    tempDF$GeneExpr <- rep(0, nrow(tempDF))
+    
     return(tempDF)
   })
   
@@ -564,7 +619,7 @@ server <- function(input, output, session) {
     
     
     
-
+    
     if(input$metaselect3 == "experiment") {
       MetaFac <- (datat$experiment)
     } else  if(input$metaselect3 == "FinalFinalPheno_old") {
@@ -692,13 +747,13 @@ server <- function(input, output, session) {
     # })
     # 
     
-   
+    
     
     return(list(Scores = results$scores[MyCells,], Meta=as.data.frame( subset(datat, barcode %in% MyCells))$experiment))
     
   })
   
-
+  
   observeEvent(input$NextSDA, {
     Val <- as.character(min(c(150, as.numeric(input$ComponentNtext)+1)))
     
@@ -712,7 +767,7 @@ server <- function(input, output, session) {
   })
   
   observeEvent(input$C2Cpos, {
- 
+    
     
     Out1 <- print_gene_list(as.numeric(input$ComponentNtext), PosOnly = T) %>%
       #group_by(package) %>%
@@ -731,7 +786,7 @@ server <- function(input, output, session) {
   
   
   observeEvent(input$C2Cneg, {
-  
+    
     
     Out2 <- print_gene_list(as.numeric(input$ComponentNtext), NegOnly = T) %>%
       #group_by(package) %>%
@@ -749,11 +804,11 @@ server <- function(input, output, session) {
   })
   
   
-  output$PseudoSDA <- renderPlot({
+  output$CellScoreOrderSDA <- renderPlot({
     
     Scores <- GEx3()$Scores
     Meta <- GEx3()$Meta
-
+    
     # print(head(Scores[,as.numeric(input$ComponentNtext2)]))
     
     SC_SDA_ScoreDF <- data.frame(Score=Scores[,as.numeric(input$ComponentNtext2)],
@@ -765,29 +820,29 @@ server <- function(input, output, session) {
     
     
     cowplot::plot_grid(ggplot(SC_SDA_ScoreDF ,
-           aes(x = Score, y = Rank, colour = Meta)) +
-      geom_point(alpha=.2) +
-        ggtitle(paste0("Cells ordered by SDA Scores in SDA", input$ComponentNtext2)) +
-      xlab(paste0("Score : SDA", input$ComponentNtext2)) +
-      ylab(paste0("Rank : SDA", input$ComponentNtext2)) +
-      theme_bw() + scale_color_manual(values=col_vector) +
-      theme(legend.position="below",
-            legend.direction="horizontal",
-            legend.title = element_blank(),
-            axis.text.x = element_text(angle = 90)),
-      ggplot(SC_SDA_ScoreDF, 
-             aes(x = Score, 
-                 y = Meta, 
-                 colour = Meta)) +
-        ggbeeswarm::geom_quasirandom(groupOnX = FALSE)  +
-        xlab(paste0("Score : SDA", input$ComponentNtext2)) + 
-        ylab("Categ.")  +
-        theme_bw() + scale_color_manual(values=col_vector) +
-        theme(legend.position="bottom",
-              legend.direction="horizontal",
-              legend.title = element_blank(),
-              axis.text.x = element_text(angle = 90)),
-      ncol=1)
+                              aes(x = Score, y = Rank, colour = Meta)) +
+                         geom_point(alpha=.2) +
+                         ggtitle(paste0("Cells ordered by SDA Scores in SDA", input$ComponentNtext2)) +
+                         xlab(paste0("Score : SDA", input$ComponentNtext2)) +
+                         ylab(paste0("Rank : SDA", input$ComponentNtext2)) +
+                         theme_bw() + scale_color_manual(values=col_vector) +
+                         theme(legend.position="below",
+                               legend.direction="horizontal",
+                               legend.title = element_blank(),
+                               axis.text.x = element_text(angle = 90)),
+                       ggplot(SC_SDA_ScoreDF, 
+                              aes(x = Score, 
+                                  y = Meta, 
+                                  colour = Meta)) +
+                         ggbeeswarm::geom_quasirandom(groupOnX = FALSE)  +
+                         xlab(paste0("Score : SDA", input$ComponentNtext2)) + 
+                         ylab("Categ.")  +
+                         theme_bw() + scale_color_manual(values=col_vector) +
+                         theme(legend.position="bottom",
+                               legend.direction="horizontal",
+                               legend.title = element_blank(),
+                               axis.text.x = element_text(angle = 90)),
+                       ncol=1)
     
     
     
@@ -795,70 +850,229 @@ server <- function(input, output, session) {
     
   })
   
+  
+  #### tSNEPseudoSDA
+  
+  output$tSNEPseudoSDA <- renderPlot({
+    
+    
+    tempDF <- tDF_GS()
+    
+    if(input$metaselect4 == "pseudotime") {
+      MetaFac <- datat$PseudoTime
+    } else{
+      
+      if(input$metaselect4 == "celltype") {
+        MetaFac <- (datat$FinalFinalPheno_old)
+      } else {
+        if(input$metaselect4 == "donrep"){
+          MetaFac <- (datat$DonRep)
+        } else {
+          if(input$metaselect4 == "donor"){
+            MetaFac <- (datat$donor)
+          } else {
+            if(input$metaselect4 == "COND.ID"){
+              MetaFac <- (datat$COND.ID)
+            } else {
+              if(input$metaselect4 == "experiment"){
+                MetaFac <- (datat$experiment)
+              } else {
+                
+              }
+            }
+          }
+        }
+      }
+      
+    }
+    
+    
+    tempDF$MetFacZ <- MetaFac
+    
+    tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+    
+    
+    if(input$metaselect4 == "pseudotime") {
+      
+      ggplot(tempDF, aes(tSNE1, tSNE2, color=MetFacZ)) +
+        geom_point(size=0.1) + theme_bw() +
+        scale_color_viridis() +
+        theme(legend.position = "bottom", aspect.ratio=1,
+              legend.title = element_blank())  +
+        ggtitle("SDA t-SNE - cells coloured by PseudoTime")  +
+        coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
+      
+    } else {
+      
+      #ggplotly
+      ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(as.character(MetFacZ)))) +
+        geom_point(size=0.1)+ theme_bw() +
+        theme(legend.position = "bottom", aspect.ratio=1,
+              legend.title = element_blank()) +
+        ggtitle("Germ-cell Only t-SNE") +
+        scale_color_manual(values=(col_vector)) + 
+        guides(colour = guide_legend(override.aes = list(size=2, alpha=1), nrow =3))  +
+        coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
+      
+    }
+    
+    
+    
+    
+    
+    
+    
+  })
+  
+  output$PseudotimeSDA <- renderPlot({
+    
+    Scores <- results$scores
+    tempDF <- tDF_GS()
+    
+    PT <- datat$PseudoTime
+    
+    if(input$metaselect4 == "pseudotime") {
+      MetaFac <- datat$PseudoTime
+    } else{
+      
+      if(input$metaselect4 == "celltype") {
+        MetaFac <- (datat$FinalFinalPheno_old)
+      } else {
+        if(input$metaselect4 == "donrep"){
+          MetaFac <- (datat$DonRep)
+        } else {
+          if(input$metaselect4 == "donor"){
+            MetaFac <- (datat$donor)
+          } else {
+            if(input$metaselect4 == "COND.ID"){
+              MetaFac <- (datat$COND.ID)
+            } else {
+              if(input$metaselect4 == "experiment"){
+                MetaFac <- (datat$experiment)
+              } else {
+                
+              }
+            }
+          }
+        }
+      }
+      
+    }
+    
+    
+    tempDF$MetFacZ <- MetaFac
+    tempDF$PT <- PT
+    
+    tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+    
+    tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentNtext3))]
+    tempDF$barcode <- rownames(tempDF)
+    
+    if(input$metaselect4 == "pseudotime") {
+      tempDF$MetFacZ <- as.numeric(as.character(tempDF$MetFacZ)) 
+    } else {
+      tempDF$MetFacZ <- factor(as.character(tempDF$MetFacZ))
+    }
+    
+    merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
+    # print(head(rownames(tempDF)))
+    # print(head(rownames(Scores)))
+    
+    # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+    # Scores <-Scores[rownames(tempDF),]
+    print(head(merge_sda_melt))
+    # plot(merge_sda_melt$PT, 
+    #      merge_sda_melt$value)
+    
+    
+    ggpp <- ggplot(merge_sda_melt, aes(PT, value, colour=(MetFacZ))) +
+      geom_point_rast(alpha=1, size=1.2, stroke=0) +
+      geom_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
+      ylab("Cell Component Score") +
+      xlab("Pseudotime") +
+      # ggtitle(paste0("SDA Comp: ", xN))+
+      theme_bw() +
+      # scale_colour_manual(values=col_vector)+ #RColorBrewer::brewer.pal(9,"Set1")[-6]
+      theme(legend.position = "none") +
+      ylim(-8,8)
+    
+    if(input$metaselect4 == "pseudotime") {
+      ggpp <-  ggpp +  scale_color_viridis()
+    } else {
+      ggpp <-  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ, 
+                                                                            ncol=3, scales = "fixed")
+    }
+    ggpp
+    
+    
+  })
+  
+  
+  
   output$SDAScoresChiPos <- renderPlot({
     
     # ColFac_DONR.ID <- CDID()
     
+    
+    SDAScores <- results$scores
+    ComponentN <- 1:ncol(SDAScores)
+    MetaDF <- as.data.frame(datat)
+    rownames(MetaDF) <- datat$barcode
+    MetaDF <- MetaDF[rownames(SDAScores),]
+    
+    
+    
+    
+    PosCompsDF <- as.data.frame(lapply(levels(factor(MetaDF$experiment)), function(CondX){
       
-      SDAScores <- results$scores
-      ComponentN <- 1:ncol(SDAScores)
-      MetaDF <- as.data.frame(datat)
-      rownames(MetaDF) <- datat$barcode
-      MetaDF <- MetaDF[rownames(SDAScores),]
-      
-      
-      
-      
-      PosCompsDF <- as.data.frame(lapply(levels(factor(MetaDF$experiment)), function(CondX){
-        
-        apply(SDAScores[rownames(MetaDF)[which(MetaDF$experiment == CondX)], ], 2, 
-              function(x){
-                round(sum(x>0)/nrow(SDAScores)*100, 2)
-              })
-      }))
-      
-      colnames(PosCompsDF) <- levels(factor(MetaDF$experiment))
-      
-      # print(head(PosCompsDF))
-      # print(min(PosCompsDF))
-      
-      
-      PosCompsDF <- PosCompsDF[gtools::mixedsort(rownames(PosCompsDF)),]
-      PosCompsDF$SDA <- factor(rownames(PosCompsDF), levels=rownames(PosCompsDF))
-      
-      print(head(PosCompsDF))
-      
-      ChiT <- chisq.test(PosCompsDF[,1:(ncol(PosCompsDF)-1)])
-
-      ChiTres <- ChiT$residuals
-      ChiTres[which(is.na(ChiTres))] = 0
-
-      ChiResSD <- round(apply(ChiTres, 1, sd),2)
-      ChiResSD[which(is.na(ChiResSD))] <- 0
-      ChiResSD[ChiResSD < 0.2] <- ""
-
-      # if(is.null(envv$SDAScoresChi_clusBTN)) {
-      #   clustStat = F
-      # } else {
-      #   clustStat <- ifelse(envv$SDAScoresChi_clusBTN=="ON", T, F)
-      # }
-
-      clustStat = T
-
-      pheatmap::pheatmap((t(ChiT$residuals)),
-                         cluster_cols = clustStat, cluster_rows = clustStat,
-                         color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
-                         labels_col = paste0(rownames(PosCompsDF), " sd_", ChiResSD)
-      )
-      
-      
-      
-      
-      
-      
-      
-      
-      
+      apply(SDAScores[rownames(MetaDF)[which(MetaDF$experiment == CondX)], ], 2, 
+            function(x){
+              round(sum(x>0)/nrow(SDAScores)*100, 2)
+            })
+    }))
+    
+    colnames(PosCompsDF) <- levels(factor(MetaDF$experiment))
+    
+    # print(head(PosCompsDF))
+    # print(min(PosCompsDF))
+    
+    
+    PosCompsDF <- PosCompsDF[gtools::mixedsort(rownames(PosCompsDF)),]
+    PosCompsDF$SDA <- factor(rownames(PosCompsDF), levels=rownames(PosCompsDF))
+    
+    print(head(PosCompsDF))
+    
+    ChiT <- chisq.test(PosCompsDF[,1:(ncol(PosCompsDF)-1)])
+    
+    ChiTres <- ChiT$residuals
+    ChiTres[which(is.na(ChiTres))] = 0
+    
+    ChiResSD <- round(apply(ChiTres, 1, sd),2)
+    ChiResSD[which(is.na(ChiResSD))] <- 0
+    ChiResSD[ChiResSD < 0.2] <- ""
+    
+    # if(is.null(envv$SDAScoresChi_clusBTN)) {
+    #   clustStat = F
+    # } else {
+    #   clustStat <- ifelse(envv$SDAScoresChi_clusBTN=="ON", T, F)
+    # }
+    
+    clustStat = T
+    
+    pheatmap::pheatmap((t(ChiT$residuals)),
+                       cluster_cols = clustStat, cluster_rows = clustStat,
+                       color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
+                       labels_col = paste0(rownames(PosCompsDF), " sd_", ChiResSD)
+    )
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
   })
@@ -938,65 +1152,65 @@ server <- function(input, output, session) {
     GeneExpr <- GEx()$GeneExpr
     my_comparisons <- GEx()$my_comparisons
     
-
-    CellType = input$celltypeselect2
-      
-     
     
-
+    CellType = input$celltypeselect2
+    
+    
+    
+    
     
     TestName = "Wilcox Rank Sum"
     
     
-
+    
     ggboxplot(GeneExpr, x = "meta", y = "gene", palette = "jco",
-                    add = "jitter", col="meta") + 
+              add = "jitter", col="meta") + 
       stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
       theme_bw() + 
       ggtitle( paste0(as.character(input$Genetext2), " expression :: ", TestName, " test :: ", CellType)) + 
       xlab("") + ylab(as.character(input$Genetext2))
-
+    
     
     
     
   })
   
   output$GeneExprSigMeta2 <- renderPlot({
-
+    
     GeneExpr <- GEx2()$GeneExpr
     my_comparisons <- GEx2()$my_comparisons
-
+    
     # print(head(GeneExpr))
     # print(head(my_comparisons))
-
+    
     # CellType = input$celltypeselect
-
-
-
+    
+    
+    
     GeneExpr$meta <- factor(GeneExpr$meta)
     GeneExpr$meta <- factor(GeneExpr$meta, levels = gtools::mixedsort(levels(GeneExpr$meta)) )
     
-
+    
     TestName = "Wilcox Rank Sum"
-
-
-
+    
+    
+    
     ggboxplot(GeneExpr, x = "meta", y = "gene", palette = col_vector,
               add = "jitter", col="meta") +
       #stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
       theme_bw() +
       ggtitle( paste0(as.character(input$Genetext3), " expression :: "
                       #, TestName, " test "
-                      )) +
+      )) +
       xlab("") + ylab(as.character(input$Genetext3))  +
       theme(legend.position="bottom",
             legend.direction="horizontal",
             legend.title = element_blank(),
             axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-
-
-
-
+    
+    
+    
+    
   })
   
   output$packageTablePos <- renderTable({
@@ -1024,7 +1238,7 @@ server <- function(input, output, session) {
   
   
   output$CellType1 <- renderValueBox({
-     valueBox(
+    valueBox(
       value = StatFac[paste0("SDAV", input$ComponentNtext, sep=""),2], #format(Sys.time(), "%a %b %d %X %Y %Z"),
       subtitle = StatFac[paste0("SDAV", input$ComponentNtext, sep=""),6],
       icon = icon("area-chart"),
@@ -1056,42 +1270,42 @@ server <- function(input, output, session) {
     tempDF <- tDF()
     (ggplot(cbind(tempDF, SDAComp=datat[,get(paste0("SDAV", input$ComponentNtext, sep=""))]), 
             aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
-       geom_point(size=0.1) + theme_bw() +
-       scale_color_manual("CS", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
-       guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
-       theme(legend.position = "bottom", aspect.ratio=1) + 
-       ggtitle(paste0("SDAV", input$ComponentNtext, " \n", 
-                      StatFac[paste0("SDAV", input$ComponentNtext, sep=""),2], sep="")) + 
-       simplify2 + coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE))
+        geom_point(size=0.1) + theme_bw() +
+        scale_color_manual("CS", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
+        guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
+        theme(legend.position = "bottom", aspect.ratio=1) + 
+        ggtitle(paste0("SDAV", input$ComponentNtext, " \n", 
+                       StatFac[paste0("SDAV", input$ComponentNtext, sep=""),2], sep="")) + 
+        simplify2 + coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE))
     
   })
   
   output$plot2 <- renderPlot({
     tempDF <- tDF()
-
+    
     if(input$metaselect == "celltype") {
       MetaFac <- (datat$FinalFinalPheno_old)
     } else {
-        if(input$metaselect == "donrep"){
-          MetaFac <- (datat$DonRep)
+      if(input$metaselect == "donrep"){
+        MetaFac <- (datat$DonRep)
+      } else {
+        if(input$metaselect == "donor"){
+          MetaFac <- (datat$donor)
         } else {
-          if(input$metaselect == "donor"){
-            MetaFac <- (datat$donor)
+          if(input$metaselect == "COND.ID"){
+            MetaFac <- (datat$COND.ID)
           } else {
-            if(input$metaselect == "COND.ID"){
-              MetaFac <- (datat$COND.ID)
+            if(input$metaselect == "experiment"){
+              MetaFac <- (datat$experiment)
             } else {
-              if(input$metaselect == "experiment"){
-                MetaFac <- (datat$experiment)
-              } else {
-                
-              }
+              
             }
           }
         }
+      }
     }
-
-
+    
+    
     
     ggFph <- ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(MetaFac))) +
       geom_point(size=0.1)+ theme_bw() +
@@ -1134,11 +1348,11 @@ server <- function(input, output, session) {
     
     #ggplotly
     (ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(MetaFac))) +
-       geom_point(size=0.1)+ theme_bw() +
-       theme(legend.position = "none", aspect.ratio=1) +
-       ggtitle("t-SNE - Meta") +
-       scale_color_manual(values=(col_vector))   +
-       coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE))
+        geom_point(size=0.1)+ theme_bw() +
+        theme(legend.position = "none", aspect.ratio=1) +
+        ggtitle("t-SNE - Meta") +
+        scale_color_manual(values=(col_vector))   +
+        coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE))
     
     
   })
@@ -1152,24 +1366,24 @@ server <- function(input, output, session) {
       GeneExpr <- results$scores %*% results$loadings[[1]][,as.character(input$Genetext)]
     } else {
       GeneExpr <- results$scores %*% rep(0, nrow(results$loadings[[1]]))
-
+      
     }
     #ggplotly
     #as.numeric(input$NoOfGenes)
     
     LoadOrdVal <- round(results$loadings[[1]][,as.character(input$Genetext)][order(abs(results$loadings[[1]][,as.character(input$Genetext)]), decreasing = T)], 3)
     
-
+    
     tempDF[rownames(GeneExpr), ]$GeneExpr <- GeneExpr[,1]
     
     (ggplot(tempDF, 
             aes(tSNE1, tSNE2, color=cut(asinh(GeneExpr), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
-       geom_point(size=0.1) + theme_bw() +
-       scale_color_manual("EX", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
-       guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
-       theme(legend.position = "bottom", aspect.ratio=1) + 
-       
-       simplify2 + 
+        geom_point(size=0.1) + theme_bw() +
+        scale_color_manual("EX", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
+        guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
+        theme(legend.position = "bottom", aspect.ratio=1) + 
+        
+        simplify2 + 
         coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)) + 
       labs(title = paste("Gene: ", input$Genetext, sep=""), 
            subtitle = paste("Found in comps: \n",
@@ -1184,7 +1398,7 @@ server <- function(input, output, session) {
            caption = "Caption here")
     
     
-
+    
     
     
   })
@@ -1325,7 +1539,7 @@ server <- function(input, output, session) {
     k = 150 #100
     GeneSet <- input$GeneSet
     #GeneSet <- "'PRM1', 'SPATA42', 'SPRR4', 'NUPR2', 'HBZ', 'DYNLL2'"
-
+    
     
     if(length(grep(",", GeneSet)) == 0){
       
@@ -1334,7 +1548,7 @@ server <- function(input, output, session) {
       } else {
         GeneSet <- unlist(strsplit(GeneSet, " "))
       }
-
+      
       #print(GeneSet)
     }else {
       GeneSet <- (unlist(strsplit(gsub(" ", "", gsub("'", '', gsub('"', '', GeneSet))), ",")))
