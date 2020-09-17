@@ -45,7 +45,7 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=F
+LocalRun=T
 
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
@@ -163,6 +163,7 @@ ui <- dashboardPage(
                   textInput("NoOfGenes", "No. of Genes to output:", "20"),
                   actionButton("C2Cpos", "Copy2ClipPosGenes"),
                   actionButton("C2Cneg", "Copy2ClipNegGenes"),
+                  downloadButton("TXTall", "Copy2TxtAll"),
                   actionButton("PrevSDA", "Prev SDA"),
                   actionButton("NextSDA", "Next SDA"),
                   width = 3
@@ -753,6 +754,40 @@ server <- function(input, output, session) {
     
   })
   
+  ComboTopSDAgenes <- reactive({
+    Out1 <- print_gene_list(as.numeric(input$ComponentNtext), PosOnly = T) %>%
+      #group_by(package) %>%
+      #tally() %>%
+      #arrange(desc(n), tolower(package)) %>%
+      #mutate(percentage = n / nrow(pkgData()) * 100) %>%
+      #select("Package name" = package, "% of downloads" = percentage) %>%
+      as.data.frame() %>% head(as.numeric(input$NoOfGenes))
+    Out1 <- Out1$Gene.Name
+    
+    Out2 <- print_gene_list(as.numeric(input$ComponentNtext), NegOnly = T) %>%
+      #group_by(package) %>%
+      #tally() %>%
+      #arrange(desc(n), tolower(package)) %>%
+      #mutate(percentage = n / nrow(pkgData()) * 100) %>%
+      #select("Package name" = package, "% of downloads" = percentage) %>%
+      as.data.frame() %>% head(as.numeric(input$NoOfGenes))
+    Out2 <- Out2$Gene.Name
+    
+    data.frame(Pos=Out1, Neg=Out2)
+  })
+  
+  output$TXTall <- downloadHandler(
+    
+    filename = function(){
+      paste("data-TopGenes_SDA_negNpos", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      print(ComboTopSDAgenes())
+      write.csv(ComboTopSDAgenes(), file, row.names=F)
+      # write.table(paste(text,collapse=", "), file,col.names=FALSE)
+    }
+  )
+  
   
   observeEvent(input$NextSDA, {
     Val <- as.character(min(c(150, as.numeric(input$ComponentNtext)+1)))
@@ -765,6 +800,7 @@ server <- function(input, output, session) {
     
     updateTextInput(session, "ComponentNtext", value = Val)
   })
+  
   
   observeEvent(input$C2Cpos, {
     
