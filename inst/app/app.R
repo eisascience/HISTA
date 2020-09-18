@@ -46,14 +46,14 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=T
+LocalRun=F
 
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
-  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3.rds" )
+  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3_Sep2020.rds" )
 }  else {
   if(LocalRun) init.path = "/Volumes/Maggie/Work/OHSU/Conrad/R/TestisII/HISTA_orig/data" else init.path = getwd()
   
