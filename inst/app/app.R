@@ -41,6 +41,7 @@ library(gridExtra)
 require(dplyr)
 library(ggrastr)
 
+
 library(ggpubr)
 
 library("BiocParallel")
@@ -294,6 +295,7 @@ ui <- dashboardPage(
                 box(
                   title = "Gene Expression Stat. Sig. Meta", status = "primary", solidHeader = TRUE,
                   collapsible = TRUE,
+                  downloadButton("geneexprstatsig_download"),
                   plotOutput("GeneExprSigMeta"),
                   width = 10
                 )
@@ -447,19 +449,20 @@ ui <- dashboardPage(
 )
 
 
+
+
 server <- function(input, output, session) {
+  
+  vals <- reactiveValues()
   
   datat <- as.data.frame(cbind(datat, results$scores[rownames(datat),])); 
   rownames(datat) <- datat$barcode 
   
   ColFac_DONR.ID  <- as.data.frame(datat)[rownames(results$scores), ]$donor
-  
-  
-  
-  
+
   datat <- data.table(datat)
   
-  
+  # dl.y <- callModule(dlmodule, "input1")
   
   # SDALoadings <- results$loadings[[1]]
   
@@ -782,7 +785,7 @@ server <- function(input, output, session) {
       paste("data-TopGenes_SDA_negNpos", Sys.Date(), ".csv", sep = "")
     },
     content = function(file) {
-      print(ComboTopSDAgenes())
+      # print(ComboTopSDAgenes())
       write.csv(ComboTopSDAgenes(), file, row.names=F)
       # write.table(paste(text,collapse=", "), file,col.names=FALSE)
     }
@@ -1183,7 +1186,7 @@ server <- function(input, output, session) {
   })
   
   
-  output$GeneExprSigMeta <- renderPlot({
+  GeneExprSigMeta_Rx <- reactive({
     
     GeneExpr <- GEx()$GeneExpr
     my_comparisons <- GEx()$my_comparisons
@@ -1196,11 +1199,9 @@ server <- function(input, output, session) {
     
     
     TestName = "Wilcox Rank Sum"
-    
-    
-    
+    # vals$GeneExprSigMeta <- 
     ggboxplot(GeneExpr, x = "meta", y = "gene", palette = "jco",
-              add = "jitter", col="meta") + 
+                                      add = "jitter", col="meta") + 
       stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
       theme_bw() + 
       ggtitle( paste0(as.character(input$Genetext2), " expression :: ", TestName, " test :: ", CellType)) + 
@@ -1208,8 +1209,52 @@ server <- function(input, output, session) {
     
     
     
+    # vals$GeneExprSigMeta
+    
     
   })
+  
+  output$GeneExprSigMeta <- renderPlot({
+    # ggsave("geneexprstatsig_export.pdf", GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
+    (GeneExprSigMeta_Rx())
+    # print(vals$GeneExprSigMeta)
+  })
+  
+  output$geneexprstatsig_download <- downloadHandler(
+    filename = function(){
+      paste("geneexprstatsig_download", Sys.Date(), ".pdf", sep = "")
+      # "test.pdf"
+    },
+    content = function(file) {
+      pdf(file, width = 12, height =9, compress = T, pointsize = 15)
+      # grid.text("This is some initial text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+      # grid::grid.newpage()
+      plot(GeneExprSigMeta_Rx())
+      # grid::grid.newpage()
+      # grid.text("This is some final text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+      # ggsave(file,GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
+      
+      dev.off()
+    })
+  
+  # output$geneexprstatsig_export = downloadHandler(
+  #   filename = function(){
+  #     paste("geneexprstatsig_export", Sys.Date(), ".pdf", sep = "")
+  #     # "test.pdf"
+  #   },
+  #   content = function(file) {
+  #     print(head(file))
+  #     # pdf(file, width = 12, height =9, compress = T, pointsize = 15)
+  #     # print(GeneExprSigMeta_Rx())
+  #     ggsave(file,GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
+  #     # dev.off()
+  #   }
+  # )
+  
+  
+  
+  
+
   
   output$GeneExprSigMeta2 <- renderPlot({
     
