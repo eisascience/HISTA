@@ -46,7 +46,7 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=F
+LocalRun=T
 
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
@@ -405,6 +405,7 @@ ui <- dashboardPage(
                 ),
                 box(title = "Pseudotime", status = "primary", solidHeader = TRUE,
                     collapsible = TRUE,
+                    downloadButton("PseudotimeSDA_download"),
                     plotOutput("PseudotimeSDA", height = 800),
                     width = 10
                 )
@@ -453,8 +454,6 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
   
-  vals <- reactiveValues()
-  
   datat <- as.data.frame(cbind(datat, results$scores[rownames(datat),])); 
   rownames(datat) <- datat$barcode 
   
@@ -467,6 +466,21 @@ server <- function(input, output, session) {
   # SDALoadings <- results$loadings[[1]]
   
   # print(input$data)
+  
+  output$messageMenu <- renderMenu({
+    # Code to generate each of the messageItems here, in a list. This assumes
+    # that messageData is a data frame with two columns, 'from' and 'message'.
+    msgs <- apply(messageData, 1, function(row) {
+      messageItem(from = row[["from"]], message = row[["message"]])
+    })
+    
+    # This is equivalent to calling:
+    #   dropdownMenu(type="messages", msgs[[1]], msgs[[2]], ...)
+    dropdownMenu(type = "messages", .list = msgs)
+  })
+  
+  
+  ################################ Reactive sections
   
   tDF <- reactive({
     # data, tsneBrSDACS, tsneDSNDGE, tsneSNDGE
@@ -515,7 +529,6 @@ server <- function(input, output, session) {
     
     return(tempDF)
   })
-  
   
   GEx <- reactive({
     
@@ -615,8 +628,6 @@ server <- function(input, output, session) {
     
   })
   
-  
-  
   GEx2 <- reactive({
     MyCells <- datat$barcode
     
@@ -660,7 +671,6 @@ server <- function(input, output, session) {
     return(list(GeneExpr = GeneExpr, my_comparisons = my_comparisons))
     
   })
-  
   
   GEx3 <- reactive({
     
@@ -757,6 +767,88 @@ server <- function(input, output, session) {
     
   })
   
+  PseudotimeSDA_Rx <- reactive({
+    
+    Scores <- results$scores
+    tempDF <- tDF_GS()
+    
+    PT <- datat$PseudoTime
+    
+    if(input$metaselect4 == "pseudotime") {
+      MetaFac <- datat$PseudoTime
+    } else{
+      
+      if(input$metaselect4 == "celltype") {
+        MetaFac <- (datat$FinalFinalPheno_old)
+      } else {
+        if(input$metaselect4 == "donrep"){
+          MetaFac <- (datat$DonRep)
+        } else {
+          if(input$metaselect4 == "donor"){
+            MetaFac <- (datat$donor)
+          } else {
+            if(input$metaselect4 == "COND.ID"){
+              MetaFac <- (datat$COND.ID)
+            } else {
+              if(input$metaselect4 == "experiment"){
+                MetaFac <- (datat$experiment)
+              } else {
+                
+              }
+            }
+          }
+        }
+      }
+      
+    }
+    
+    
+    tempDF$MetFacZ <- MetaFac
+    tempDF$PT <- PT
+    
+    tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+    
+    tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentNtext3))]
+    tempDF$barcode <- rownames(tempDF)
+    
+    if(input$metaselect4 == "pseudotime") {
+      tempDF$MetFacZ <- as.numeric(as.character(tempDF$MetFacZ)) 
+    } else {
+      tempDF$MetFacZ <- factor(as.character(tempDF$MetFacZ))
+    }
+    
+    merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
+    # print(head(rownames(tempDF)))
+    # print(head(rownames(Scores)))
+    
+    # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+    # Scores <-Scores[rownames(tempDF),]
+    print(head(merge_sda_melt))
+    # plot(merge_sda_melt$PT, 
+    #      merge_sda_melt$value)
+    
+    
+    ggpp <- ggplot(merge_sda_melt, aes(PT, value, colour=(MetFacZ))) +
+      geom_point_rast(alpha=1, size=1.2, stroke=0) +
+      geom_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
+      ylab("Cell Component Score") +
+      xlab("Pseudotime") +
+      ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentNtext3)))+
+      theme_bw() +
+      # scale_colour_manual(values=col_vector)+ #RColorBrewer::brewer.pal(9,"Set1")[-6]
+      theme(legend.position = "none") +
+      ylim(-8,8)
+    
+    if(input$metaselect4 == "pseudotime") {
+      ggpp <-  ggpp +  scale_color_viridis()
+    } else {
+      ggpp <-  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ, 
+                                                                            ncol=3, scales = "fixed")
+    }
+    ggpp
+    
+  })
+  
   ComboTopSDAgenes <- reactive({
     Out1 <- print_gene_list(as.numeric(input$ComponentNtext), PosOnly = T) %>%
       #group_by(package) %>%
@@ -779,18 +871,28 @@ server <- function(input, output, session) {
     data.frame(Pos=Out1, Neg=Out2)
   })
   
-  output$TXTall <- downloadHandler(
+  GeneExprSigMeta_Rx <- reactive({
     
-    filename = function(){
-      paste("data-TopGenes_SDA_negNpos", Sys.Date(), ".csv", sep = "")
-    },
-    content = function(file) {
-      # print(ComboTopSDAgenes())
-      write.csv(ComboTopSDAgenes(), file, row.names=F)
-      # write.table(paste(text,collapse=", "), file,col.names=FALSE)
-    }
-  )
+    GeneExpr <- GEx()$GeneExpr
+    my_comparisons <- GEx()$my_comparisons
+    
+    
+    CellType = input$celltypeselect2
+    
+    
+    TestName = "Wilcox Rank Sum"
+    
+    ggboxplot(GeneExpr, x = "meta", y = "gene", palette = "jco",
+              add = "jitter", col="meta") + 
+      stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
+      theme_bw() + 
+      ggtitle( paste0(as.character(input$Genetext2), " expression :: ", TestName, " test :: ", CellType)) + 
+      xlab("") + ylab(as.character(input$Genetext2))
+    
+    
+  })
   
+  ################################ observeEvent sections
   
   observeEvent(input$NextSDA, {
     Val <- as.character(min(c(150, as.numeric(input$ComponentNtext)+1)))
@@ -803,7 +905,6 @@ server <- function(input, output, session) {
     
     updateTextInput(session, "ComponentNtext", value = Val)
   })
-  
   
   observeEvent(input$C2Cpos, {
     
@@ -822,8 +923,7 @@ server <- function(input, output, session) {
     clipr::write_clip(Out1)
     
   })
-  
-  
+
   observeEvent(input$C2Cneg, {
     
     
@@ -842,6 +942,7 @@ server <- function(input, output, session) {
     
   })
   
+  ################################ renderPlot sections
   
   output$CellScoreOrderSDA <- renderPlot({
     
@@ -888,9 +989,6 @@ server <- function(input, output, session) {
     
     
   })
-  
-  
-  #### tSNEPseudoSDA
   
   output$tSNEPseudoSDA <- renderPlot({
     
@@ -965,89 +1063,10 @@ server <- function(input, output, session) {
   
   output$PseudotimeSDA <- renderPlot({
     
-    Scores <- results$scores
-    tempDF <- tDF_GS()
-    
-    PT <- datat$PseudoTime
-    
-    if(input$metaselect4 == "pseudotime") {
-      MetaFac <- datat$PseudoTime
-    } else{
-      
-      if(input$metaselect4 == "celltype") {
-        MetaFac <- (datat$FinalFinalPheno_old)
-      } else {
-        if(input$metaselect4 == "donrep"){
-          MetaFac <- (datat$DonRep)
-        } else {
-          if(input$metaselect4 == "donor"){
-            MetaFac <- (datat$donor)
-          } else {
-            if(input$metaselect4 == "COND.ID"){
-              MetaFac <- (datat$COND.ID)
-            } else {
-              if(input$metaselect4 == "experiment"){
-                MetaFac <- (datat$experiment)
-              } else {
-                
-              }
-            }
-          }
-        }
-      }
-      
-    }
-    
-    
-    tempDF$MetFacZ <- MetaFac
-    tempDF$PT <- PT
-    
-    tempDF <- tempDF[!is.na(tempDF$tSNE1),]
-    
-    tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentNtext3))]
-    tempDF$barcode <- rownames(tempDF)
-    
-    if(input$metaselect4 == "pseudotime") {
-      tempDF$MetFacZ <- as.numeric(as.character(tempDF$MetFacZ)) 
-    } else {
-      tempDF$MetFacZ <- factor(as.character(tempDF$MetFacZ))
-    }
-    
-    merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
-    # print(head(rownames(tempDF)))
-    # print(head(rownames(Scores)))
-    
-    # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
-    # Scores <-Scores[rownames(tempDF),]
-    print(head(merge_sda_melt))
-    # plot(merge_sda_melt$PT, 
-    #      merge_sda_melt$value)
-    
-    
-    ggpp <- ggplot(merge_sda_melt, aes(PT, value, colour=(MetFacZ))) +
-      geom_point_rast(alpha=1, size=1.2, stroke=0) +
-      geom_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
-      ylab("Cell Component Score") +
-      xlab("Pseudotime") +
-      # ggtitle(paste0("SDA Comp: ", xN))+
-      theme_bw() +
-      # scale_colour_manual(values=col_vector)+ #RColorBrewer::brewer.pal(9,"Set1")[-6]
-      theme(legend.position = "none") +
-      ylim(-8,8)
-    
-    if(input$metaselect4 == "pseudotime") {
-      ggpp <-  ggpp +  scale_color_viridis()
-    } else {
-      ggpp <-  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ, 
-                                                                            ncol=3, scales = "fixed")
-    }
-    ggpp
-    
+    PseudotimeSDA_Rx()
     
   })
-  
-  
-  
+
   output$SDAScoresChiPos <- renderPlot({
     
     # ColFac_DONR.ID <- CDID()
@@ -1115,7 +1134,6 @@ server <- function(input, output, session) {
     
     
   })
-  
   
   output$SDAScoresChiNeg <- renderPlot({
     
@@ -1185,77 +1203,10 @@ server <- function(input, output, session) {
     
   })
   
-  
-  GeneExprSigMeta_Rx <- reactive({
-    
-    GeneExpr <- GEx()$GeneExpr
-    my_comparisons <- GEx()$my_comparisons
-    
-    
-    CellType = input$celltypeselect2
-    
-    
-    
-    
-    
-    TestName = "Wilcox Rank Sum"
-    # vals$GeneExprSigMeta <- 
-    ggboxplot(GeneExpr, x = "meta", y = "gene", palette = "jco",
-                                      add = "jitter", col="meta") + 
-      stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
-      theme_bw() + 
-      ggtitle( paste0(as.character(input$Genetext2), " expression :: ", TestName, " test :: ", CellType)) + 
-      xlab("") + ylab(as.character(input$Genetext2))
-    
-    
-    
-    # vals$GeneExprSigMeta
-    
-    
-  })
-  
   output$GeneExprSigMeta <- renderPlot({
-    # ggsave("geneexprstatsig_export.pdf", GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
     (GeneExprSigMeta_Rx())
-    # print(vals$GeneExprSigMeta)
   })
-  
-  output$geneexprstatsig_download <- downloadHandler(
-    filename = function(){
-      paste("geneexprstatsig_download", Sys.Date(), ".pdf", sep = "")
-      # "test.pdf"
-    },
-    content = function(file) {
-      pdf(file, width = 12, height =9, compress = T, pointsize = 15)
-      # grid.text("This is some initial text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
-      # grid::grid.newpage()
-      plot(GeneExprSigMeta_Rx())
-      # grid::grid.newpage()
-      # grid.text("This is some final text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
-      # ggsave(file,GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
-      
-      dev.off()
-    })
-  
-  # output$geneexprstatsig_export = downloadHandler(
-  #   filename = function(){
-  #     paste("geneexprstatsig_export", Sys.Date(), ".pdf", sep = "")
-  #     # "test.pdf"
-  #   },
-  #   content = function(file) {
-  #     print(head(file))
-  #     # pdf(file, width = 12, height =9, compress = T, pointsize = 15)
-  #     # print(GeneExprSigMeta_Rx())
-  #     ggsave(file,GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
-  #     # dev.off()
-  #   }
-  # )
-  
-  
-  
-  
 
-  
   output$GeneExprSigMeta2 <- renderPlot({
     
     GeneExpr <- GEx2()$GeneExpr
@@ -1315,36 +1266,7 @@ server <- function(input, output, session) {
       as.data.frame() %>%
       head(as.numeric(input$NoOfGenes))
   }, digits = 1)
-  
-  
-  
-  output$CellType1 <- renderValueBox({
-    valueBox(
-      value = StatFac[paste0("SDAV", input$ComponentNtext, sep=""),2], #format(Sys.time(), "%a %b %d %X %Y %Z"),
-      subtitle = StatFac[paste0("SDAV", input$ComponentNtext, sep=""),6],
-      icon = icon("area-chart"),
-      color = "yellow" #if (downloadRate >= input$rateThreshold) "yellow" else "aqua"
-    )
-  })
-  
-  output$GeneName <- renderValueBox({
-    if(input$Genetext %in% colnames(results$loadings[[1]])){
-      # results$loadings[[1]][,"PRM1"]
-      GeneName <- input$Genetext
-    } else {
-      GeneName <- paste0(input$Genetext, " Not Found")
-      
-    }
-    
-    valueBox(
-      value = GeneName, #format(Sys.time(), "%a %b %d %X %Y %Z"),
-      subtitle = "Gene Name",
-      icon = icon("area-chart"),
-      color = "yellow" #if (downloadRate >= input$rateThreshold) "yellow" else "aqua"
-    )
-  })
-  
-  
+
   #renderPlotly
   output$plot1 <- renderPlot({
     #ggplotly
@@ -1401,6 +1323,7 @@ server <- function(input, output, session) {
     grid.draw(legend)
     
   })
+
   #renderPlotly
   output$plot3 <- renderPlot({
     tempDF <- tDF()
@@ -1496,7 +1419,6 @@ server <- function(input, output, session) {
     
   })
   
-  
   output$GOneg <- renderPlot({
     
     if(! (as.numeric(input$ComponentNtext) %in% 1:150)){
@@ -1554,18 +1476,6 @@ server <- function(input, output, session) {
       
     }
     
-  })
-  
-  output$messageMenu <- renderMenu({
-    # Code to generate each of the messageItems here, in a list. This assumes
-    # that messageData is a data frame with two columns, 'from' and 'message'.
-    msgs <- apply(messageData, 1, function(row) {
-      messageItem(from = row[["from"]], message = row[["message"]])
-    })
-    
-    # This is equivalent to calling:
-    #   dropdownMenu(type="messages", msgs[[1]], msgs[[2]], ...)
-    dropdownMenu(type = "messages", .list = msgs)
   })
   
   output$plot5 <- renderPlot({
@@ -1658,6 +1568,74 @@ server <- function(input, output, session) {
     
   })
   
+  ################################ renderValueBox sections
+  
+  output$CellType1 <- renderValueBox({
+    valueBox(
+      value = StatFac[paste0("SDAV", input$ComponentNtext, sep=""),2], #format(Sys.time(), "%a %b %d %X %Y %Z"),
+      subtitle = StatFac[paste0("SDAV", input$ComponentNtext, sep=""),6],
+      icon = icon("area-chart"),
+      color = "yellow" #if (downloadRate >= input$rateThreshold) "yellow" else "aqua"
+    )
+  })
+  
+  output$GeneName <- renderValueBox({
+    if(input$Genetext %in% colnames(results$loadings[[1]])){
+      # results$loadings[[1]][,"PRM1"]
+      GeneName <- input$Genetext
+    } else {
+      GeneName <- paste0(input$Genetext, " Not Found")
+      
+    }
+    
+    valueBox(
+      value = GeneName, #format(Sys.time(), "%a %b %d %X %Y %Z"),
+      subtitle = "Gene Name",
+      icon = icon("area-chart"),
+      color = "yellow" #if (downloadRate >= input$rateThreshold) "yellow" else "aqua"
+    )
+  })
+  
+  ################################ downloadHandler sections
+  
+  output$TXTall <- downloadHandler(
+    filename = function(){
+      paste("data-TopGenes_SDA_negNpos", Sys.Date(), ".csv", sep = "")
+    },
+    content = function(file) {
+      # print(ComboTopSDAgenes())
+      write.csv(ComboTopSDAgenes(), file, row.names=F)
+      # write.table(paste(text,collapse=", "), file,col.names=FALSE)
+    }
+  )
+  
+  output$geneexprstatsig_download <- downloadHandler(
+    filename = function(){
+      paste("geneexprstatsig_download", Sys.Date(), ".pdf", sep = "")
+      # "test.pdf"
+    },
+    content = function(file) {
+      pdf(file, width = 12, height =9, compress = T, pointsize = 15)
+      # grid.text("This is some initial text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+      # grid::grid.newpage()
+      plot(GeneExprSigMeta_Rx())
+      # grid::grid.newpage()
+      # grid.text("This is some final text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+      # ggsave(file,GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
+      
+      dev.off()
+    })
+  
+  output$PseudotimeSDA_download <- downloadHandler(
+    filename = function(){
+      paste("PseudotimeSDA_download_15x5", Sys.Date(), ".pdf", sep = "")
+      # "test.pdf"
+    },
+    content = function(file) {
+      pdf(file, width = 15, height =5, compress = T, pointsize = 15)
+      plot(PseudotimeSDA_Rx())
+      dev.off()
+    })
   
 }
 
