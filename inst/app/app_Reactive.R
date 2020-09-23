@@ -50,6 +50,8 @@ tSNE_GermCells_DF_Rx <- reactive({
 tSNEwSDAScoreProj_Rx <- reactive({
   #ggplotly
   tempDF <- tSNE_AllCells_DF_Rx()
+  
+
   ggplot(cbind(tempDF, SDAComp=datat[,get(paste0("SDAV", input$ComponentNtext, sep=""))]), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
     geom_point(size=0.1) + theme_bw() +
@@ -58,20 +60,39 @@ tSNEwSDAScoreProj_Rx <- reactive({
     theme(legend.position = "bottom", aspect.ratio=1) + 
     ggtitle(paste0("SDAV", input$ComponentNtext, " \n", 
                    StatFac[paste0("SDAV", input$ComponentNtext, sep=""),2], sep="")) + 
-    simplify2 + coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
+    simplify2  + coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
+  
   
 })
 
 tSNEwSDAScoreProjPerCT_Rx <- reactive({
   #ggplotly
   tempDF <- tSNE_SDA_CT_Rx()
+  
+  AddPer <- function(x, perc=0.1){
+    x + x *  perc
+  }
+  
+  # limValX <- max(c(abs(min(tempDF$tSNE1)), max(tempDF$tSNE1)) ) 
+  # limValX = limValX + limValX*0.1
+  # 
+  # limValY <- max(c(abs(min(tempDF$tSNE2)), max(tempDF$tSNE2)) ) 
+  # limValY = limValY + limValY*0.1
+  
   # print(head(tempDF))
+  if(input$tsnepercelltype_ctselect == "all"){
+    percH = .5
+    percL = percH
+  } else {
+    percH = .2
+    percL = .05
+  }
+  
   
   tempMeta <- datat[,get(paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""))]
   names(tempMeta) <- datat$barcode
   tempMeta <- tempMeta[rownames(tempDF)]
-  print(head(tempMeta))
-  
+  # print(head(tempMeta))
   
   ggplot(cbind(tempDF, SDAComp=tempMeta), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
@@ -81,8 +102,8 @@ tSNEwSDAScoreProjPerCT_Rx <- reactive({
     theme(legend.position = "bottom", aspect.ratio=1) + 
     ggtitle(paste0("SDAV", input$ComponentNtext_tsnepercelltype, " \n", 
                    StatFac[paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""),2], sep="")) + 
-    simplify2 + coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)
-  
+    simplify2 + coord_cartesian(xlim = c(-AddPer(abs(quantile(tempDF$tSNE1, .01)), perc=percL),AddPer( quantile(tempDF$tSNE1, .98), perc=percH)), 
+                                ylim = c(-AddPer(abs(quantile(tempDF$tSNE2, .01)), perc=percL),AddPer( quantile(tempDF$tSNE2, .98), perc=percH)), expand = T)
 })
 
 tSNEwMeta_Rx <- reactive({
