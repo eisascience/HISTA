@@ -26,6 +26,8 @@ output$geneexprstatsig_download <- downloadHandler(
     dev.off()
   })
 
+
+
 output$tSNEwSDAScoreProj_download <- downloadHandler(
   filename = function(){
     paste("tSNEwSDAScoreProj_download_9x9", Sys.Date(), ".pdf", sep = "")
@@ -67,6 +69,17 @@ output$tsnepercelltype_download <- downloadHandler(
   content = function(file) {
     pdf(file, width = 9, height =9, compress = T, pointsize = 15)
     plot(tSNEwSDAScoreProjPerCT_Rx())
+    dev.off()
+  })
+
+output$tsnepercelltype_meta_download <- downloadHandler(
+  filename = function(){
+    paste("tsnepercelltype_meta_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9, height =9, compress = T, pointsize = 15)
+    plot(tSNEwMetaPerCT_Rx())
     dev.off()
   })
 

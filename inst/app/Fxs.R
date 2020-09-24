@@ -1,5 +1,4 @@
-# .libPaths(c("/home/groups/monkeydo/R_LIBS/3.6.1_em"))
-# setwd("/home/groups/monkeydo/acc/shiny/apps/HISTA")
+
 
 genome_loadings <- function (component = NULL, max.items = 20, label.size = 3, label.repel = 1, 
           label_both = TRUE, label_X = FALSE, min_loading = 0.01, gene_locations = NULL, 

@@ -46,10 +46,10 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=T
-
+LocalRun=F
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
+
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
@@ -122,7 +122,9 @@ ui <- dashboardPage(
       #          badgeLabel = "soon", badgeColor = "red"),
       # menuItem("Soma Only", tabName = "somadash", icon = icon("allergies"),
       #          badgeLabel = "soon", badgeColor = "red"),
-      menuItem("SDA-tSNE per Celltype", tabName = "tsnepercelltype", icon = icon("arrows-alt"),
+      menuItem("tSNE-SDA score per Celltype", tabName = "tsnepercelltype", icon = icon("arrows-alt"),
+               badgeLabel = "soon", badgeColor = "yellow"),
+      menuItem("tSNE-Meta per Celltype", tabName = "tsnepercelltype_meta", icon = icon("arrows-alt"),
                badgeLabel = "soon", badgeColor = "yellow"),
       menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("arrows-alt"),
                badgeLabel = "underconst.", badgeColor = "red"),
@@ -357,6 +359,52 @@ ui <- dashboardPage(
       
       
       
+      
+      tabItem(tabName = "tsnepercelltype_meta",
+              h2("tSNE with Metada by cell type"),
+              fluidRow(
+                box(
+                  title = "Inputs 2", status = "warning", solidHeader = TRUE,
+                  #"Box content here", br(), "More box content",
+                  #sliderInput("ComponentN", "Slider input:", 1, 150, 1),
+                  width = 5,
+                  radioButtons("tsnepercelltype_ctselect_meta", "Celltype Selection:",
+                               c("Leydig" = "leydig",
+                                 "Sertoli" = "sertoli",
+                                 "Germ-All" = "germ",
+                                 "Germ-UndiffSg" = "germ_UnDiffSgSct",
+                                 "Germ-DiffSg" = "germ_DiffSgSct",
+                                 "Germ-PrePachSct" = "germ_PrePachSct",
+                                 "Germ-PachSct" = "germ_PachSct",
+                                 "Germ_Std" = "germ_Std",
+                                 "Endothelial" = "endothelial",
+                                 "Myeloid" = "myeloid",
+                                 "Adaptive" = "adaptive",
+                                 "All" = "all"
+                               ), selected = "all"),
+                  radioButtons("ctselect_meta", "Metadata Selection:",
+                               c("Cell types" = "celltype",
+                                 "Donor-replicates" = "donrep",
+                                 "Donors" = "donor",
+                                 "Condition" = "COND.ID",
+                                 "Experiments" = "experiment"
+                               )),
+                ),
+                box(
+                  title = "tSNE with SDA score Projected per CellType", status = "primary", solidHeader = TRUE,
+                  collapsible = TRUE,
+                  downloadButton("tsnepercelltype_meta_download"),
+                  plotOutput("tSNEperCellType_meta"),
+                  width = 10
+                )
+                
+                
+                
+              )
+      ),
+      
+      
+      
       # Cell type
       tabItem(tabName = "celltypestatsig",
               h2("Cell type Expression Stat. Sig."),
@@ -502,6 +550,11 @@ ui <- dashboardPage(
 
 
 server <- function(input, output, session) {
+  
+  AddPer <- function(x, perc=0.1){
+    x + x *  perc
+  }
+  
   
   datat <- as.data.frame(cbind(datat, results$scores[rownames(datat),])); 
   rownames(datat) <- datat$barcode 

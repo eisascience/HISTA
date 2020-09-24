@@ -211,6 +211,10 @@ output$tSNEperCellType <- renderPlot({
   tSNEwSDAScoreProjPerCT_Rx()
 })
 
+output$tSNEperCellType_meta <- renderPlot({
+  tSNEwMetaPerCT_Rx()
+})
+
 
 output$tSNEwMetaLegend <- renderPlot({
   

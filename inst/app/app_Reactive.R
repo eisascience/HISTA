@@ -1,5 +1,6 @@
 ################################ Reactive sections
 
+#returns DF of tSNE
 tSNE_AllCells_DF_Rx <- reactive({
   # data, tsneBrSDACS, tsneDSNDGE, tsneSNDGE
   # print(input$data)
@@ -31,6 +32,7 @@ tSNE_AllCells_DF_Rx <- reactive({
   return(tempDF)
 })
 
+#returns DF of tsne for GC (Tsne1_SDAQC4sperm) 
 tSNE_GermCells_DF_Rx <- reactive({
   # data, tsneBrSDACS, tsneDSNDGE, tsneSNDGE
   # print(input$data)
@@ -47,6 +49,7 @@ tSNE_GermCells_DF_Rx <- reactive({
   return(tempDF)
 })
 
+#gets tSNE_AllCells_DF_Rx and plots tSNE vs SDA score
 tSNEwSDAScoreProj_Rx <- reactive({
   #ggplotly
   tempDF <- tSNE_AllCells_DF_Rx()
@@ -65,13 +68,12 @@ tSNEwSDAScoreProj_Rx <- reactive({
   
 })
 
+#gets tSNE_SDA_CT_Rx and plots tSNE per CT vs SDA score
 tSNEwSDAScoreProjPerCT_Rx <- reactive({
   #ggplotly
   tempDF <- tSNE_SDA_CT_Rx()
   
-  AddPer <- function(x, perc=0.1){
-    x + x *  perc
-  }
+  
   
   # limValX <- max(c(abs(min(tempDF$tSNE1)), max(tempDF$tSNE1)) ) 
   # limValX = limValX + limValX*0.1
@@ -96,16 +98,84 @@ tSNEwSDAScoreProjPerCT_Rx <- reactive({
   
   ggplot(cbind(tempDF, SDAComp=tempMeta), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
-    geom_point(size=0.1) + theme_bw() +
+    geom_point(size=0.5) + theme_bw() +
     scale_color_manual("CS", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
     guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
     theme(legend.position = "bottom", aspect.ratio=1) + 
     ggtitle(paste0("SDAV", input$ComponentNtext_tsnepercelltype, " \n", 
                    StatFac[paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""),2], sep="")) + 
-    simplify2 + coord_cartesian(xlim = c(-AddPer(abs(quantile(tempDF$tSNE1, .01)), perc=percL),AddPer( quantile(tempDF$tSNE1, .98), perc=percH)), 
-                                ylim = c(-AddPer(abs(quantile(tempDF$tSNE2, .01)), perc=percL),AddPer( quantile(tempDF$tSNE2, .98), perc=percH)), expand = T)
+    simplify2 + 
+    coord_cartesian(xlim = c(-AddPer(abs(quantile(tempDF$tSNE1, .01)), perc=percL), 
+                             AddPer( quantile(tempDF$tSNE1, .98), perc=percH)), 
+                    ylim = c(-AddPer(abs(quantile(tempDF$tSNE2, .01)), perc=percL), 
+                             AddPer( quantile(tempDF$tSNE2, .98), perc=percH)), expand = T) +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+  
+  # if(LocalRun) AugmentPlot(ggf) else ggf
 })
 
+#get tSNE_AllCells_DF_Rx and plot tSNE vs Meta per CT
+tSNEwMetaPerCT_Rx <- reactive({
+  tempDF <- tSNE_META_CT_Rx()
+  # print("tSNEwMetaPerCT_Rx")
+  # print(head(tempDF))
+  
+  tempMetaDF <- as.data.frame(datat)
+  rownames(tempMetaDF) <- datat$barcode
+  tempMetaDF <- tempMetaDF[rownames(tempDF), ]
+  
+  # print(head(tempMetaDF))
+  
+  if(input$ctselect_meta == "celltype") {
+    MetaFac <- as.character(tempMetaDF$FinalFinalPheno_old)
+  } else {
+    if(input$ctselect_meta == "donrep"){
+      MetaFac <- as.character(tempMetaDF$DonRep)
+    } else {
+      if(input$ctselect_meta == "donor"){
+        MetaFac <- as.character(tempMetaDF$donor)
+      } else {
+        if(input$ctselect_meta == "COND.ID"){
+          MetaFac <- as.character(tempMetaDF$COND.ID)
+        } else {
+          if(input$ctselect_meta == "experiment"){
+            MetaFac <- as.character(tempMetaDF$experiment)
+          } else {
+            
+          }
+        }
+      }
+    }
+  }
+  
+  if(input$tsnepercelltype_ctselect_meta == "all"){
+    percH = .5
+    percL = percH
+  } else {
+    percH = .2
+    percL = .05
+  }
+  
+  
+  #ggplotly
+  ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(MetaFac))) +
+    geom_point(size=0.1)+ theme_bw() +
+    theme(legend.position = "right", aspect.ratio=1,
+          legend.title = element_blank()) +
+    ggtitle("t-SNE - Final Pheno") +
+    scale_color_manual(values=(col_vector)) + 
+    guides(colour = guide_legend(override.aes = list(size=2, alpha=1), ncol =2))  + 
+    simplify2 + 
+    coord_cartesian(xlim = c(-AddPer(abs(quantile(tempDF$tSNE1, .01)), perc=percL), 
+                             AddPer( quantile(tempDF$tSNE1, .98), perc=percH)), 
+                    ylim = c(-AddPer(abs(quantile(tempDF$tSNE2, .01)), perc=percL), 
+                             AddPer( quantile(tempDF$tSNE2, .98), perc=percH)), expand = T) +
+    theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
+  
+  
+})
+
+#gets tSNE_AllCells_DF_Rx and plots tSNE vs Meta
 tSNEwMeta_Rx <- reactive({
   tempDF <- tSNE_AllCells_DF_Rx()
   
@@ -210,6 +280,78 @@ tSNE_SDA_CT_Rx <- reactive({
   
   tempDF$GeneExpr <- rep(0, nrow(tempDF))
   
+  return(tempDF)
+  
+})
+
+tSNE_META_CT_Rx <- reactive({
+  
+  if(input$tsnepercelltype_ctselect_meta == "leydig"){
+    MyCells <- datat[datat$FinalFinalPheno == "Leydig",]$barcode
+  } else {
+    if(input$tsnepercelltype_ctselect_meta == "sertoli"){
+      MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
+    } else {
+      if(input$tsnepercelltype_ctselect_meta == "endothelial"){
+        MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
+      } else {
+        if(input$tsnepercelltype_ctselect_meta == "myeloid"){
+          MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
+        } else {
+          if(input$tsnepercelltype_ctselect_meta == "adaptive"){
+            MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
+          } else {
+            if(input$tsnepercelltype_ctselect_meta == "germ"){
+              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
+                                                            "Gamete_Meiotic_Pach_Dip_2nd_Scts",
+                                                            "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
+                                                            "Gamete_RoundSpermatid",
+                                                            "Gamete_UndiffSg"),]$barcode
+            } else {
+              if(input$tsnepercelltype_ctselect_meta == "all"){
+                MyCells <- datat$barcode
+              } else {
+                if(input$tsnepercelltype_ctselect_meta == "germ_DiffSgSct"){
+                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                } else {
+                  if(input$tsnepercelltype_ctselect_meta == "germ_PrePachSct"){
+                    MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
+                  } else {
+                    if(input$tsnepercelltype_ctselect_meta == "germ_PachSct"){
+                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
+                    }  else {
+                      if(input$tsnepercelltype_ctselect_meta == "germ_Std"){
+                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                      } else {
+                        if(input$tsnepercelltype_ctselect_meta == "germ_UnDiffSgSct"){
+                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    
+  }
+  
+  
+  
+  
+  
+  tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  
+  rownames(tempDF) <- datat$barcode
+  tempDF <- tempDF[MyCells, ]
+  
+  tempDF$GeneExpr <- rep(0, nrow(tempDF))
+  
+  # print("tSNE_META_CT_Rx")
+  # print(head(tempDF))
   return(tempDF)
   
 })
