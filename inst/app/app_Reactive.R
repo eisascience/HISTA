@@ -96,15 +96,30 @@ tSNEwSDAScoreProjPerCT_Rx <- reactive({
   tempMeta <- tempMeta[rownames(tempDF)]
   # print(head(tempMeta))
   
+  if(input$ComponentNtext_tsnepercelltype > 150) {
+    BREAKS = c(-Inf, round(as.numeric(quantile(asinh(tempMeta), c(.15,.25,.5,.75,.85))), 5), Inf)
+    
+      if(input$ComponentNtext_tsnepercelltype > 203) {
+        TITLE = ggtitle(paste0("DiffComp-Rank", as.numeric(input$ComponentNtext_tsnepercelltype)-199))
+      } else {
+        TITLE = ggtitle(paste0("DiffComp", as.numeric(input$ComponentNtext_tsnepercelltype)-199))
+      }
+    
+    } else {
+      BREAKS = c(-Inf, -1, -.5, 0, .5, 1, Inf)
+      TITLE = ggtitle(paste0("SDAV", input$ComponentNtext_tsnepercelltype, " \n", 
+                             StatFac[paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""),2], sep=""))
+
+    }
+
+  
   ggplot(cbind(tempDF, SDAComp=tempMeta), 
-         aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
+         aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = BREAKS))) +
     geom_point(size=0.5) + theme_bw() +
     scale_color_manual("CS", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
     guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
-    theme(legend.position = "bottom", aspect.ratio=1) + 
-    ggtitle(paste0("SDAV", input$ComponentNtext_tsnepercelltype, " \n", 
-                   StatFac[paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""),2], sep="")) + 
-    simplify2 + 
+    theme(legend.position = "bottom", aspect.ratio=1)  + 
+    simplify2 + TITLE + 
     coord_cartesian(xlim = c(-AddPer(abs(quantile(tempDF$tSNE1, .01)), perc=percL), 
                              AddPer( quantile(tempDF$tSNE1, .98), perc=percH)), 
                     ylim = c(-AddPer(abs(quantile(tempDF$tSNE2, .01)), perc=percL), 
@@ -159,7 +174,7 @@ tSNEwMetaPerCT_Rx <- reactive({
   
   #ggplotly
   ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(MetaFac))) +
-    geom_point(size=0.1)+ theme_bw() +
+    geom_point(size=0.5)+ theme_bw() +
     theme(legend.position = "right", aspect.ratio=1,
           legend.title = element_blank()) +
     ggtitle("t-SNE - Final Pheno") +
@@ -219,6 +234,12 @@ tSNE_SDA_CT_Rx <- reactive({
   if(input$tsnepercelltype_ctselect == "leydig"){
     MyCells <- datat[datat$FinalFinalPheno == "Leydig",]$barcode
   } else {
+    if(input$tsnepercelltype_ctselect == "neuro"){
+      MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
+    } else {
+      if(input$tsnepercelltype_ctselect == "myoid"){
+        MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
+      } else {
     if(input$tsnepercelltype_ctselect == "sertoli"){
       MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
     } else {
@@ -266,6 +287,8 @@ tSNE_SDA_CT_Rx <- reactive({
         }
       }
     }
+      }
+    }
     
   }
   
@@ -292,6 +315,12 @@ tSNE_META_CT_Rx <- reactive({
     if(input$tsnepercelltype_ctselect_meta == "sertoli"){
       MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
     } else {
+      if(input$tsnepercelltype_ctselect_meta == "neuro"){
+        MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
+      } else {
+        if(input$tsnepercelltype_ctselect_meta == "myoid"){
+          MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
+        } else {
       if(input$tsnepercelltype_ctselect_meta == "endothelial"){
         MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
       } else {
@@ -335,7 +364,7 @@ tSNE_META_CT_Rx <- reactive({
           }
         }
       }
-    }
+    }}}
     
   }
   
@@ -364,6 +393,12 @@ GeneExprPerCellType_DF_Rx <- reactive({
     if(input$celltypeselect2 == "sertoli"){
       MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
     } else {
+      if(input$celltypeselect2 == "neuro"){
+        MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
+      } else {
+        if(input$celltypeselect2 == "myoid"){
+          MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
+        } else {
       if(input$celltypeselect2 == "endothelial"){
         MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
       } else {
@@ -407,7 +442,7 @@ GeneExprPerCellType_DF_Rx <- reactive({
           }
         }
       }
-    }
+    }}}
     
   }
   
@@ -520,6 +555,12 @@ ComboTopSDAgenes_Rx <- reactive({
     if(input$celltypeselect3 == "sertoli"){
       MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
     } else {
+      if(input$celltypeselect3 == "neuro"){
+        MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
+      } else {
+        if(input$celltypeselect3 == "myoid"){
+          MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
+        } else {
       if(input$celltypeselect3 == "endothelial"){
         MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
       } else {
@@ -563,7 +604,7 @@ ComboTopSDAgenes_Rx <- reactive({
           }
         }
       }
-    }
+    }}}
     
   }
   

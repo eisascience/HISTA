@@ -46,23 +46,24 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=F
+LocalRun=T
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
 
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
-  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3_Sep2020.rds" )
+  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3_Sep2020B.rds" )
 }  else {
   if(LocalRun) init.path = "/Volumes/Maggie/Work/OHSU/Conrad/R/TestisII/HISTA_orig/data" else init.path = getwd()
   
-  load.data.path = paste0(init.path, "/ShinyServerLSV3_Sep2020.rds" )
+  load.data.path = paste0(init.path, "/ShinyServerLSV3_Sep2020B.rds" )
   
 }
 
 list2env(readRDS(load.data.path), envir = globalenv())
 
+print(table(datat$FinalFinalPheno))
 # datat <- as.data.frame(datat)
 # rownames(datat) <- datat$barcode
 # 
@@ -292,6 +293,8 @@ ui <- dashboardPage(
                   radioButtons("celltypeselect2", "Celltype Selection:",
                                c("Leydig" = "leydig",
                                  "Sertoli" = "sertoli",
+                                 "Myoid" = "myoid",
+                                 "Neuro" = "neuro",
                                  "Germ-All" = "germ",
                                  "Germ-UndiffSg" = "germ_UnDiffSgSct",
                                  "Germ-DiffSg" = "germ_DiffSgSct",
@@ -332,6 +335,8 @@ ui <- dashboardPage(
                   radioButtons("tsnepercelltype_ctselect", "Celltype Selection:",
                                c("Leydig" = "leydig",
                                  "Sertoli" = "sertoli",
+                                 "Myoid" = "myoid",
+                                 "Neuro" = "neuro",
                                  "Germ-All" = "germ",
                                  "Germ-UndiffSg" = "germ_UnDiffSgSct",
                                  "Germ-DiffSg" = "germ_DiffSgSct",
@@ -371,6 +376,8 @@ ui <- dashboardPage(
                   radioButtons("tsnepercelltype_ctselect_meta", "Celltype Selection:",
                                c("Leydig" = "leydig",
                                  "Sertoli" = "sertoli",
+                                 "Myoid" = "myoid",
+                                 "Neuro" = "neuro",
                                  "Germ-All" = "germ",
                                  "Germ-UndiffSg" = "germ_UnDiffSgSct",
                                  "Germ-DiffSg" = "germ_DiffSgSct",
@@ -460,6 +467,8 @@ ui <- dashboardPage(
                   radioButtons("celltypeselect3", "Celltype Selection:",
                                c("Leydig" = "leydig",
                                  "Sertoli" = "sertoli",
+                                 "Myoid" = "myoid",
+                                 "Neuro" = "neuro",
                                  "Germ-All" = "germ",
                                  "Germ-UndiffSg" = "germ_UnDiffSgSct",
                                  "Germ-DiffSg" = "germ_DiffSgSct",
