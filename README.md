@@ -1,4 +1,9 @@
 # HISTA
+
+
+<a href="https://zenodo.org/badge/latestdoi/271643615"><img src="https://zenodo.org/badge/271643615.svg" alt="DOI"></a>
+
+
 Human Infertility Single-cell Testis Atlas
 Developed by @eisamahyari
 PI: Don F. Conrad
