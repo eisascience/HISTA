@@ -144,7 +144,7 @@ output$SDAGOpos_download <- downloadHandler(
   },
   content = function(file) {
     pdf(file, width = 9, height =9, compress = T, pointsize = 15)
-    plot(SDAGOneg_Rx())
+    plot(SDAGOpos_Rx())
     dev.off()
   })
 

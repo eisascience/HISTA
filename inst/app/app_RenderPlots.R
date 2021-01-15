@@ -334,7 +334,7 @@ output$plot5 <- renderPlot({
   # print("length of your genes in this dataset:")
   # print(length(GeneSet))
   
-  plotEnrich(GeneSetsDF=SDA_Top100neg, 
+  plotEnrich(GeneSetsDF=SDA_Top100pos, 
              GeneVec = GeneSet, 
              plotTitle= paste0("Gene-set enrichment\n SDA top 150 pos loadings\n Cust. Input. genes \n Hypergeometric test: * adj.p < 0.01 \n Genes not found: ",
                                paste0(GeneSetNot, collapse = ", ")),
