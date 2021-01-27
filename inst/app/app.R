@@ -8,7 +8,9 @@
 library(BiocManager)
 options(repos = BiocManager::repositories())
 
-# InstallPkg <- function(pkg, lib="/home/groups/monkeydo/R_LIBS/3.6.1_em") {
+# lib361.monkeydo = "/home/groups/monkeydo/R_LIBS/3.6.1_em"
+
+# InstallPkg <- function(pkg, lib=.libPaths()) {
 #   if(!(pkg %in% rownames(installed.packages()))){
 #     BiocManager::install(pkg , ask =F, lib=lib)
 #     print(paste0(pkg, " installed"))
@@ -47,9 +49,12 @@ library(ggpubr)
 library("BiocParallel")
 register(MulticoreParam(4))
 LocalRun=T
+# e <- environment()
+# system.file('/inst/app_Fxs.R', mustWork = TRUE)
+
 
 source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
-
+# system.file()
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")

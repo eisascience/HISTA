@@ -5,16 +5,23 @@
 
 
 Human Infertility Single-cell Testis Atlas
-Developed by @eisamahyari
-PI: Don F. Conrad
+Developed by Eisa Mahyari Ph.D. @eisamahyari
+PI: Don F. Conrad Ph.D.
+Oregon Health & Science University (OHSU)
+Div. Reproductive Genetics 
 
 ## Associated Manuscript
 
-Under sumbission
+Under submission.
 
 ## Introduction
 
-Under Construction
+HISTA, is short for the Human Infertility Single-cell Testis Atlas. We have carefully combined, and processed 6 controls, with 2 infertile cases as well as 2 pre-pubescent juveniles and 2 Klinefelter single-cell sample data. 
+
+In processing the amalgam data we utilized (SDA ref-5), a tensor-decomposition method that projects the high-dimensional transcriptomic space, into a set of prev. defined (150 in our case was optimal) latent factors which then can be assessed for batch or signal. With the batch-components removed, a new DGE (cells by genes) matrix is imputed that in theory, captures only the signal. This DGE was used for most downstream analysis such as tSNE/UMAP projects, cluster and condition based DE analysis, and psuedotime trajectory analysis. 
+
+
+This Shiny App browser serves as a resource for our manuscript (under submission) as well as a tool for exploration and hypothesis generation of future experiments. 
 
 ### Refs:
 
@@ -28,6 +35,8 @@ Under Construction
 
 4- Stuart and Butler et al. Comprehensive integration of single cell data. bioRxiv (2018).
 
+5- https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5010142/
+
 
 ## Contact: 
 
@@ -35,6 +44,8 @@ Conrad Lab: conradlab.org
 
 ## Install : 
 
+Tested on R 3.6.3 and 4.0.3
+    
 
     devtools::install_github(repo = 'eisascience/HISTA', dependencies = T, upgrade = 'always')
 
