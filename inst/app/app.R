@@ -48,21 +48,21 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=T
+LocalRun=F
 # e <- environment()
 # system.file('/inst/app_Fxs.R', mustWork = TRUE)
 
 
-source(system.file('app/Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
+source(system.file('app/app_Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
 # system.file()
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
   init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
-  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3_Sep2020B.rds" )
+  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3_Feb112021.rds" )
 }  else {
   if(LocalRun) init.path = "/Volumes/Maggie/Work/OHSU/Conrad/R/TestisII/HISTA_orig/data" else init.path = getwd()
   
-  load.data.path = paste0(init.path, "/ShinyServerLSV3_Sep2020B.rds" )
+  load.data.path = paste0(init.path, "/ShinyServerLSV3_Feb112021.rds" )
   
 }
 
@@ -118,28 +118,32 @@ ui <- dashboardPage(
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Germ + Soma", tabName = "combodash", icon = icon("dashboard"),
-               badgeLabel = "underconst.", badgeColor = "yellow"),
-      menuItem("Gene expr stat. sig", tabName = "geneexprstatsig", icon = icon("affiliatetheme"),
-               badgeLabel = "underconst.", badgeColor = "yellow"),
-      menuItem("Cell type stat. sig", tabName = "celltypestatsig", icon = icon("affiliatetheme"),
-               badgeLabel = "underconst.", badgeColor = "yellow"),
+      menuItem("Germ + Soma", tabName = "combodash", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Gene expr stat. sig", tabName = "geneexprstatsig", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Cell type stat. sig", tabName = "celltypestatsig", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
       # menuItem("Germ Only", tabName = "germdash", icon = icon("affiliatetheme"),
       #          badgeLabel = "soon", badgeColor = "red"),
       # menuItem("Soma Only", tabName = "somadash", icon = icon("allergies"),
       #          badgeLabel = "soon", badgeColor = "red"),
-      menuItem("tSNE-SDA score per Celltype", tabName = "tsnepercelltype", icon = icon("arrows-alt"),
-               badgeLabel = "soon", badgeColor = "yellow"),
-      menuItem("tSNE-Meta per Celltype", tabName = "tsnepercelltype_meta", icon = icon("arrows-alt"),
-               badgeLabel = "soon", badgeColor = "yellow"),
-      menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("arrows-alt"),
-               badgeLabel = "underconst.", badgeColor = "red"),
-      menuItem("Pseudotime (Germ-Only)", tabName = "pseudotimeSDA", icon = icon("arrows-alt"),
-               badgeLabel = "underconst.", badgeColor = "red"),
-      menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("dashboard"),
-               badgeLabel = "underconst.", badgeColor = "yellow"),
+      menuItem("tSNE-SDA score per Celltype", tabName = "tsnepercelltype", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("tSNE-Meta per Celltype", tabName = "tsnepercelltype_meta", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Pseudotime (Germ-Only)", tabName = "pseudotimeSDA", icon = icon("random"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("asterisk"),
+               badgeLabel = "final", badgeColor = "green"),
       menuItem("Conrad Lab", icon = icon("file-code-o"), 
-               href = "https://conradlab.org")
+               href = "https://conradlab.org"),
+      menuItem("@eisamahyari", icon = icon("heart"), 
+               href = "https://eisascience.github.io")
     )
   ),
   
@@ -273,6 +277,51 @@ ui <- dashboardPage(
               
               
               
+      ),
+      
+     #
+      tabItem(tabName = "somaWLN",
+              h2("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019)*"),
+              fluidRow(
+                box(
+                  title = "Phenotype", status = "primary", 
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  downloadButton("tsnesomaonlywln_phenotype_download"),
+                  plotOutput("tSNE_somaWLN_Pheno3_Rx"),
+                  width = 5,
+                  # footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/"
+                ),
+                box(
+                  title = "Condition", status = "primary", 
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  downloadButton("tsnesomaonlywln_condition_download"),
+                  plotOutput("tSNE_somaWLN_COND.ID_Rx"),
+                  width = 5,
+                  # footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/"
+                ),
+                box(
+                  title = "Donors", status = "primary", 
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  downloadButton("tsnesomaonlywln_donor_download"),
+                  plotOutput("tSNE_somaWLN_DONR.ID_Rx"),
+                  width = 5,
+                  footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/"
+                ),
+                box(
+                  title = "Total No. of transcripts", status = "primary", 
+                  solidHeader = TRUE,
+                  collapsible = TRUE,
+                  downloadButton("tsnesomaonlywln_ncount_download"),
+                  plotOutput("tSNE_somaWLN_nCount_RNA_Rx"),
+                  width = 5,
+                  # footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/"
+                )
+                
+              )
+        
       ),
       
       # Gene expression

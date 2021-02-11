@@ -211,6 +211,30 @@ output$tSNEperCellType <- renderPlot({
   tSNEwSDAScoreProjPerCT_Rx()
 })
 
+# output$tSNE_somaWLN <- renderPlot({
+#   cowplot::plot_grid(tSNE_somaWLN_Pheno3_Rx(), 
+#                      tSNE_somaWLN_COND.ID_Rx(), 
+#                      tSNE_somaWLN_DONR.ID_Rx(), 
+#                      tSNE_somaWLN_nCount_RNA_Rx(),
+#                      ncol=2)
+# })
+
+
+output$tSNE_somaWLN_Pheno3_Rx <- renderPlot({
+  tSNE_somaWLN_Pheno3_Rx()
+})
+output$tSNE_somaWLN_COND.ID_Rx <- renderPlot({
+  tSNE_somaWLN_COND.ID_Rx()
+})
+output$tSNE_somaWLN_DONR.ID_Rx <- renderPlot({
+  tSNE_somaWLN_DONR.ID_Rx()
+})
+output$tSNE_somaWLN_nCount_RNA_Rx <- renderPlot({
+  tSNE_somaWLN_nCount_RNA_Rx()
+})
+
+
+
 output$tSNEperCellType_meta <- renderPlot({
   tSNEwMetaPerCT_Rx()
 })

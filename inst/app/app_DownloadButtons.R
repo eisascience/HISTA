@@ -158,3 +158,47 @@ output$ChrLoc_download <- downloadHandler(
     plot(ChrLocLoadings_Rx())
     dev.off()
   })
+
+
+
+
+output$tsnesomaonlywln_phenotype_download <- downloadHandler(
+  filename = function(){
+    paste("tsnesomaonlywln_phenotype_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9, height =9, compress = T, pointsize = 15)
+    plot(tSNE_somaWLN_Pheno3_Rx())
+    dev.off()
+  })
+output$tsnesomaonlywln_condition_download <- downloadHandler(
+  filename = function(){
+    paste("tsnesomaonlywln_condition_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9, height =9, compress = T, pointsize = 15)
+    plot(tSNE_somaWLN_COND.ID_Rx())
+    dev.off()
+  })
+output$tsnesomaonlywln_donor_download <- downloadHandler(
+  filename = function(){
+    paste("tsnesomaonlywln_donor_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9, height =9, compress = T, pointsize = 15)
+    plot(tSNE_somaWLN_DONR.ID_Rx())
+    dev.off()
+  })
+output$tsnesomaonlywln_ncount_download <- downloadHandler(
+  filename = function(){
+    paste("tsnesomaonlywln_ncount_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9, height =9, compress = T, pointsize = 15)
+    plot(tSNE_somaWLN_nCount_RNA_Rx())
+    dev.off()
+  })

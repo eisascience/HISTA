@@ -68,6 +68,7 @@ tSNEwSDAScoreProj_Rx <- reactive({
   
 })
 
+
 #gets tSNE_SDA_CT_Rx and plots tSNE per CT vs SDA score
 tSNEwSDAScoreProjPerCT_Rx <- reactive({
   #ggplotly
@@ -938,4 +939,49 @@ ChrLocLoadings_Rx <- reactive({
   }
 })
 
+tSNE_somaWLN_Pheno3_Rx <- reactive({
+  
+  ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=Pheno3)) +
+    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    theme(legend.position = "bottom") +
+    # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
+    scale_color_manual(values = col_vector) + 
+    guides(colour = guide_legend(override.aes = list(size=2, alpha=1), ncol = 3))
+  
+
+})
+
+tSNE_somaWLN_COND.ID_Rx <- reactive({
+  
+  ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=COND.ID)) +
+    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    theme(legend.position = "bottom") +
+    # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
+    scale_color_manual(values = col_vector) + 
+    guides(colour = guide_legend(override.aes = list(size=2, alpha=1), ncol = 3))
+  
+  
+})
+
+tSNE_somaWLN_DONR.ID_Rx <- reactive({
+  
+  ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=DONR.ID)) +
+    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    theme(legend.position = "bottom") +
+    # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
+    scale_color_manual(values = col_vector) + 
+    guides(colour = guide_legend(override.aes = list(size=2, alpha=1), ncol = 3))
+  
+  
+})
+
+tSNE_somaWLN_nCount_RNA_Rx <- reactive({
+  
+  ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=log10(nCount_RNA))) +
+    geom_point(size=0.5) + theme_bw() +
+    theme(legend.position = "bottom") +
+    scale_color_distiller(palette = "Spectral")
+  
+  
+})
 

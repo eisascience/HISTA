@@ -12,7 +12,7 @@ Div. Reproductive Genetics
 
 ## Associated Manuscript
 
-Under submission.
+Mahyari-Gui-Conrad (2021) - Under submission.
 
 ## Introduction
 
@@ -41,6 +41,8 @@ This Shiny App browser serves as a resource for our manuscript (under submission
 ## Contact: 
 
 Conrad Lab: conradlab.org
+Packaged created by: @eisamahyari
+Package maintained by: @eisamahyari
 
 ## Install : 
 
