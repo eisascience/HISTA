@@ -49,11 +49,15 @@ library(ggpubr)
 library("BiocParallel")
 register(MulticoreParam(4))
 LocalRun=F
-# e <- environment()
-# system.file('/inst/app_Fxs.R', mustWork = TRUE)
 
+# if(as.numeric(R.version$major) == 3)
 
 source(system.file('app/app_Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
+
+
+# e <- environment()
+
+
 # system.file()
 
 if (Sys.getenv("SCRATCH_DIR") != "") {
