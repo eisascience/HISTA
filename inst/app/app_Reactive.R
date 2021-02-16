@@ -985,3 +985,44 @@ tSNE_somaWLN_nCount_RNA_Rx <- reactive({
   
 })
 
+tSNE_geneExpr_Rx <- reactive({
+  
+  tempDF <- as.data.frame(tSNE_AllCells_DF_Rx())
+  
+  if(input$Genetext %in% colnames(results$loadings[[1]])){
+    # results$loadings[[1]][,"PRM1"]
+    GeneExpr <- results$scores %*% results$loadings[[1]][,as.character(input$Genetext)]
+  } else {
+    GeneExpr <- results$scores %*% rep(0, nrow(results$loadings[[1]]))
+    
+  }
+  #ggplotly
+  #as.numeric(input$NoOfGenes)
+  
+  LoadOrdVal <- round(results$loadings[[1]][,as.character(input$Genetext)][order(abs(results$loadings[[1]][,as.character(input$Genetext)]), decreasing = T)], 3)
+  
+  
+  tempDF[rownames(GeneExpr), ]$GeneExpr <- GeneExpr[,1]
+  
+  (ggplot(tempDF, 
+          aes(tSNE1, tSNE2, color=cut(asinh(GeneExpr), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
+      geom_point(size=0.1) + theme_bw() +
+      scale_color_manual("EX", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
+      guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
+      theme(legend.position = "bottom", aspect.ratio=1) + 
+      
+      simplify2 + 
+      coord_cartesian(xlim = NULL, ylim = NULL, expand = FALSE)) + 
+    labs(title = paste("Gene: ", input$Genetext, sep=""), 
+         subtitle = paste("Found in comps: \n",
+                          paste(names(LoadOrdVal)[1:5], collapse = ", "), 
+                          "\n",
+                          paste(LoadOrdVal[1:5], collapse = ", "), 
+                          "\n",
+                          paste(names(LoadOrdVal)[6:10], collapse = ", "), 
+                          "\n",
+                          paste(LoadOrdVal[6:10], collapse = ", "), 
+                          "\n"), 
+         caption = "Caption here")
+})
+

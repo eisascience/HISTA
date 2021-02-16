@@ -48,7 +48,7 @@ library(ggpubr)
 
 library("BiocParallel")
 register(MulticoreParam(4))
-LocalRun=F
+LocalRun=T
 
 # if(as.numeric(R.version$major) == 3)
 
@@ -207,7 +207,8 @@ ui <- dashboardPage(
               box(
                 title = "Gene expr", status = "primary", solidHeader = TRUE,
                 collapsible = TRUE,
-                plotOutput("plot4"), #plotlyOutput
+                downloadButton("tSNEwGeneExpr_download"),
+                plotOutput("tSNE_geneExpr"), #plotlyOutput
                 width = 5
               ),
               box(

@@ -50,6 +50,19 @@ output$tSNEwMeta_download <- downloadHandler(
     dev.off()
   })
 
+output$tSNEwGeneExpr_download <- downloadHandler(
+  filename = function(){
+    paste("tSNEwMeta_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9.5, height =9, compress = T, pointsize = 15)
+    plot(tSNE_geneExpr_Rx())
+    dev.off()
+  })
+
+
+
 output$PseudotimeSDA_download <- downloadHandler(
   filename = function(){
     paste("PseudotimeSDA_download_15x5", Sys.Date(), ".pdf", sep = "")
