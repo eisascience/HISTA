@@ -1,24 +1,20 @@
-Package: HISTA
-Title: The Human Infertility Single-cell Testis Atlas Shiny App. Jan.26.2021
+Package: MISTAv0
+Title: The Mouse Infertility Single-cell Testis Atlas Shiny App. Jan.26.2022
 Version: 1.2.0
 Authors@R: 
     person(given = "eisamahyari",
            role = c("aut", "cre"),
            email = "mahyarie@ohsu.edu")
-Description: The goal of this app is to explore the Human Infertility Single-cell Testis Atlas.
+Description: The goal of this app is to explore the Moouse Infertility Single-cell Testis Atlas published in 2018 by D. Conrad et al.
 License: `use_gpl3_license()`
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends:
     R (>= 3.5.0)
 biocViews:
 Imports:
-    AnnotationHub,
-    BiocParallel,
-    biomaRt,
-    clusterProfiler,
     data.table,
     dplyr,
     ggplot2,
@@ -45,4 +41,5 @@ Suggests:
     ggvis,
     devtools
 Remotes:
+    eisascience/MISTA,
     marchinilab/SDAtools

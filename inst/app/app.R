@@ -2,36 +2,12 @@
 # Human Infertility Single_cell Testis Atlas (HISTA)
 
 
-# .libPaths(c("/home/groups/monkeydo/R_LIBS/3.6.1_em"))
-
-.libPaths()
-library(BiocManager)
-options(repos = BiocManager::repositories())
-
-# lib361.monkeydo = "/home/groups/monkeydo/R_LIBS/3.6.1_em"
-
-# InstallPkg <- function(pkg, lib=.libPaths()) {
-#   if(!(pkg %in% rownames(installed.packages()))){
-#     BiocManager::install(pkg , ask =F, lib=lib)
-#     print(paste0(pkg, " installed"))
-#   } else print(paste0(pkg, " prev. installed"))
-# }
-# 
-# reqPkgs <- c("shiny", "rclipboard", "shinydashboard", "ggplot2", "data.table", "ggrepel", "viridis", "ggnewscale",
-#              "RColorBrewer", "RColorBrewer", "grid", "gridExtra", "dplyr", "ggpubr", "BiocParallel")
-# 
-# for(PK in reqPkgs){
-#   InstallPkg(PK)
-# }
-
-# setwd("/home/groups/monkeydo/acc/shiny/apps/HISTA")
 
 library(shiny)
 library(rclipboard)
 library(shinydashboard)
 
-# library(SDAtools)
-library(shiny)
+
 library(ggplot2)
 library(data.table)
 library(ggrepel)
@@ -46,103 +22,78 @@ library(ggrastr)
 
 library(ggpubr)
 
-library("BiocParallel")
-register(MulticoreParam(4))
-LocalRun=T
-
-# if(as.numeric(R.version$major) == 3)
-
-source(system.file('app/app_Fxs.R', package = 'HISTA', mustWork = TRUE), local = TRUE)
+library(DT)
 
 
-# e <- environment()
+pathi = getwd()
 
 
-# system.file()
-
-if (Sys.getenv("SCRATCH_DIR") != "") {
-  init.path = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
-  load.data.path = paste0(init.path, "/ConradLab/HISTA/ShinyServerLSV3_Feb112021.rds" )
-}  else {
-  if(LocalRun) init.path = "/Volumes/Maggie/Work/OHSU/Conrad/R/TestisII/HISTA_orig/data" else init.path = getwd()
-  
-  load.data.path = paste0(init.path, "/ShinyServerLSV3_Feb112021.rds" )
-  
-}
-
-list2env(readRDS(load.data.path), envir = globalenv())
-
-print(table(datat$FinalFinalPheno))
-# datat <- as.data.frame(datat)
-# rownames(datat) <- datat$barcode
-# 
-# datat$donor <- factor(datat$donor,levels=c("UtahD1", "UtahD2", "UtahD3", "AdHu173", "AdHu174", "AdHu175", "UtahI1",  "UtahI2",  "UtahK1",  "UtahK2", "Juv1", "Juv2"))
-# 
-# datat$donor2 <- as.character(datat$donor)
-# 
-# datat$donor2[which(datat$donor %in% c("UtahD1", "UtahD2", "UtahD3", "AdHu173", "AdHu174", "AdHu175"))] <-"CNT"
-# datat$donor2[which(datat$donor %in% c("Juv1", "Juv2"))] <-"JUV"
-# datat$donor2[which(datat$donor %in% c("UtahK1",  "UtahK2"))] <-"KS"
-# datat$donor2[which(datat$donor %in% c("UtahI1"))] <-"INF1"
-# datat$donor2[which(datat$donor %in% c("UtahI2"))] <-"INF2"
-# datat$donor2 <- factor(datat$donor2,
-#                               levels=c("CNT", "INF1", "INF2", "KS", "JUV"))
-# 
-# datat$experiment <- datat$donor2
+source("app_Fxs.R",local = TRUE)
 
 
-# 
-# names(orig)
-# names(new)
+# source(paste0(pathi, "inst/app/app_Fxs.R"))
+
+list2env(readRDS( paste0(pathi, "/data/HISTAv1_dataLS_oct2021.rds")), envir = globalenv()) #for deploy on shinyapps
+
 
 
 col_vector <- col_vector[c(1:8, 12, 16:19, 20:26, sample(setdiff(1:length(col_vector), c(1:8, 12, 16:19, 20:26)), length(setdiff(1:length(col_vector), c(1:8, 12, 16:19, 20:26))), replace = F))]
 
 
-SDA_Top100pos <- (as.data.frame(lapply(1:150, function(xN){
-  as.data.frame(print_gene_list(xN, PosOnly = T, NegOnly = F))[1:150,1]
-})))
-colnames(SDA_Top100pos) <- paste0("SDAV", 1:150)
-colnames(SDA_Top100pos) <- paste0(colnames(SDA_Top100pos), "_" , StatFac$Lab)
+# SDA_Top100pos <- (as.data.frame(lapply(1:150, function(xN){
+#   as.data.frame(print_gene_list(xN, PosOnly = T, NegOnly = F))[1:150,1]
+# })))
+# colnames(SDA_Top100pos) <- paste0("SDAV", 1:150)
+# colnames(SDA_Top100pos) <- paste0(colnames(SDA_Top100pos), "_" , StatFac$Lab)
+# 
+# SDA_Top100neg <- (as.data.frame(lapply(1:150, function(xN){
+#   as.data.frame(print_gene_list(xN, PosOnly = F, NegOnly = T))[1:150,1]
+# })))
+# colnames(SDA_Top100neg) <- paste0("SDAV", 1:150)
+# colnames(SDA_Top100neg) <- paste0(colnames(SDA_Top100neg), "_" , StatFac$Lab)
 
-SDA_Top100neg <- (as.data.frame(lapply(1:150, function(xN){
-  as.data.frame(print_gene_list(xN, PosOnly = F, NegOnly = T))[1:150,1]
-})))
-colnames(SDA_Top100neg) <- paste0("SDAV", 1:150)
-colnames(SDA_Top100neg) <- paste0(colnames(SDA_Top100neg), "_" , StatFac$Lab)
 
-
-
+## ui ------
 
 ui <- dashboardPage(
-  dashboardHeader(title = "HISTA"
+  dashboardHeader(title = "HISTA v2.8"
   ),
   
-  
+  ## dashboard items ------
   
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Germ + Soma", tabName = "combodash", icon = icon("plus"),
+      menuItem("Home Page", tabName = "homepage", icon = icon("home"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("plus"),
+      menuItem("Main tab", tabName = "combodash", icon = icon("star"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Gene expr stat. sig", tabName = "geneexprstatsig", icon = icon("plus"),
+      menuItem("Index of Components", tabName = "sdaindex", icon = icon("tree"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Cell type stat. sig", tabName = "celltypestatsig", icon = icon("plus"),
+      menuItem("Gene Expr per pathology (boxplot)", tabName = "geneexprstatsig", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      # menuItem("Germ Only", tabName = "germdash", icon = icon("affiliatetheme"),
-      #          badgeLabel = "soon", badgeColor = "red"),
-      # menuItem("Soma Only", tabName = "somadash", icon = icon("allergies"),
-      #          badgeLabel = "soon", badgeColor = "red"),
-      menuItem("tSNE-SDA score per Celltype", tabName = "tsnepercelltype", icon = icon("plus"),
+      menuItem("Gene Expr per cell type (boxplot)", tabName = "celltypestatsig", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("tSNE-Meta per Celltype", tabName = "tsnepercelltype_meta", icon = icon("plus"),
+      menuItem("Gene Expr per cell type (tSNE)", tabName = "celltypeGeneExpr2D", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("plus"),
+      menuItem("Fingerprinting (heatmap)", tabName = "chisqrSDAenrichHeatmaps", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Pseudotime (Germ-Only)", tabName = "pseudotimeSDA", icon = icon("random"),
+      menuItem("Cell score per celltype (tSNE)", tabName = "tsnepercelltype", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Metadata per celltype (tSNE)", tabName = "tsnepercelltype_meta", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      #menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("plus"),
+               #badgeLabel = "final", badgeColor = "green"),
+      menuItem("Pseudotime (germ only)", tabName = "pseudotimeSDA", icon = icon("random"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Pseudotime Component Index", tabName = "pseudotimeSDAIndex", icon = icon("tree"),
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("asterisk"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("minus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("LC only W. Zhao21", tabName = "LConly", icon = icon("minus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("User Manual", tabName = "usermanual", icon = icon("book"),
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Conrad Lab", icon = icon("file-code-o"), 
                href = "https://conradlab.org"),
@@ -151,8 +102,64 @@ ui <- dashboardPage(
     )
   ),
   
+  # dashboard body ------
+  
   dashboardBody(
     tabItems(
+      
+      ## template tabs -----
+      
+      # tabItem(tabName = "germdash",
+      #         h2("Germ only"),
+      #         fluidRow(
+      #           
+      #         )
+      # ),
+
+      
+      
+      ## homepage -----
+      tabItem(tabName = "homepage",
+              h2("Welcome to HISTA's Homepage"),
+              fluidRow(
+                
+                imageOutput("homepage", width = 900)
+                
+                
+              )
+      ),
+      
+      
+ 
+     
+     
+     
+      ## sdaindex -----
+
+     tabItem(tabName = "sdaindex",
+             h2("Index of SDA components and annotation"),
+             fluidRow(
+              
+               
+               DT::dataTableOutput("SDAannotations")
+               
+             )
+     ),
+
+     
+     ## pseudotimeSDAIndex -----
+     
+     tabItem(tabName = "pseudotimeSDAIndex",
+             h2("Index of SDA components and their pseudo-order"),
+             fluidRow(
+               DT::dataTableOutput("SDApseudotime")
+
+             )
+     ),
+     
+      
+     ## combo main dashboard ------
+      
       # First
       tabItem(tabName = "combodash",
               fluidRow(
@@ -162,8 +169,8 @@ ui <- dashboardPage(
                   #"Box content here", br(), "More box content",
                   #sliderInput("ComponentN", "Slider input:", 1, 150, 1),
                   
-                  textInput("ComponentNtext", "Numerical input:", "1"),
-                  textInput("Genetext", "Text input:", "PRM1"),
+                  textInput("ComponentNtext", "SDA component search (numerical):", "1"),
+                  textInput("Genetext", "Gene search (text input):", "PRM1"),
                   radioButtons("data", "Data origin:",
                                c("tSNE - Batch-removed SDA-CellScores" = "tsneBrSDACS",
                                  "tSNE - DropSim Norm. DGE" = "tsneDSNDGE",
@@ -180,11 +187,12 @@ ui <- dashboardPage(
                                  "Experiments" = "experiment"
                                )),
                   textInput("NoOfGenes", "No. of Genes to output:", "20"),
-                  actionButton("C2Cpos", "Copy2ClipPosGenes"),
-                  actionButton("C2Cneg", "Copy2ClipNegGenes"),
-                  downloadButton("TXTall", "Copy2TxtAll"),
+                  actionButton("C2Cpos", "Copy2ClipPosGenes (local only)"),
+                  actionButton("C2Cneg", "Copy2ClipNegGenes (local only)"),
+                  downloadButton("TXTall", "Copy2TxtAll (any browser"),
                   actionButton("PrevSDA", "Prev SDA"),
                   actionButton("NextSDA", "Next SDA"),
+                  #actionButton("ScreenShot", "Take a screenshot"),
                   width = 3
                 ),
                 
@@ -195,7 +203,13 @@ ui <- dashboardPage(
                 
                 
               ), 
-              
+              box(
+                title = "Gene expr", status = "primary", solidHeader = TRUE,
+                collapsible = TRUE,
+                downloadButton("tSNEwGeneExpr_download"),
+                plotOutput("tSNE_geneExpr"), #plotlyOutput
+                width = 5
+              ),
               box(
                 #actionButton("button", "Next"),
                 title = "Cell score", status = "primary", solidHeader = TRUE,
@@ -204,13 +218,7 @@ ui <- dashboardPage(
                 plotOutput("tSNEwSDAScoreProj"), #plotlyOutput
                 width = 5
               ),
-              box(
-                title = "Gene expr", status = "primary", solidHeader = TRUE,
-                collapsible = TRUE,
-                downloadButton("tSNEwGeneExpr_download"),
-                plotOutput("tSNE_geneExpr"), #plotlyOutput
-                width = 5
-              ),
+              
               box(
                 title = "Pheno - tSNE", status = "primary", solidHeader = TRUE,
                 collapsible = TRUE,
@@ -235,20 +243,20 @@ ui <- dashboardPage(
                 width = 10
               ),
               
-              box(
-                title = "ChiSqrRes Scores Pos cellscores", status = "primary", solidHeader = TRUE,
-                collapsible = TRUE,
-                downloadButton("SDAScoresChiPos_download"),
-                plotOutput("SDAScoresChiPos", height = 400), 
-                width = 10, background = "black"
-              ),
-              box(
-                title = "ChiSqrRes Scores Neg cellscores", status = "primary", solidHeader = TRUE,
-                collapsible = TRUE,
-                downloadButton("SDAScoresChiNeg_download"),
-                plotOutput("SDAScoresChiNeg", height = 400), 
-                width = 10, background = "black"
-              ),
+              # box(
+              #   title = "ChiSqrRes Scores Pos cellscores", status = "primary", solidHeader = TRUE,
+              #   collapsible = TRUE,
+              #   downloadButton("SDAScoresChiPos_download"),
+              #   plotOutput("SDAScoresChiPos", height = 400), 
+              #   width = 10, background = "black"
+              # ),
+              # box(
+              #   title = "ChiSqrRes Scores Neg cellscores", status = "primary", solidHeader = TRUE,
+              #   collapsible = TRUE,
+              #   downloadButton("SDAScoresChiNeg_download"),
+              #   plotOutput("SDAScoresChiNeg", height = 400), 
+              #   width = 10, background = "black"
+              # ),
               
               box(
                 title = "Pos. Loadings GO", status = "primary", solidHeader = TRUE,
@@ -284,9 +292,11 @@ ui <- dashboardPage(
               
       ),
       
-     #
+      
+     ##Soma only w LN19 -----
+     
       tabItem(tabName = "somaWLN",
-              h2("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019)*"),
+              h2("Reprocessing of: \nMahyari-Conrad et al. (2021) + \n Laurentino-Neuhaus (2019)*"),
               fluidRow(
                 box(
                   title = "Phenotype", status = "primary", 
@@ -328,8 +338,82 @@ ui <- dashboardPage(
               )
         
       ),
+     
       
-      # Gene expression
+     ##LC only w Zhao20 LN19 -----
+     
+     tabItem(tabName = "LConly",
+             h2("Reprocessing of Leydig Cells (LC): \nMahyari-Conrad et al. (2021) + \n Laurentino-Neuhaus (2019) + \n Zhao-Li (2020)**"),
+             fluidRow(
+               
+               box(
+                 title = "Mahyari et al. only data", status = "primary", 
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 # downloadButton("tsnesomaonlywln_donor_download"),
+                 plotOutput("DimRedux_LConly_donors_Rx"),
+                 width = 5,
+                 #footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/ \n** Zhao et al. 2020 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7655944/"
+               ),
+               
+               box(
+                 title = "Mahyari et al. only data", status = "primary", 
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 # downloadButton("tsnesomaonlywln_donor_download"),
+                 plotOutput("DimRedux_LConly_phenotype_Rx"),
+                 width = 5,
+                 #footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/ \n** Zhao et al. 2020 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7655944/"
+               ),
+               
+               box(
+                 title = "LC from Mahyari21 + LN19 + Zhao20", status = "primary", 
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 # downloadButton("tsnesomaonlywln_donor_download"),
+                 plotOutput("DimRedux_LConlyZhao_donors_Rx"),
+                 width = 5,
+                 footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/ \n** Zhao et al. 2020 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7655944/"
+               ),
+               
+               box(
+                 title = "LC from Mahyari21 + LN19 + Zhao20", status = "primary", 
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 # downloadButton("tsnesomaonlywln_donor_download"),
+                 plotOutput("DimRedux_LConlyZhao_phenotype_Rx"),
+                 width = 5,
+                 #footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/ \n** Zhao et al. 2020 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7655944/"
+               ),
+               
+               box(
+                 title = "LC from Mahyari21 + LN19 + Zhao20", status = "primary", 
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 # downloadButton("tsnesomaonlywln_donor_download"),
+                 plotOutput("DimRedux_LConlyZhao_phenotypeProp_Rx"),
+                 width = 5,
+                 #footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/ \n** Zhao et al. 2020 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7655944/"
+               ),
+               
+               box(
+                 title = "LC from Mahyari21 + LN19 + Zhao20", status = "primary", 
+                 solidHeader = TRUE,
+                 collapsible = TRUE,
+                 # downloadButton("tsnesomaonlywln_donor_download"),
+                 plotOutput("DimRedux_LConlyZhao_KeyGenesViolin_Rx"),
+                 width = 10,
+                 #footer = "* Laurentino et al. 2019 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6714305/ \n** Zhao et al. 2020 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7655944/"
+               ),
+               
+               
+             )
+             
+     ),
+      
+     
+     ##Gene expression -----
+
       tabItem(tabName = "geneexprstatsig",
               h2("Gene Expression Stat. Sig."),
               fluidRow(
@@ -378,9 +462,77 @@ ui <- dashboardPage(
                 
               )
       ),
+     
+     ##tSNE per cell type gene expr-----
+     
+     
+     tabItem(tabName = "celltypeGeneExpr2D",
+             h2("tSNE with gene expr by cell type"),
+             fluidRow(
+               box(
+                 title = "Inputs 2", status = "warning", solidHeader = TRUE,
+                 #"Box content here", br(), "More box content",
+                 #sliderInput("ComponentN", "Slider input:", 1, 150, 1),
+                 width = 5,
+                 textInput("Genetext_celltype_gex", "Gene search (text input):", "PRM1"),
+                 radioButtons("tsnepercelltype_ctselect_gex", "Celltype Selection:",
+                              c("Leydig" = "leydig",
+                                "Sertoli" = "sertoli",
+                                "Myoid" = "myoid",
+                                "Neuro" = "neuro",
+                                "Germ-All" = "germ",
+                                "Germ-UndiffSg" = "germ_UnDiffSgSct",
+                                "Germ-DiffSg" = "germ_DiffSgSct",
+                                "Germ-PrePachSct" = "germ_PrePachSct",
+                                "Germ-PachSct" = "germ_PachSct",
+                                "Germ_Std" = "germ_Std",
+                                "Endothelial" = "endothelial",
+                                "Myeloid" = "myeloid",
+                                "Adaptive" = "adaptive",
+                                "All" = "all"
+                              ), selected = "all")
+               ),
+               box(
+                 title = "tSNE with gene expr Projected per CellType", status = "primary", solidHeader = TRUE,
+                 collapsible = TRUE,
+                 downloadButton("tsnepercelltype_gex_download"),
+                 plotOutput("tSNEperCellType_GEX"),
+                 width = 10
+               )
+               
+               
+               
+             )
+     ),
       
+     ##ChisqrHeatmaps -----
+     
+     tabItem(tabName = "chisqrSDAenrichHeatmaps",
+             h2("SDA component pathology fingerprinting"),
+             fluidRow(
+               
+               
+               box(
+                 title = "ChiSqrRes Scores Pos cellscores", status = "primary", solidHeader = TRUE,
+                 collapsible = TRUE,
+                 downloadButton("SDAScoresChiPos_download"),
+                 plotOutput("SDAScoresChiPos", height = 400),
+                 width = 10, background = "black"
+               ),
+               box(
+                 title = "ChiSqrRes Scores Neg cellscores", status = "primary", solidHeader = TRUE,
+                 collapsible = TRUE,
+                 downloadButton("SDAScoresChiNeg_download"),
+                 plotOutput("SDAScoresChiNeg", height = 400),
+                 width = 10, background = "black"
+               ),
+               
+               
+             )
+     ),
       
-      
+     ##tSNE per cell type cell score -----
+     
      
       tabItem(tabName = "tsnepercelltype",
               h2("tSNE with SDA score by cell type"),
@@ -390,7 +542,7 @@ ui <- dashboardPage(
                   #"Box content here", br(), "More box content",
                   #sliderInput("ComponentN", "Slider input:", 1, 150, 1),
                   width = 5,
-                  textInput("ComponentNtext_tsnepercelltype", "Numerical input:", "1"),
+                  textInput("ComponentNtext_tsnepercelltype", "SDA component search (numerical):", "1"),
                   radioButtons("tsnepercelltype_ctselect", "Celltype Selection:",
                                c("Leydig" = "leydig",
                                  "Sertoli" = "sertoli",
@@ -422,7 +574,8 @@ ui <- dashboardPage(
       ),
       
       
-      
+     ##tSNE per meta -----
+     
       
       tabItem(tabName = "tsnepercelltype_meta",
               h2("tSNE with Metada by cell type"),
@@ -471,7 +624,8 @@ ui <- dashboardPage(
       
       
       
-      # Cell type
+     ##Cell type stat sig -----
+     
       tabItem(tabName = "celltypestatsig",
               h2("Cell type Expression Stat. Sig."),
               fluidRow(
@@ -482,9 +636,17 @@ ui <- dashboardPage(
                   #sliderInput("ComponentN", "Slider input:", 1, 150, 1),
                   width = 5,
                   textInput("Genetext3", "Text input:", "STAR"),
-                  radioButtons("metaselect3", "Metadata Selection:",
-                               c("Pheno" = "FinalFinalPheno_old"
-                               ))
+                  radioButtons("metaselect3", "Phenotype scope:",
+                               c("Pheno" = "scope1"
+                               )),
+                  radioButtons("condSelect1", "Conditions:",
+                               c("All donors" = "all",
+                                 "Adult controls" = "cnt",
+                                 "Inf 1" = "inf1",
+                                 "Inf 2" = "inf2",
+                                 "KS" = "ks", 
+                                 "JUV"= "juv"
+                               ), selected = "cnt")
                 ),
                 box(
                   title = "Gene Expression Stat. Sig. Meta", status = "primary", solidHeader = TRUE,
@@ -500,17 +662,10 @@ ui <- dashboardPage(
       
       
       
-      # # Germ
-      # tabItem(tabName = "germdash",
-      #         h2("Germ only")
-      # ),
-      # 
-      # # Soma
-      # tabItem(tabName = "somadash",
-      #         h2("Soma only")
-      # ),
       
-      # CellScoreOrdering
+      
+     ##Cell score ordering -----
+     
       tabItem(tabName = "CellScoreOrderingSDA",
               h2("Cell Score Ordering"),
               fluidRow(
@@ -519,7 +674,7 @@ ui <- dashboardPage(
                   #"Box content here", br(), "More box content",
                   #sliderInput("ComponentN", "Slider input:", 1, 150, 1),
                   
-                  textInput("ComponentNtext2", "Numerical input:", "1"),
+                  textInput("ComponentNtext2", "SDA component search (numerical):", "1"),
                   # radioButtons("metaselect3", "Metadata Selection:",
                   #              c("Experiments" = "experiment"
                   #              )),
@@ -549,12 +704,13 @@ ui <- dashboardPage(
               )
       ),
       
-      # pseudotime
+     ##Pseudotime -----
+     
       tabItem(tabName = "pseudotimeSDA",
               h2("Pseudotime of Germ Cells Only"),
               fluidRow(
                 box(title = "Inputs", status = "warning", solidHeader = TRUE,
-                    textInput("ComponentNtext3", "Numerical input:", "1"),
+                    textInput("ComponentNtext3", "SDA component search (numerical):", "1"),
                     radioButtons("metaselect4", "Metadata Selection:",
                                  c("Pseudotime" = "pseudotime",
                                    "Cell types" = "celltype",
@@ -578,7 +734,8 @@ ui <- dashboardPage(
               )
       ),
       
-      # Enrichment
+     ## Enrichment -----
+     
       tabItem(tabName = "Enrichment",
               fluidRow(
                 box(
@@ -630,13 +787,7 @@ server <- function(input, output, session) {
   ColFac_DONR.ID  <- as.data.frame(datat)[rownames(results$scores), ]$donor
 
   datat <- data.table(datat)
-  
-  # dl.y <- callModule(dlmodule, "input1")
-  
-  # SDALoadings <- results$loadings[[1]]
-  
-  # print(input$data)
-  
+   
   output$messageMenu <- renderMenu({
     # Code to generate each of the messageItems here, in a list. This assumes
     # that messageData is a data frame with two columns, 'from' and 'message'.
@@ -650,16 +801,16 @@ server <- function(input, output, session) {
   })
   
   
-################################ Reactive sections
+################################ Reactive sections-----
   source("app_Reactive.R",local = TRUE)
   
-################################ observeEvent sections
+################################ observeEvent sections-----
   source("app_ObserveEvents.R",local = TRUE)
   
-################################ renderPlot sections
+################################ renderPlot sections-----
   source("app_RenderPlots.R",local = TRUE)
   
-################################ renderValueBox sections
+################################ renderValueBox sections-----
   
   output$CellType1 <- renderValueBox({
     valueBox(
@@ -687,9 +838,47 @@ server <- function(input, output, session) {
     )
   })
   
-################################ downloadHandler sections
+################################ downloadHandler sections ----
   source("app_DownloadButtons.R",local = TRUE)
   
+  
+  ### table SDA annotations -----
+  output$SDAannotations <- DT::renderDataTable(SDAannotation,
+                                     options = list(paging = TRUE,    ## paginate the output
+                                                    pageLength = 20,  ## number of rows to output for each page
+                                                    scrollX = TRUE,   ## enable scrolling on X axis
+                                                    scrollY = TRUE,   ## enable scrolling on Y axis
+                                                    autoWidth = TRUE, ## use smart column width handling
+                                                    server = FALSE,   ## use client-side processing
+                                                    dom = 'Bfrtip',
+                                                    buttons = c('csv', 'excel')#,
+                                                    # columnDefs = list(list(targets = '_all', className = 'dt-center'),
+                                                    #                   list(targets = c(0, 8, 9), visible = FALSE))
+                                     ),
+                                     extensions = 'Buttons',
+                                     selection = 'single', ## enable selection of a single row
+                                     filter = 'bottom',              ## include column filters at the bottom
+                                     rownames = FALSE                ## don't show row numbers/names
+  )
+  
+  ### table SDA pseudotime  -----
+  output$SDApseudotime<- DT::renderDataTable(SDApseudotime,
+                                             options = list(paging = TRUE,    ## paginate the output
+                                                            pageLength = 20,  ## number of rows to output for each page
+                                                            scrollX = TRUE,   ## enable scrolling on X axis
+                                                            scrollY = TRUE,   ## enable scrolling on Y axis
+                                                            autoWidth = TRUE, ## use smart column width handling
+                                                            server = FALSE,   ## use client-side processing
+                                                            dom = 'Bfrtip',
+                                                            buttons = c('csv', 'excel')#,
+                                                            # columnDefs = list(list(targets = '_all', className = 'dt-center'),
+                                                            #                   list(targets = c(0, 8, 9), visible = FALSE))
+                                             ),
+                                             extensions = 'Buttons',
+                                             selection = 'single', ## enable selection of a single row
+                                             filter = 'bottom',              ## include column filters at the bottom
+                                             rownames = FALSE                ## don't show row numbers/names
+  )
   
 }
 
