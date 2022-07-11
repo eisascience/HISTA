@@ -1,17 +1,3 @@
-
-
-
-# image2 sends pre-rendered images
-output$homepage <- renderImage({
-  return(list(
-    src = "images/HISTA_Figs_v2.png",
-    filetype = "image/png",
-    alt = "Tutorial"
-  ))
-  
-}, deleteFile = FALSE)
-
-
 output$CellScoreOrderSDA <- renderPlot({
   
   Scores <- ComboTopSDAgenes_Rx()$Scores
@@ -60,47 +46,42 @@ output$CellScoreOrderSDA <- renderPlot({
 
 output$tSNEPseudoSDA <- renderPlot({
   
-  tempDF <- PseudotimeGeneral_RX()
   
-  # 
-  # tempDF <- tSNE_GermCells_DF_Rx()
-  # 
-  # if(input$metaselect4 == "pseudotime") {
-  #   MetaFac <- datat$PseudoTime
-  # } else{
-  #   
-  #   if(input$metaselect4 == "celltype") {
-  #     MetaFac <- (datat$FinalFinalPheno_old)
-  #   } else {
-  #     if(input$metaselect4 == "donrep"){
-  #       MetaFac <- (datat$DonRep)
-  #     } else {
-  #       if(input$metaselect4 == "donor"){
-  #         MetaFac <- (datat$donor)
-  #       } else {
-  #         if(input$metaselect4 == "COND.ID"){
-  #           MetaFac <- (datat$COND.ID)
-  #         } else {
-  #           if(input$metaselect4 == "experiment"){
-  #             MetaFac <- (datat$experiment)
-  #           } else {
-  #             
-  #           }
-  #         }
-  #       }
-  #     }
-  #   }
-  #   
-  # }
-  # 
-  # 
-  # tempDF$MetFacZ <- MetaFac
-  # 
-  # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
-  # 
-  # #reduce memory
+  tempDF <- tSNE_GermCells_DF_Rx()
   
-  # tempDF = tempDF[sample(1:nrow(tempDF), 500, replace = F), ]
+  if(input$metaselect4 == "pseudotime") {
+    MetaFac <- datat$PseudoTime
+  } else{
+    
+    if(input$metaselect4 == "celltype") {
+      MetaFac <- (datat$FinalFinalPheno_old)
+    } else {
+      if(input$metaselect4 == "donrep"){
+        MetaFac <- (datat$DonRep)
+      } else {
+        if(input$metaselect4 == "donor"){
+          MetaFac <- (datat$donor)
+        } else {
+          if(input$metaselect4 == "COND.ID"){
+            MetaFac <- (datat$COND.ID)
+          } else {
+            if(input$metaselect4 == "experiment"){
+              MetaFac <- (datat$experiment)
+            } else {
+              
+            }
+          }
+        }
+      }
+    }
+    
+  }
+  
+  
+  tempDF$MetFacZ <- MetaFac
+  
+  tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+  
   
   if(input$metaselect4 == "pseudotime") {
     
@@ -136,47 +117,7 @@ output$tSNEPseudoSDA <- renderPlot({
 
 output$PseudotimeSDA <- renderPlot({
   
-  tempDF <- PseudotimeGeneral_RX()
-  
-  merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
-  
-  print("melted table")
-  
-  # print(head(rownames(tempDF)))
-  # print(head(rownames(Scores)))
-  
-  # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
-  # Scores <-Scores[rownames(tempDF),]
-  # print(head(merge_sda_melt))
-  # plot(merge_sda_melt$PT, 
-  #      merge_sda_melt$value)
-  
-  
-  
-  ggpp = ggplot(merge_sda_melt, aes(PT, value, colour=(MetFacZ))) +
-    geom_point(alpha=1, size=.2) +
-    geom_smooth(method = lm, formula = y ~ splines::bs(x, 50), se = FALSE) +
-    # stat_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
-    ylab("Cell Component Score") +
-    xlab("Pseudotime") +
-    # ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentNtext3)))+
-    theme_bw() +
-    theme(legend.position = "none") +
-    ylim(-8,8)
-  
-  print("ggpp made")
-
-  if(input$metaselect4 == "pseudotime") {
-    ggpp =  ggpp +  scale_color_viridis()
-  } else {
-    ggpp =  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ,
-                                                                         ncol=3, 
-                                                                         scales = "fixed")
-  }
-  
-  print("color type corrected")
-  
-  ggpp
+  PseudotimeSDA_Rx()
   
 })
 
@@ -270,35 +211,6 @@ output$tSNEperCellType <- renderPlot({
   tSNEwSDAScoreProjPerCT_Rx()
 })
 
-output$tSNEperCellType_GEX <- renderPlot({
-  tSNEwSDAScoreProjPerCT_GEX_Rx()
-})
-
-output$tSNEwMetaLegend <- renderPlot({
-  
-  legend <- cowplot::get_legend(tSNEwMeta_Rx())
-  
-  #grid.newpage()
-  grid.draw(legend)
-})
-
-#renderPlotly
-
-output$tSNEwMeta <- renderPlot({
-  tSNEwMeta_Rx()+
-    theme(legend.position = "none", aspect.ratio=1,
-          legend.title = element_blank())
-})
-
-output$tSNE_geneExpr <- renderPlot({
-  tSNE_geneExpr_Rx()
-  
-})
-
-output$tSNEperCellType_meta <- renderPlot({
-  tSNEwMetaPerCT_Rx()
-})
-
 # output$tSNE_somaWLN <- renderPlot({
 #   cowplot::plot_grid(tSNE_somaWLN_Pheno3_Rx(), 
 #                      tSNE_somaWLN_COND.ID_Rx(), 
@@ -307,8 +219,6 @@ output$tSNEperCellType_meta <- renderPlot({
 #                      ncol=2)
 # })
 
-
-## Soma only with LN19 ------
 
 output$tSNE_somaWLN_Pheno3_Rx <- renderPlot({
   tSNE_somaWLN_Pheno3_Rx()
@@ -324,30 +234,31 @@ output$tSNE_somaWLN_nCount_RNA_Rx <- renderPlot({
 })
 
 
-## LC with Zhao20 and LN19 ------
 
-output$DimRedux_LConly_donors_Rx <- renderPlot({
-  DimRedux_LConly_donors_Rx()
-})
-
-output$DimRedux_LConly_phenotype_Rx <- renderPlot({
-  DimRedux_LConly_phenotype_Rx()
+output$tSNEperCellType_meta <- renderPlot({
+  tSNEwMetaPerCT_Rx()
 })
 
-output$DimRedux_LConlyZhao_phenotype_Rx <- renderPlot({
-  DimRedux_LConlyZhao_phenotype_Rx()
-})
-output$DimRedux_LConlyZhao_donors_Rx <- renderPlot({
-  DimRedux_LConlyZhao_donors_Rx()
-})
-output$DimRedux_LConlyZhao_phenotypeProp_Rx <- renderPlot({
-  DimRedux_LConlyZhao_phenotypeProp_Rx()
-})
-output$DimRedux_LConlyZhao_KeyGenesViolin_Rx <- renderPlot({
-  DimRedux_LConlyZhao_KeyGenesViolin_Rx()
+
+output$tSNEwMetaLegend <- renderPlot({
+  
+  legend <- cowplot::get_legend(tSNEwMeta_Rx())
+  
+  #grid.newpage()
+  grid.draw(legend)
 })
 
-## GO enrichment plots ------
+#renderPlotly
+output$tSNEwMeta <- renderPlot({
+  tSNEwMeta_Rx()+
+    theme(legend.position = "none", aspect.ratio=1,
+          legend.title = element_blank())
+})
+
+output$tSNE_geneExpr <- renderPlot({
+  tSNE_geneExpr_Rx()
+
+})
 
 output$GOpos <- renderPlot({
   
@@ -361,25 +272,16 @@ output$GOneg <- renderPlot({
   
 })
 
-
-## chrom loading location -----
-
 output$ChrLoc <- renderPlot({
   
   ChrLocLoadings_Rx()
   
 })
 
-
-## SDA scpres across ------
-
 output$SDAScoresAcross <- renderPlot({
   SDAScoresAcross_Rx()
   
 })
-
-
-## Enrichment ------
 
 output$plot5 <- renderPlot({
   # N = total number of genes (usually not entire genome, since many have unk func)

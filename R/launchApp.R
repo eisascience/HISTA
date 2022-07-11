@@ -1,6 +1,6 @@
-#' Launch MISTA
-#' @title Launch MISTA
-#' @description Launch MISTA
+#' Launch HISTA
+#' @title Launch HISTA
+#' @description Launch HISTA
 #' @keywords shiny SDA Testis Single-Cell RNASeq
 #' @export
 #' @return Shiny application.
@@ -29,18 +29,10 @@
 #' @import org.Mmu.eg.db
 #' @import biomaRt
 #' @import SDAtools
-#' @import profvis
 
 #' 
-launchMISTA <- function(...) {
+launchShinySDA <- function(...) {
   ## runApp() does not work w shiny-server
-  shinyAppDir(appDir = system.file("app", package = "MISTA"))
+  shinyAppDir(appDir = system.file("app", package = "ShinySDA"))
   
-}
-launchMISTA.profile <- function(interval = 0.5, ...) {
-  ## runApp() does not work w shiny-server
-  require(profvis)
-  profvis({
-    shinyAppDir(appDir = system.file("app", package = "MISTA"), options = list(display.mode = "normal"))
-  }, interval = interval)
 }

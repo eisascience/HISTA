@@ -1,20 +1,4 @@
 
-print("source of FXs")
-
-get_LC_props = function(seurat_obj, column_name, metadata_column){
-  types <- table(seurat_obj$type[seurat_obj@meta.data[metadata_column] == column_name])
-  
-  sum <- types['ILC'] + types['PLC'] + types['MLC']
-  p_ilc <- types['ILC']/sum
-  p_mlc <- types['MLC']/sum
-  p_plc <- types['PLC']/sum
-  
-  return(c(p_plc, p_ilc, p_mlc))
-}
-
-error.bar = function(x, upper, lower, length=0.1,...){
-  arrows(x,upper, x, lower, angle=90, code=3, length=length, lwd=3)
-}
 
 genome_loadings <- function (component = NULL, max.items = 20, label.size = 3, label.repel = 1, 
           label_both = TRUE, label_X = FALSE, min_loading = 0.01, gene_locations = NULL, 
