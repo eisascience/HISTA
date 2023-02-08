@@ -1,5 +1,10 @@
 ################################ observeEvent sections
 
+observeEvent(input$ScreenShot, {
+  screenshot()
+})
+
+
 observeEvent(input$NextSDA, {
   Val <- as.character(min(c(150, as.numeric(input$ComponentNtext)+1)))
   

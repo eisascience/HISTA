@@ -57,7 +57,7 @@ output$tSNEwGeneExpr_download <- downloadHandler(
   },
   content = function(file) {
     pdf(file, width = 9.5, height =9, compress = T, pointsize = 15)
-    plot(tSNE_geneExpr_Rx())
+    plot(PseudotimeSDA())
     dev.off()
   })
 
@@ -82,6 +82,17 @@ output$tsnepercelltype_download <- downloadHandler(
   content = function(file) {
     pdf(file, width = 9, height =9, compress = T, pointsize = 15)
     plot(tSNEwSDAScoreProjPerCT_Rx())
+    dev.off()
+  })
+
+output$tsnepercelltype_gex_download<- downloadHandler(
+  filename = function(){
+    paste("tsnepercelltype_GEX_download_9x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 9, height =9, compress = T, pointsize = 15)
+    plot(tSNEwSDAScoreProjPerCT_GEX_Rx())
     dev.off()
   })
 
@@ -213,5 +224,62 @@ output$tsnesomaonlywln_ncount_download <- downloadHandler(
   content = function(file) {
     pdf(file, width = 9, height =9, compress = T, pointsize = 15)
     plot(tSNE_somaWLN_nCount_RNA_Rx())
+    dev.off()
+  })
+
+
+
+
+
+output$CompCorPlot_download <- downloadHandler(
+  filename = function(){
+    paste("CompCorPlot_download_download_10x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    tempLS = CompCor_Rx()
+    
+  
+    
+    pdf(file, width = 10, height =9, compress = T, pointsize = 15)
+    
+    
+    pheatmap::pheatmap(asinh(cor(t(tempLS$lnRNASDAusageMat))), 
+                       # cutree_rows = 5, 
+                       # clustering_distance_rows = "euclidean",
+                       clustering_method = "ward.D2",
+                       annotation_row = tempLS$annotDF,
+                       annotation_colors = tempLS$my_colour,
+                       # filename = "./inst/app/figs/lncRNA_CorOfCompsHM_HISTA_SDA_clean.pdf",
+                       width = 12, height = 10, fontsize = 10,
+                       main = "Pearson correlation \n Euc dist Ward.D2 h.clustering")
+    
+    dev.off()
+  })
+
+
+
+output$CompCorCustPlot_download <- downloadHandler(
+  filename = function(){
+    paste("CompCorCustPlot_download_download_10x9", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    tempLS = CompCorCust_Rx()
+
+    
+    pdf(file, width = 10, height =9, compress = T, pointsize = 15)
+    
+    
+    pheatmap::pheatmap(asinh(cor(t(tempLS$lnRNASDAusageMat))), 
+                       # cutree_rows = 5, 
+                       # clustering_distance_rows = "euclidean",
+                       clustering_method = "ward.D2",
+                       annotation_row = tempLS$annotDF,
+                       annotation_colors = tempLS$my_colour,
+                       # filename = "./inst/app/figs/lncRNA_CorOfCompsHM_HISTA_SDA_clean.pdf",
+                       width = 12, height = 10, fontsize = 10,
+                       main = "Pearson correlation \n Euc dist Ward.D2 h.clustering")
+    
     dev.off()
   })

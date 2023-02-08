@@ -29,10 +29,18 @@
 #' @import org.Mmu.eg.db
 #' @import biomaRt
 #' @import SDAtools
+#' @import profvis
 
 #' 
-launchShinySDA <- function(...) {
+launchHISTA <- function(...) {
   ## runApp() does not work w shiny-server
-  shinyAppDir(appDir = system.file("app", package = "ShinySDA"))
+  shinyAppDir(appDir = system.file("app", package = "HISTA"))
   
+}
+launchHISTA.profile <- function(interval = 0.5, ...) {
+  ## runApp() does not work w shiny-server
+  require(profvis)
+  profvis({
+    shinyAppDir(appDir = system.file("app", package = "HISTA"), options = list(display.mode = "normal"))
+  }, interval = interval)
 }
