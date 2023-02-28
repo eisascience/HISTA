@@ -26,15 +26,32 @@ library(DT)
 library(knitr)
 
 
+library(HISTA)
+
+
 pathi = getwd()
 
-
-source("app_Fxs.R",local = TRUE)
+# source("app_Fxs.R",local = TRUE)
 
 
 # source(paste0(pathi, "inst/app/app_Fxs.R"))
 
-list2env(readRDS( paste0(pathi, "/data/HISTAv1_dataLS_feb2022.rds")), envir = globalenv()) #for deploy on shinyapps
+# list2env(readRDS( paste0(pathi, "/data/HISTAv1_dataLS_feb2022.rds")), envir = globalenv()) #for deploy on shinyapps
+
+#monkey shiny server do has SCRATCH_DIR defined
+if (Sys.getenv("SCRATCH_DIR") != "") {
+  pathi = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
+  load.data.path = paste0(pathi, "/ConradLab/HISTA/HISTAv1_dataLS_feb2022.rds" )
+}  else {
+  load.data.path = paste0(pathi, "/HISTAv1_dataLS_feb2022.rds" )
+  
+  if(!file.exists(load.data.path)) {
+    load.data.path = paste0(pathi, "/inst/app/data/HISTAv1_dataLS_feb2022.rds" )
+    
+  }
+  
+}
+list2env(readRDS(load.data.path), envir = globalenv())
 
 
 
@@ -80,16 +97,16 @@ ui <- dashboardPage(
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("asterisk"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Top Loaded Componnents", tabName = "TopLoadedComps", icon = icon("asterisk"),
+      menuItem("Top Loaded Components", tabName = "TopLoadedComps", icon = icon("asterisk"),
               badgeLabel = "final", badgeColor = "green"),
       menuItem("lncRNAs", tabName = "lncRNA_expr_toploaded", icon = icon("asterisk"),
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Component Corrrelations", tabName = "CompCor", icon = icon("asterisk"),
                badgeLabel = "final", badgeColor = "green"),
-      # menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("minus"),
-      #          badgeLabel = "final", badgeColor = "green"),
-      # menuItem("LC only W. Zhao21", tabName = "LConly", icon = icon("minus"),
-      #          badgeLabel = "final", badgeColor = "green"),
+      menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("minus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("LC only W. Zhao21", tabName = "LConly", icon = icon("minus"),
+               badgeLabel = "final", badgeColor = "green"),
       menuItem("User Manual", tabName = "usermanual", icon = icon("book"),
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Version History", tabName = "versionhistory", icon = icon("file-code-o"),

@@ -104,8 +104,8 @@ pre code {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -113,16 +113,9 @@ pre code {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -177,7 +170,7 @@ pre code {
 <h2>V2.9.4</h2>
 <div id="top-enriched-componnents-with-specific-gene-sets" class="section level3">
 <h3>Top enriched componnents with specific Gene sets</h3>
-<p>Similar to the lnncRNA specific analysis, however you can input any gene set of interest to identify enrichment of the set in the top 200 genes of each component; see the ‘Top Loaded Componnents’ tab.</p>
+<p>Similar to the lncRNA specific analysis, however you can input any gene set of interest to identify enrichment of the set in the top 200 genes of each component; see the ‘Top Loaded Components’ tab.</p>
 <p>Note: There is already an enrichment analyis tab which uses a statistical method to formally test components enriched with a smaller gene set. However, in this tab, we can input large sets of genes of interest, as an example we have input the genes with -AS (antisense genes) to highlight this feature.</p>
 </div>
 </div>

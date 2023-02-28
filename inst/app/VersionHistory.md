@@ -6,7 +6,7 @@
 
 ### Top enriched componnents with specific Gene sets
 
-Similar to the lnncRNA specific analysis, however you can input any gene set of interest to identify enrichment of the set in the top 200 genes of each component; see the 'Top Loaded Componnents' tab.
+Similar to the lncRNA specific analysis, however you can input any gene set of interest to identify enrichment of the set in the top 200 genes of each component; see the 'Top Loaded Components' tab.
 
 Note: There is already an enrichment analyis tab which uses a statistical method to formally test components enriched with a smaller gene set. However, in this tab, we can input large sets of genes of interest, as an example we have input the genes with -AS (antisense genes) to highlight this feature. 
 
