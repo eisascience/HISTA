@@ -3,6 +3,7 @@
 
 <a href="https://zenodo.org/badge/latestdoi/271643615"><img src="https://zenodo.org/badge/271643615.svg" alt="DOI"></a>
 
+[https://conradlab.shinyapps.io/HISTA/](https://conradlab.shinyapps.io/HISTA/)
 
 Human Infertility Single-cell Testis Atlas
 Developed by Eisa Mahyari Ph.D. @eisamahyari
@@ -12,7 +13,7 @@ Div. Reproductive Genetics
 
 ## Associated Manuscript
 
-Mahyari-Gui-Conrad (2021) - Under submission.
+Eisa Mahyari, Jingtao Guo, Ana C. Lima, Daniel P. Lewinsohn, Alexandra M. Stendahl, Katinka A. Vigh-Conrad, Xichen Nie, Liina Nagirnaja, Nicole B. Rockweiler, Douglas T.Carrell, James M.Hotaling, Kenneth I.Aston, Donald F.Conrad “Comparative single-cell analysis of biopsies clarifies pathogenic mechanisms in Klinefelter syndrome.” The American Journal of Human Genetics 108, no. 10 (2021): 1924-1945
 
 ## Introduction
 
