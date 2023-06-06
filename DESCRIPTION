@@ -26,8 +26,7 @@ Imports:
     ggpubr,
     grid,
     gridExtra,
-    org.Hs.eg.db,
-    org.Mmu.eg.db,
+    AnnotationHub,
     RColorBrewer,
     rclipboard,
     shiny,
@@ -36,10 +35,14 @@ Imports:
     shinyFiles,
     stringr,
     SDAtools,
-    viridis
+    viridis,
+    ShinySDA,
+    scCustFx
 Suggests:
     ggvis,
     devtools
 Remotes:
     eisascience/HISTA,
-    marchinilab/SDAtools
+    marchinilab/SDAtools,
+    eisascience/ShinySDA,
+    eisascience/scCustFx
