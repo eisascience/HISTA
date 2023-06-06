@@ -65,23 +65,23 @@ output$tSNEPseudoSDA <- renderPlot({
   # 
   # tempDF <- tSNE_GermCells_DF_Rx()
   # 
-  # if(input$metaselect4 == "pseudotime") {
+  # if(input$metaselect_pseudo == "pseudotime") {
   #   MetaFac <- datat$PseudoTime
   # } else{
   #   
-  #   if(input$metaselect4 == "celltype") {
+  #   if(input$metaselect_pseudo == "celltype") {
   #     MetaFac <- (datat$FinalFinalPheno_old)
   #   } else {
-  #     if(input$metaselect4 == "donrep"){
+  #     if(input$metaselect_pseudo == "donrep"){
   #       MetaFac <- (datat$DonRep)
   #     } else {
-  #       if(input$metaselect4 == "donor"){
+  #       if(input$metaselect_pseudo == "donor"){
   #         MetaFac <- (datat$donor)
   #       } else {
-  #         if(input$metaselect4 == "COND.ID"){
+  #         if(input$metaselect_pseudo == "COND.ID"){
   #           MetaFac <- (datat$COND.ID)
   #         } else {
-  #           if(input$metaselect4 == "experiment"){
+  #           if(input$metaselect_pseudo == "experiment"){
   #             MetaFac <- (datat$experiment)
   #           } else {
   #             
@@ -102,7 +102,7 @@ output$tSNEPseudoSDA <- renderPlot({
   
   # tempDF = tempDF[sample(1:nrow(tempDF), 500, replace = F), ]
   
-  if(input$metaselect4 == "pseudotime") {
+  if(input$metaselect_pseudo == "pseudotime") {
     
     ggplot(tempDF, aes(tSNE1, tSNE2, color=MetFacZ)) +
       geom_point(size=0.1) + theme_bw() +
@@ -132,6 +132,14 @@ output$tSNEPseudoSDA <- renderPlot({
   
   
   
+})
+
+output$PseudotimeSDAgeneMeta <- renderPlot({
+  PseudotimeSDA_geneMeta_Rx()
+})
+
+output$PseudotimeSDAgene <- renderPlot({
+  PseudotimeSDA_gene_Rx()
 })
 
 output$PseudotimeSDA <- renderPlot({
@@ -166,7 +174,7 @@ output$PseudotimeSDA <- renderPlot({
   # 
   # print("ggpp made")
   # 
-  # if(input$metaselect4 == "pseudotime") {
+  # if(input$metaselect_pseudo == "pseudotime") {
   #   ggpp =  ggpp +  scale_color_viridis()
   # } else {
   #   ggpp =  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ,
@@ -813,3 +821,16 @@ output$CompCorCustPlot <- renderPlot({
   
 })
 
+# CompCor -----
+
+
+
+
+output$GeneCorPlot <- renderPlot({
+  
+  tempCor = GeneCor_Rx()
+  
+  pheatmap::pheatmap(tempCor)
+  
+  
+})

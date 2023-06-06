@@ -62,6 +62,17 @@ output$tSNEwGeneExpr_download <- downloadHandler(
   })
 
 
+output$PseudotimeSDA_gene_download <- downloadHandler(
+  filename = function(){
+    paste("PseudotimeSDA_download_15x5", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 15, height =5, compress = T, pointsize = 15)
+    plot(PseudotimeSDA_gene_Rx())
+    dev.off()
+  })
+
 
 output$PseudotimeSDA_download <- downloadHandler(
   filename = function(){

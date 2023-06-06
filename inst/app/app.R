@@ -31,7 +31,7 @@ library(HISTA)
 
 pathi = getwd()
 
-# source("app_Fxs.R",local = TRUE)
+source("app_Fxs.R",local = TRUE)
 
 
 # source(paste0(pathi, "inst/app/app_Fxs.R"))
@@ -40,13 +40,14 @@ pathi = getwd()
 
 #monkey shiny server do has SCRATCH_DIR defined
 if (Sys.getenv("SCRATCH_DIR") != "") {
+  
   pathi = paste0(Sys.getenv("SCRATCH_DIR"), "/data")
-  load.data.path = paste0(pathi, "/ConradLab/HISTA/HISTAv1_dataLS_feb2022.rds" )
+  load.data.path = paste0(pathi, "/ConradLab/HISTA/HISTAv1_dataLS_June2023.rds" )
 }  else {
-  load.data.path = paste0(pathi, "/HISTAv1_dataLS_feb2022.rds" )
+  load.data.path = paste0(pathi, "/HISTAv1_dataLS_June2023.rds" )
   
   if(!file.exists(load.data.path)) {
-    load.data.path = paste0(pathi, "/inst/app/data/HISTAv1_dataLS_feb2022.rds" )
+    load.data.path = paste0(pathi, "/data/HISTAv1_dataLS_June2023.rds" )
     
   }
   
@@ -54,17 +55,21 @@ if (Sys.getenv("SCRATCH_DIR") != "") {
 list2env(readRDS(load.data.path), envir = globalenv())
 
 
+# palettes <- ggthemes::ggthemes_data[["tableau"]][["color-palettes"]][["regular"]]$`Tableau 20`$value
 
-
-col_vector <- col_vector[c(1:8, 12, 16:19, 20:26, sample(setdiff(1:length(col_vector), c(1:8, 12, 16:19, 20:26)), length(setdiff(1:length(col_vector), c(1:8, 12, 16:19, 20:26))), replace = F))]
-
-
+col_vector = c("#7FC97F", "#38170B", "#BEAED4", "#BF1B0B", "#FFC465", "#386CB0", 
+  "#66ADE5", "#F0027F", "#252A52", "#BF5B17", "#999999", "#666666", 
+  "#E69F00", "#1B9E77", "#7570B3", "#F0E442", "#B07AA1", "#F28E2B", 
+  "#FFBE7D", "#59A14F", "#8CD17D", "#B6992D", "#F1CE63", "#499894", 
+  "#86BCB6", "#E15759", "#FF9D9A", "#79706E", "#BAB0AC", "#D37295", 
+  "#FABFD2", "#E7298A", "#D4A6C8", "#9D7660", "#D7B5A6","#e6194b", 
+  "#666666", "#3cb44b", "#A6CEE3", "#ffe119", "#1F78B4", "#B15928")
 
 
 ## ui ------
 
 ui <- dashboardPage(
-  dashboardHeader(title = "HISTA v2.9.4"
+  dashboardHeader(title = "HISTA v2.9.5"
   ),
   
   ## dashboard items ------
@@ -77,41 +82,45 @@ ui <- dashboardPage(
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Index of Components", tabName = "sdaindex", icon = icon("tree"),
                badgeLabel = "final", badgeColor = "green"),
+      menuItem("Fingerprinting (heatmap)", tabName = "chisqrSDAenrichHeatmaps", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
       menuItem("Gene Expr per pathology (boxplot)", tabName = "geneexprstatsig", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
       menuItem("Gene Expr per cell type (boxplot)", tabName = "celltypestatsig", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Gene Expr per cell type (tSNE)", tabName = "celltypeGeneExpr2D", icon = icon("plus"),
+      menuItem("Gene Expr per cell type (2D)", tabName = "celltypeGeneExpr2D", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Fingerprinting (heatmap)", tabName = "chisqrSDAenrichHeatmaps", icon = icon("plus"),
+      menuItem("Cell score per celltype (2D)", tabName = "tsnepercelltype", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Cell score per celltype (tSNE)", tabName = "tsnepercelltype", icon = icon("plus"),
+      menuItem("Metadata per celltype (2D)", tabName = "tsnepercelltype_meta", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Metadata per celltype (tSNE)", tabName = "tsnepercelltype_meta", icon = icon("plus"),
+      menuItem("Gene Correlations", tabName = "GeneCor", icon = icon("plus"),
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Component Corrrelations", tabName = "CompCor", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
       #menuItem("Score order per. Comp", tabName = "CellScoreOrderingSDA", icon = icon("plus"),
                #badgeLabel = "final", badgeColor = "green"),
-      menuItem("Pseudotime (germ only)", tabName = "pseudotimeSDA", icon = icon("random"),
+      menuItem("Pseudotime Meta (germ only)", tabName = "pseudotimeSDA", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Pseudotime Component Index", tabName = "pseudotimeSDAIndex", icon = icon("tree"),
+      menuItem("Pseudotime Gene (germ only)", tabName = "pseudotimeSDAgene", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("asterisk"),
+      menuItem("Pseudotime Component Index", tabName = "pseudotimeSDAIndex", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Top Loaded Components", tabName = "TopLoadedComps", icon = icon("asterisk"),
+      menuItem("Enrichment Analysis", tabName = "Enrichment", icon = icon("plus"),#asterisk
+               badgeLabel = "final", badgeColor = "green"),
+      menuItem("Top Loaded Components", tabName = "TopLoadedComps", icon = icon("plus"),
               badgeLabel = "final", badgeColor = "green"),
-      menuItem("lncRNAs", tabName = "lncRNA_expr_toploaded", icon = icon("asterisk"),
+      menuItem("lncRNAs", tabName = "lncRNA_expr_toploaded", icon = icon("plus"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Component Corrrelations", tabName = "CompCor", icon = icon("asterisk"),
+      menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("asterisk"), #minus
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Soma only W. LN19", tabName = "somaWLN", icon = icon("minus"),
-               badgeLabel = "final", badgeColor = "green"),
-      menuItem("LC only W. Zhao21", tabName = "LConly", icon = icon("minus"),
+      menuItem("LC only W. Zhao21", tabName = "LConly", icon = icon("asterisk"),
                badgeLabel = "final", badgeColor = "green"),
       menuItem("User Manual", tabName = "usermanual", icon = icon("book"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Version History", tabName = "versionhistory", icon = icon("file-code-o"),
+      menuItem("Version History", tabName = "versionhistory", icon = icon("book"),
                badgeLabel = "final", badgeColor = "green"),
-      menuItem("Conrad Lab", icon = icon("file-code-o"), 
+      menuItem("Conrad Lab", icon = icon("book"), 
                href = "https://conradlab.org"),
       menuItem("@eisamahyari", icon = icon("heart"), 
                href = "https://eisascience.github.io")
@@ -218,6 +227,7 @@ ui <- dashboardPage(
                   textInput("Genetext", "Gene search (text input):", "PRM1"),
                   radioButtons("data", "Data origin:",
                                c("tSNE - Batch-removed SDA-CellScores" = "tsneBrSDACS",
+                                 "UMAP - Batch-removed SDA-CellScores" = "umapBrSDACS",
                                  "tSNE - DropSim Norm. DGE" = "tsneDSNDGE",
                                  #"Batch-removed-Imputed-DGE" = "DGEimp",
                                  #"DromSim-Normalized-DGE" = "DGEnorm",
@@ -498,7 +508,7 @@ ui <- dashboardPage(
      
      
      tabItem(tabName = "celltypeGeneExpr2D",
-             h2("tSNE with gene expr by cell type"),
+             h2("Gene expr by cell type"),
              fluidRow(
                box(
                  title = "Inputs 2", status = "warning", solidHeader = TRUE,
@@ -523,6 +533,19 @@ ui <- dashboardPage(
                                 "All" = "all"
                               ), selected = "all")
                ),
+               box(title = "DimRedux", status = "warning", solidHeader = TRUE,
+                 radioButtons("data2", "Data origin:",
+                              c("tSNE - Batch-removed SDA-CellScores" = "tsneBrSDACS",
+                                "UMAP - Batch-removed SDA-CellScores" = "umapBrSDACS",
+                                "tSNE - DropSim Norm. DGE" = "tsneDSNDGE",
+                                #"Batch-removed-Imputed-DGE" = "DGEimp",
+                                #"DromSim-Normalized-DGE" = "DGEnorm",
+                                #"tSNE - Seurat-Norm. DGE" = "tsneSNDGE",
+                                "tSNE - Batch-removed-Imputed-DGE" = "tsneImpDGE"
+                              )),
+                 width = 5
+               ),
+               
                box(
                  title = "tSNE with gene expr Projected per CellType", status = "primary", solidHeader = TRUE,
                  collapsible = TRUE,
@@ -541,6 +564,24 @@ ui <- dashboardPage(
      tabItem(tabName = "chisqrSDAenrichHeatmaps",
              h2("SDA component pathology fingerprinting"),
              fluidRow(
+               
+               box(title = "ChiSqrRes Scores Pos cellscores", status = "primary", solidHeader = TRUE,
+                   collapsible = TRUE,
+                   radioButtons("clustStat_chisqr", "Hierarchical cluster:",
+                                c("Cluster" = "True",
+                                  "No Cluster" = "False"
+                                )),
+                 radioButtons("metaselect_chisqr", "Metadata Selection:",
+                              c("Cell types" = "celltype",
+                                "Donor-replicates" = "donrep",
+                                "Donors" = "donor",
+                                "Condition" = "COND.ID",
+                                "Experiments" = "experiment",
+                                "CellCycle" = "Phase"
+                              ), selected = "experiment"),
+                 
+                 width = 5#, background = "black"
+               ),
                
                
                box(
@@ -566,8 +607,20 @@ ui <- dashboardPage(
      
      
       tabItem(tabName = "tsnepercelltype",
-              h2("tSNE with SDA score by cell type"),
+              h2("SDA score by cell type"),
               fluidRow(
+                box(title = "DimRedux", status = "warning", solidHeader = TRUE,
+                    radioButtons("data3", "Data origin:",
+                                 c("tSNE - Batch-removed SDA-CellScores" = "tsneBrSDACS",
+                                   "UMAP - Batch-removed SDA-CellScores" = "umapBrSDACS",
+                                   "tSNE - DropSim Norm. DGE" = "tsneDSNDGE",
+                                   #"Batch-removed-Imputed-DGE" = "DGEimp",
+                                   #"DromSim-Normalized-DGE" = "DGEnorm",
+                                   #"tSNE - Seurat-Norm. DGE" = "tsneSNDGE",
+                                   "tSNE - Batch-removed-Imputed-DGE" = "tsneImpDGE"
+                                 )),
+                    width = 5
+                ),
                 box(
                   title = "Inputs 2", status = "warning", solidHeader = TRUE,
                   #"Box content here", br(), "More box content",
@@ -609,8 +662,20 @@ ui <- dashboardPage(
      
       
       tabItem(tabName = "tsnepercelltype_meta",
-              h2("tSNE with Metada by cell type"),
+              h2("Metadata by cell type"),
               fluidRow(
+                box(title = "DimRedux", status = "warning", solidHeader = TRUE,
+                    radioButtons("data4", "Data origin:",
+                                 c("tSNE - Batch-removed SDA-CellScores" = "tsneBrSDACS",
+                                   "UMAP - Batch-removed SDA-CellScores" = "umapBrSDACS",
+                                   "tSNE - DropSim Norm. DGE" = "tsneDSNDGE",
+                                   #"Batch-removed-Imputed-DGE" = "DGEimp",
+                                   #"DromSim-Normalized-DGE" = "DGEnorm",
+                                   #"tSNE - Seurat-Norm. DGE" = "tsneSNDGE",
+                                   "tSNE - Batch-removed-Imputed-DGE" = "tsneImpDGE"
+                                 )),
+                    width = 5
+                ),
                 box(
                   title = "Inputs 2", status = "warning", solidHeader = TRUE,
                   #"Box content here", br(), "More box content",
@@ -742,8 +807,8 @@ ui <- dashboardPage(
               h2("Pseudotime of Germ Cells Only"),
               fluidRow(
                 box(title = "Inputs", status = "warning", solidHeader = TRUE,
-                    textInput("ComponentNtext3", "SDA component search (numerical):", "1"),
-                    radioButtons("metaselect4", "Metadata Selection:",
+                    textInput("ComponentName_pseudo", "SDA component search (numerical):", "1"),
+                    radioButtons("metaselect_pseudo", "Metadata Selection:",
                                  c("Pseudotime" = "pseudotime",
                                    "Cell types" = "celltype",
                                    "Donor-replicates" = "donrep",
@@ -760,7 +825,7 @@ ui <- dashboardPage(
                 box(title = "Pseudotime", status = "primary", solidHeader = TRUE,
                     collapsible = TRUE,
                     downloadButton("PseudotimeSDA_download"),
-                    plotOutput("PseudotimeSDA", height = 800),
+                    plotOutput("PseudotimeSDA", height = 400),
                     width = 10
                 )
                 
@@ -768,7 +833,34 @@ ui <- dashboardPage(
       ),
      
      
+     ### Pseudotime gene -----
      
+     tabItem(tabName = "pseudotimeSDAgene",
+             h2("Gene expr on Pseudotime of Germ Cells Only"),
+             fluidRow(
+               box(title = "Inputs", status = "warning", solidHeader = TRUE,
+                   textInput("Genetext_pseudo", "Gene search (text input):", "PRM1"),
+                   radioButtons("metaselect_pseudo_gene", "Metadata Selection:",
+                                c("Cell types" = "celltype",
+                                  "Donor-replicates" = "donrep",
+                                  "Donors" = "donor",
+                                  "Condition" = "COND.ID",
+                                  "Experiments" = "experiment",
+                                  "CellCycle" = "Phase"
+                                ), selected = "Phase"),
+                   width = 5
+               ),
+               box(title = "Gene Expr Pseudotime", status = "primary", solidHeader = TRUE,
+                   collapsible = TRUE,
+                   downloadButton("PseudotimeSDA_gene_download"),
+                   plotOutput("PseudotimeSDAgene", height = 400),
+                   plotOutput("PseudotimeSDAgeneMeta", height = 400),
+                   
+                   width = 10
+               )
+               
+             )
+     ),
     
      
       
@@ -949,6 +1041,47 @@ ui <- dashboardPage(
                  collapsible = TRUE,
                  textOutput("top_Neg_txt"),
                  textOutput("top_Peg_txt"),
+                 width = 10
+               )
+               
+               
+             )
+     ),
+     
+     ## CompCor -----
+     
+     tabItem(tabName = "GeneCor",
+             fluidRow(
+               
+               # valueBoxOutput("CorPlot_CellType1", width = 3),
+               
+               box(
+                 radioButtons("celltypeselect_geneCor", "Celltype Selection:",
+                              c("Leydig" = "leydig",
+                                "Sertoli" = "sertoli",
+                                "Myoid" = "myoid",
+                                "Neuro" = "neuro",
+                                "Germ-All" = "germ",
+                                "Germ-UndiffSg" = "germ_UnDiffSgSct",
+                                "Germ-DiffSg" = "germ_DiffSgSct",
+                                "Germ-PrePachSct" = "germ_PrePachSct",
+                                "Germ-PachSct" = "germ_PachSct",
+                                "Germ_Std" = "germ_Std",
+                                "Endothelial" = "endothelial",
+                                "Myeloid" = "myeloid",
+                                "Adaptive" = "adaptive",
+                                "All" = "all"
+                              ), selected = "germ_UnDiffSgSct"),
+                 width = 5
+               ),
+               
+               box(
+                 title = "Cor(GEX) gene expression correlation", status = "primary", solidHeader = TRUE,
+                 collapsible = TRUE,
+                 textInput("GeneSet_geneCor", "A set of genes", "'NANOS1', 'NANOS2', 'NANOS3', 'DMRT1', 'KIT', 'PLPPR3', 'CCK', 'HES5', 'PLPPR5', 'RHCE', 'SCT', 'FAM25G', 'DPPA4', 'TDRD1', 'MAGEA4', 'STRA8', 'DPPA4', 'TDRD1', 'MAGEA4', 'STRA8', 'GFRA1', 'BCL6B', 'ID4', 'PIWIL4', 'DNMT1', 'DMRT1', 'KIT', 'DMC1', 'SYCP3', 'ETV5', 'EGR4'"),
+                 
+                 downloadButton("GeneCorPlot_download"),
+                 plotOutput("GeneCorPlot"),
                  width = 10
                )
                

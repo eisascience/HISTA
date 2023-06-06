@@ -14,13 +14,19 @@ tSNE_AllCells_DF_Rx <- reactive({
     } else {
       if(input$data == "tsneImpDGE"){
         tempDF <- as.data.frame(datat)[, c("Tsne1_imputed", "Tsne2_imputed")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
-        tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
-        tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
         
+      } else {
+        if(input$data == "umapBrSDACS"){
+          tempDF <- as.data.frame(datat)[, c("UMAP1_scores", "UMAP2_scores")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+          
+        } 
       }
       
     }
   }
+  
+  tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
+  tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
   
   
   
@@ -57,7 +63,7 @@ tSNEwSDAScoreProj_Rx <- reactive({
 
   ggplot(cbind(tempDF, SDAComp=datat[,get(paste0("SDAV", input$ComponentNtext, sep=""))]), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
-    geom_point(size=0.1) + theme_bw() +
+    geom_point(size=0.1) + theme_classic(base_size = 10) +
     scale_color_manual("CS", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
     guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
     theme(legend.position = "bottom", aspect.ratio=1) + 
@@ -102,7 +108,7 @@ tSNEwSDAScoreProjPerCT_GEX_Rx <- reactive({
   
   (ggplot(tempDF, 
           aes(tSNE1, tSNE2, color=cut(asinh(GeneExpr), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
-      geom_point(size=0.1) + theme_bw() +
+      geom_point(size=0.1) + theme_classic(base_size = 10) +
       scale_color_manual("EX", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
       guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
       theme(legend.position = "bottom", aspect.ratio=1) + 
@@ -176,7 +182,7 @@ tSNEwSDAScoreProjPerCT_Rx <- reactive({
   
   ggplot(cbind(tempDF, SDAComp=tempMeta), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = BREAKS))) +
-    geom_point(size=0.5) + theme_bw() +
+    geom_point(size=0.5) + theme_classic(base_size = 10) +
     scale_color_manual("CS", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
     guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
     theme(legend.position = "bottom", aspect.ratio=1)  + 
@@ -241,7 +247,7 @@ tSNEwMetaPerCT_Rx <- reactive({
   
   #ggplotly
   ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(MetaFac))) +
-    geom_point(size=0.5)+ theme_bw() +
+    geom_point(size=0.5)+ theme_classic(base_size = 10) +
     theme(legend.position = "right", aspect.ratio=1,
           legend.title = element_blank()) +
     ggtitle("t-SNE - Final Pheno") +
@@ -290,7 +296,7 @@ tSNEwMeta_Rx <- reactive({
   
   #ggplotly
   ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(MetaFac))) +
-    geom_point(size=0.1)+ theme_bw() +
+    geom_point(size=0.1)+ theme_classic(base_size = 10) +
     theme(legend.position = "right", aspect.ratio=1,
           legend.title = element_blank()) +
     ggtitle("t-SNE - Final Pheno") +
@@ -365,12 +371,38 @@ tSNE_SDA_CT_Rx <- reactive({
   }
   
   
+  if(input$data3 == "tsneBrSDACS") {
+    tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  } else {
+    if(input$data3 == "tsneDSNDGE") {
+      tempDF <- as.data.frame(datat)[, c("Tsne1", "Tsne2")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+    } else {
+      if(input$data3 == "tsneImpDGE"){
+        tempDF <- as.data.frame(datat)[, c("Tsne1_imputed", "Tsne2_imputed")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+        
+      } else {
+        if(input$data3 == "umapBrSDACS"){
+          tempDF <- as.data.frame(datat)[, c("UMAP1_scores", "UMAP2_scores")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+          
+        } 
+      }
+      
+    }
+  }
+  
+  tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
+  tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
   
   
-  
-  tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
   
   rownames(tempDF) <- datat$barcode
+  
+  
+  
+  
+  # tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  
+  # rownames(tempDF) <- datat$barcode
   tempDF <- tempDF[MyCells, ]
   
   tempDF$GeneExpr <- rep(0, nrow(tempDF))
@@ -447,10 +479,32 @@ tSNE_SDA_CT_GEX_Rx <- reactive({
   
   
   
+  if(input$data2 == "tsneBrSDACS") {
+    tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  } else {
+    if(input$data2 == "tsneDSNDGE") {
+      tempDF <- as.data.frame(datat)[, c("Tsne1", "Tsne2")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+    } else {
+      if(input$data2 == "tsneImpDGE"){
+        tempDF <- as.data.frame(datat)[, c("Tsne1_imputed", "Tsne2_imputed")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+        
+      } else {
+        if(input$data2 == "umapBrSDACS"){
+          tempDF <- as.data.frame(datat)[, c("UMAP1_scores", "UMAP2_scores")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+          
+        } 
+      }
+      
+    }
+  }
   
-  tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
+  tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
+  
+  
   
   rownames(tempDF) <- datat$barcode
+  
   tempDF <- tempDF[MyCells, ]
   
   tempDF$GeneExpr <- rep(0, nrow(tempDF))
@@ -523,12 +577,36 @@ tSNE_META_CT_Rx <- reactive({
   }
   
   
+  if(input$data4 == "tsneBrSDACS") {
+    tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  } else {
+    if(input$data4 == "tsneDSNDGE") {
+      tempDF <- as.data.frame(datat)[, c("Tsne1", "Tsne2")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+    } else {
+      if(input$data4 == "tsneImpDGE"){
+        tempDF <- as.data.frame(datat)[, c("Tsne1_imputed", "Tsne2_imputed")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+        
+      } else {
+        if(input$data4 == "umapBrSDACS"){
+          tempDF <- as.data.frame(datat)[, c("UMAP1_scores", "UMAP2_scores")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+          
+        } 
+      }
+      
+    }
+  }
+  
+  tempDF$tSNE1 <- as.numeric(tempDF$tSNE1)
+  tempDF$tSNE2 <- as.numeric(tempDF$tSNE2)
   
   
-  
-  tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
   
   rownames(tempDF) <- datat$barcode
+  
+  
+  # tempDF <- as.data.frame(datat)[, c("Tsne1_SDAQC4b", "Tsne2_SDAQC4b")]; colnames(tempDF) <- c("tSNE1", "tSNE2")
+  # 
+  # rownames(tempDF) <- datat$barcode
   tempDF <- tempDF[MyCells, ]
   
   tempDF$GeneExpr <- rep(0, nrow(tempDF))
@@ -730,7 +808,7 @@ GeneExprSigMeta_Rx <- reactive({
   ggboxplot(GeneExpr, x = "meta", y = "gene", palette = "jco",
             add = "jitter", col="meta") + 
     stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
-    theme_bw() + 
+    theme_classic(base_size = 10) + 
     ggtitle( paste0(as.character(input$Genetext2), " expression :: ", TestName, " test :: ", CellType)) + 
     xlab("") + ylab(as.character(input$Genetext2))
   
@@ -860,32 +938,96 @@ ComboTopSDAgenes_DF_Rx <- reactive({
   data.frame(Pos=Out1, Neg=Out2)
 })
 
+
+
+PseudotimeGEX_RX <- reactive({
+  Scores <- results$scores
+  tempDF <- tSNE_GermCells_DF_Rx()
+  
+  
+  
+
+  if(input$metaselect_pseudo_gene == "celltype") {
+    MetaFac <- (datat$FinalFinalPheno_old)
+  } else {
+    if(input$metaselect_pseudo_gene == "donrep"){
+      MetaFac <- (datat$DonRep)
+    } else {
+      if(input$metaselect_pseudo_gene == "donor"){
+        MetaFac <- (datat$donor)
+      } else {
+        if(input$metaselect_pseudo_gene == "COND.ID"){
+          MetaFac <- (datat$COND.ID)
+        } else {
+          if(input$metaselect_pseudo_gene == "experiment"){
+            MetaFac <- (datat$experiment)
+          } else {
+            if(input$metaselect_pseudo_gene == "Phase"){
+              MetaFac <- (datat$Phase)
+            } else {
+              
+            }
+            
+          }
+        }
+      }
+    }
+  }
+    
+  
+  
+
+  tempDF$MetFacZ <- MetaFac
+  tempDF$PT <- datat$PseudoTime
+
+  tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+
+  # tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentName_pseudo))]
+  # tempDF$barcode <- rownames(tempDF)
+  # input = list(Genetext_pseudo = "PRM1")
+
+  if(input$Genetext_pseudo %in% colnames(results$loadings[[1]])){
+    # results$loadings[[1]][,"PRM1"]
+    GeneExpr <- results$scores[,ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE),as.character(input$Genetext_pseudo)]
+  } else {
+    GeneExpr <- results$scores[,ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% rep(0, nrow(results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE), ]))
+
+  }
+  
+  tempDF$GeneExpr = GeneExpr[rownames(tempDF), ]
+  tempDF$barcode = rownames(tempDF)
+  # head(tempDF)
+  tempDF
+})
+
 PseudotimeGeneral_RX <- reactive({
+  
   Scores <- results$scores
   tempDF <- tSNE_GermCells_DF_Rx()
   
   PT <- datat$PseudoTime
+  MetaFac <- datat$PseudoTime
   
-  if(input$metaselect4 == "pseudotime") {
+  if(input$metaselect_pseudo == "pseudotime") {
     MetaFac <- datat$PseudoTime
   } else{
     
-    if(input$metaselect4 == "celltype") {
+    if(input$metaselect_pseudo == "celltype") {
       MetaFac <- (datat$FinalFinalPheno_old)
     } else {
-      if(input$metaselect4 == "donrep"){
+      if(input$metaselect_pseudo == "donrep"){
         MetaFac <- (datat$DonRep)
       } else {
-        if(input$metaselect4 == "donor"){
+        if(input$metaselect_pseudo == "donor"){
           MetaFac <- (datat$donor)
         } else {
-          if(input$metaselect4 == "COND.ID"){
+          if(input$metaselect_pseudo == "COND.ID"){
             MetaFac <- (datat$COND.ID)
           } else {
-            if(input$metaselect4 == "experiment"){
+            if(input$metaselect_pseudo == "experiment"){
               MetaFac <- (datat$experiment)
             } else {
-              if(input$metaselect4 == "Phase"){
+              if(input$metaselect_pseudo == "Phase"){
                 MetaFac <- (datat$Phase)
               } else {
                 
@@ -905,19 +1047,94 @@ PseudotimeGeneral_RX <- reactive({
   
   tempDF <- tempDF[!is.na(tempDF$tSNE1),]
   
-  tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentNtext3))]
+  tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentName_pseudo))]
   tempDF$barcode <- rownames(tempDF)
   
   # tempDF = tempDF[sample(1:nrow(tempDF), 500, replace = F), ]
   
   
-  if(input$metaselect4 == "pseudotime") {
+  if(input$metaselect_pseudo == "pseudotime") {
     tempDF$MetFacZ <- as.numeric(as.character(tempDF$MetFacZ)) 
   } else {
     tempDF$MetFacZ <- factor(as.character(tempDF$MetFacZ))
   }
   return(tempDF)
 })
+
+
+PseudotimeSDA_gene_Rx <- reactive({
+  
+  tempDF <- PseudotimeGEX_RX()
+  
+  merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
+  
+  print("melted table")
+  
+  # print(head(rownames(tempDF)))
+  # print(head(rownames(Scores)))
+  
+  # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+  # Scores <-Scores[rownames(tempDF),]
+  # print(head(merge_sda_melt))
+  # plot(merge_sda_melt$PT, 
+  #      merge_sda_melt$value)
+  
+  
+  
+  input$Genetext_pseudo
+  ggpp = ggplot(merge_sda_melt, aes(PT, GeneExpr, colour=(GeneExpr))) +
+    geom_point(alpha=1, size=.2) +
+    geom_smooth(method = lm, formula = y ~ splines::bs(x, 50), se = FALSE) +
+    # stat_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
+    ylab("Cell Component Score") +
+    xlab("Pseudotime") +
+    ggtitle(paste0("", (input$Genetext_pseudo)))+
+    theme_classic(base_size = 10) +
+    theme(legend.position = "none")  +
+    ylim(-8,8) +  scale_color_viridis()
+  
+  
+  ggpp
+  
+})
+
+PseudotimeSDA_geneMeta_Rx <- reactive({
+  
+  tempDF <- PseudotimeGEX_RX()
+  
+  merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
+  
+  # print("melted table")
+  
+  # print(head(rownames(tempDF)))
+  # print(head(rownames(Scores)))
+  
+  # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+  # Scores <-Scores[rownames(tempDF),]
+  # print(head(merge_sda_melt))
+  # plot(merge_sda_melt$PT, 
+  #      merge_sda_melt$value)
+  
+  
+  
+  # input$Genetext_pseudo
+  ggpp = ggplot(merge_sda_melt, aes(PT, GeneExpr, colour=(MetFacZ))) +
+    geom_point(alpha=1, size=.2) +
+    geom_smooth(method = lm, formula = y ~ splines::bs(x, 50), se = FALSE) +
+    # stat_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
+    ylab("Cell Component Score") +
+    xlab("Pseudotime") +
+    ggtitle(paste0("", (input$Genetext_pseudo)))+
+    theme_classic(base_size = 10) +
+    theme(legend.position = "none")  +
+    ylim(-1,8) +  scale_colour_manual(values=col_vector) 
+  
+  
+  ggpp
+  
+})
+
+
 
 PseudotimeSDA_Rx <- reactive({
   
@@ -944,14 +1161,14 @@ PseudotimeSDA_Rx <- reactive({
     # stat_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
     ylab("Cell Component Score") +
     xlab("Pseudotime") +
-    # ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentNtext3)))+
-    theme_bw() +
+    # ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentName_pseudo)))+
+    theme_classic(base_size = 10) +
     theme(legend.position = "none") +
     ylim(-8,8)
   
   print("ggpp made")
   
-  if(input$metaselect4 == "pseudotime") {
+  if(input$metaselect_pseudo == "pseudotime") {
     ggpp =  ggpp +  scale_color_viridis()
   } else {
     ggpp =  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ,
@@ -965,8 +1182,7 @@ PseudotimeSDA_Rx <- reactive({
   
 })
 
-SDAScoresChiNeg_Rx <- reactive({
-  # ColFac_DONR.ID <- CDID()
+SDAScoresChi_DF_Rx <- reactive({
   
   SDAScores <- results$scores
   ComponentN <- 1:ncol(SDAScores)
@@ -975,26 +1191,91 @@ SDAScoresChiNeg_Rx <- reactive({
   MetaDF <- MetaDF[rownames(SDAScores),]
   
   
-  NegCompsDF <- as.data.frame(lapply(levels(factor(MetaDF$experiment)), function(CondX){
+  if(input$metaselect_chisqr == "celltype") {
+    MetaFac <- (MetaDF$FinalFinalPheno_old)
+  } else {
+    if(input$metaselect_chisqr == "donrep"){
+      MetaFac <- (MetaDF$DonRep)
+    } else {
+      if(input$metaselect_chisqr == "donor"){
+        MetaFac <- (MetaDF$donor)
+      } else {
+        if(input$metaselect_chisqr == "COND.ID"){
+          MetaFac <- (MetaDF$COND.ID)
+        } else {
+          if(input$metaselect_chisqr == "experiment"){
+            MetaFac <- (MetaDF$experiment)
+          } else {
+            if(input$metaselect_chisqr == "Phase"){
+              MetaFac <- (MetaDF$Phase)
+            } else {
+              
+            }
+            
+          }
+        }
+      }
+    }
+  }
+  
+ 
+  
+  
+  NegCompsDF <- as.data.frame(lapply(levels(factor(MetaFac)), function(CondX){
     
-    apply(SDAScores[rownames(MetaDF)[which(MetaDF$experiment == CondX)], ], 2, 
+    apply(SDAScores[rownames(MetaDF)[which(MetaFac == CondX)], ], 2, 
           function(x){
-            round(sum(x<0)/nrow(SDAScores)*100, 2)
+            round(sum(x<=0)/nrow(SDAScores)*100, 2)
           })
   }))
   
-  colnames(NegCompsDF) <- levels(factor(MetaDF$experiment))
+  colnames(NegCompsDF) <- levels(factor(MetaFac))
+  
+  PosCompsDF <- as.data.frame(lapply(levels(factor(MetaFac)), function(CondX){
+    
+    apply(SDAScores[rownames(MetaDF)[which(MetaFac == CondX)], ], 2, 
+          function(x){
+            round(sum(x>0)/nrow(SDAScores)*100, 2)
+          })
+  }))
+  
+  colnames(PosCompsDF) <- levels(factor(MetaFac))
+  
+  list(NegCompsDF=NegCompsDF, PosCompsDF=PosCompsDF)
+})
+
+SDAScoresChiNeg_Rx <- reactive({
+  # ColFac_DONR.ID <- CDID()
+  
+  # SDAScores <- results$scores
+  # ComponentN <- 1:ncol(SDAScores)
+  # MetaDF <- as.data.frame(datat)
+  # rownames(MetaDF) <- datat$barcode
+  # MetaDF <- MetaDF[rownames(SDAScores),]
+  # 
+  # 
+  # NegCompsDF <- as.data.frame(lapply(levels(factor(MetaDF$experiment)), function(CondX){
+  #   
+  #   apply(SDAScores[rownames(MetaDF)[which(MetaDF$experiment == CondX)], ], 2, 
+  #         function(x){
+  #           round(sum(x<0)/nrow(SDAScores)*100, 2)
+  #         })
+  # }))
+  # 
+  # colnames(NegCompsDF) <- levels(factor(MetaDF$experiment))
+  # 
+  # # print(head(NegCompsDF))
+  # # print(min(NegCompsDF))
+  # 
+  # 
+  # NegCompsDF <- NegCompsDF[gtools::mixedsort(rownames(NegCompsDF)),]
+  # NegCompsDF$SDA <- factor(rownames(NegCompsDF), levels=rownames(NegCompsDF))
   
   # print(head(NegCompsDF))
-  # print(min(NegCompsDF))
+  NegCompsDF = SDAScoresChi_DF_Rx()$NegCompsDF
   
-  
-  NegCompsDF <- NegCompsDF[gtools::mixedsort(rownames(NegCompsDF)),]
-  NegCompsDF$SDA <- factor(rownames(NegCompsDF), levels=rownames(NegCompsDF))
-  
-  # print(head(NegCompsDF))
-  
-  ChiT <- chisq.test(NegCompsDF[,1:(ncol(NegCompsDF)-1)])
+  # ChiT <- chisq.test(NegCompsDF[,1:(ncol(NegCompsDF)-1)])
+  ChiT <- chisq.test(NegCompsDF[])
   
   ChiTres <- ChiT$residuals
   ChiTres[which(is.na(ChiTres))] = 0
@@ -1009,7 +1290,11 @@ SDAScoresChiNeg_Rx <- reactive({
   #   clustStat <- ifelse(envv$SDAScoresChi_clusBTN=="ON", T, F)
   # }
   
-  clustStat = T
+  if(input$clustStat_chisqr == "True") {
+    clustStat = T
+  } else {
+    clustStat = F
+  }
   
   # HM <- pheatmap::pheatmap((t(ChiT$residuals)),
   #                    cluster_cols = clustStat, cluster_rows = clustStat,
@@ -1029,31 +1314,33 @@ SDAScoresChiPos_Rx <- reactive({
   # ColFac_DONR.ID <- CDID()
   
   
-  SDAScores <- results$scores
-  ComponentN <- 1:ncol(SDAScores)
-  MetaDF <- as.data.frame(datat)
-  rownames(MetaDF) <- datat$barcode
-  MetaDF <- MetaDF[rownames(SDAScores),]
+  # SDAScores <- results$scores
+  # ComponentN <- 1:ncol(SDAScores)
+  # MetaDF <- as.data.frame(datat)
+  # rownames(MetaDF) <- datat$barcode
+  # MetaDF <- MetaDF[rownames(SDAScores),]
+  # 
+  # 
+  # 
+  # 
+  # PosCompsDF <- as.data.frame(lapply(levels(factor(MetaDF$experiment)), function(CondX){
+  #   
+  #   apply(SDAScores[rownames(MetaDF)[which(MetaDF$experiment == CondX)], ], 2, 
+  #         function(x){
+  #           round(sum(x>0)/nrow(SDAScores)*100, 2)
+  #         })
+  # }))
+  # 
+  # colnames(PosCompsDF) <- levels(factor(MetaDF$experiment))
+  # 
+  # # print(head(PosCompsDF))
+  # # print(min(PosCompsDF))
+  # 
+  # 
+  # PosCompsDF <- PosCompsDF[gtools::mixedsort(rownames(PosCompsDF)),]
+  # PosCompsDF$SDA <- factor(rownames(PosCompsDF), levels=rownames(PosCompsDF))
   
-  
-  
-  
-  PosCompsDF <- as.data.frame(lapply(levels(factor(MetaDF$experiment)), function(CondX){
-    
-    apply(SDAScores[rownames(MetaDF)[which(MetaDF$experiment == CondX)], ], 2, 
-          function(x){
-            round(sum(x>0)/nrow(SDAScores)*100, 2)
-          })
-  }))
-  
-  colnames(PosCompsDF) <- levels(factor(MetaDF$experiment))
-  
-  # print(head(PosCompsDF))
-  # print(min(PosCompsDF))
-  
-  
-  PosCompsDF <- PosCompsDF[gtools::mixedsort(rownames(PosCompsDF)),]
-  PosCompsDF$SDA <- factor(rownames(PosCompsDF), levels=rownames(PosCompsDF))
+  PosCompsDF = SDAScoresChi_DF_Rx()$PosCompsDF
   
   # print(head(PosCompsDF))
   
@@ -1072,7 +1359,13 @@ SDAScoresChiPos_Rx <- reactive({
   #   clustStat <- ifelse(envv$SDAScoresChi_clusBTN=="ON", T, F)
   # }
   
-  clustStat = T
+  # clustStat = T
+  
+  if(input$clustStat_chisqr == "True") {
+    clustStat = T
+  } else {
+    clustStat = F
+  }
   
   # HM <- pheatmap::pheatmap((t(ChiT$residuals)),
   #                    cluster_cols = clustStat, cluster_rows = clustStat,
@@ -1107,7 +1400,7 @@ SDAScoresAcross_Rx <- reactive({
       geom_point(size = 0.5, stroke = 0) + 
       xlab("Cell Index") + ylab("Score") + 
       #scale_color_brewer(palette = "Paired") + 
-      theme_bw() + 
+      theme_classic(base_size = 10) + 
       theme(legend.position = "bottom") + 
       guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
       scale_colour_manual(values =(col_vector),
@@ -1123,7 +1416,7 @@ SDAGOpos_Rx <- reactive({
   if(! (as.numeric(input$ComponentNtext) %in% 1:150)){
     print("No GO")
   } else {
-    go_volcano_plot(component = paste("V", input$ComponentNtext, "P", sep=""))+ theme_bw()+ theme(aspect.ratio = 1)
+    go_volcano_plot(component = paste("V", input$ComponentNtext, "P", sep=""))+ theme_classic(base_size = 10)+ theme(aspect.ratio = 1)
     
   }
 })
@@ -1132,7 +1425,7 @@ SDAGOneg_Rx <- reactive({
   if(! (as.numeric(input$ComponentNtext) %in% 1:150)){
     print("No GO")
   } else {
-    go_volcano_plot(component = paste("V", input$ComponentNtext, "N", sep=""))+ theme_bw()+ theme(aspect.ratio = 1)
+    go_volcano_plot(component = paste("V", input$ComponentNtext, "N", sep=""))+ theme_classic(base_size = 10)+ theme(aspect.ratio = 1)
     
   }
 })
@@ -1163,7 +1456,7 @@ ChrLocLoadings_Rx <- reactive({
 tSNE_somaWLN_Pheno3_Rx <- reactive({
   
   ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=Pheno3)) +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = col_vector) + 
@@ -1175,7 +1468,7 @@ tSNE_somaWLN_Pheno3_Rx <- reactive({
 tSNE_somaWLN_COND.ID_Rx <- reactive({
   
   ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=COND.ID)) +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = col_vector) + 
@@ -1187,7 +1480,7 @@ tSNE_somaWLN_COND.ID_Rx <- reactive({
 tSNE_somaWLN_DONR.ID_Rx <- reactive({
   
   ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=DONR.ID)) +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = col_vector) + 
@@ -1199,7 +1492,7 @@ tSNE_somaWLN_DONR.ID_Rx <- reactive({
 tSNE_somaWLN_nCount_RNA_Rx <- reactive({
   
   ggplot(datat_SomaWLN19, aes(Seurat_tSNE1, Seurat_tSNE2, color=log10(nCount_RNA))) +
-    geom_point(size=0.5) + theme_bw() +
+    geom_point(size=0.5) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     scale_color_distiller(palette = "Spectral")
   
@@ -1214,7 +1507,7 @@ DimRedux_LConly_donors_Rx <- reactive({
 
   
   ggplot(datat_LConlyLS$LC_UMAP, aes(UMAP1, UMAP2, color=donor))  +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = col_vector) + 
@@ -1229,7 +1522,7 @@ DimRedux_LConly_phenotype_Rx <- reactive({
   
   
   ggplot(datat_LConlyLS$LC_UMAP, aes(UMAP1, UMAP2, color=phenotype))  +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = c(col_vector[41],"#E5C494", col_vector[42], "#BEAED4", "#7FC97F")) + 
@@ -1243,7 +1536,7 @@ DimRedux_LConlyZhao_donors_Rx <- reactive({
   # head(datat_LConlyLS$LC_UMAP_zhao)
   
   ggplot(datat_LConlyLS$LC_UMAP_zhao, aes(UMAP_1, UMAP_2, color=donor))  +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = col_vector) + 
@@ -1257,7 +1550,7 @@ DimRedux_LConlyZhao_phenotype_Rx <- reactive({
   # head(datat_LConlyLS$LC_UMAP_zhao)
   
   ggplot(datat_LConlyLS$LC_UMAP_zhao, aes(UMAP_1, UMAP_2, color=phenotype))  +
-    geom_point(size=0.6, alpha = 0.6) + theme_bw() +
+    geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
     theme(legend.position = "bottom") +
     # ggtitle("Reprocessing of: \nMahyari-Guo-Conrad Testis somatic cells (2021) + \n   Laurentino-Neuhaus (2019) ") +
     scale_color_manual(values = c( "#E5C494", "#BEAED4", "#7FC97F")) + 
@@ -1293,7 +1586,7 @@ DimRedux_LConlyZhao_KeyGenesViolin_Rx <- reactive({
     geom_violin(alpha = 0.8) +
     geom_point(position = position_jitter(seed = 1, width = 0.2), alpha = .5, aes(color=origin)) +
     facet_wrap(~phenotype) + 
-    theme_bw() +
+    theme_classic(base_size = 10) +
     theme(legend.position = "bottom",
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
@@ -1329,7 +1622,7 @@ tSNE_geneExpr_Rx <- reactive({
   
   (ggplot(tempDF, 
           aes(tSNE1, tSNE2, color=cut(asinh(GeneExpr), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
-      geom_point(size=0.1) + theme_bw() +
+      geom_point(size=0.1) + theme_classic(base_size = 10) +
       scale_color_manual("EX", values = rev(c("red", "orange", "yellow", "lightblue", "dodgerblue", "blue")) ) + 
       guides(colour = guide_legend(override.aes = list(size=2, alpha=1))) +
       theme(legend.position = "bottom", aspect.ratio=1) + 
@@ -1449,6 +1742,8 @@ CompCorCust_Rx <- reactive({
     #print(GeneSet)
   }
   
+  GeneSet = unique(GeneSet)
+  
   # print("length of your genes:")
   # print(length(GeneSet))
   GeneSetNot <- GeneSet[!GeneSet %in% colnames(results$loadings[[1]][,])]
@@ -1476,6 +1771,112 @@ CompCorCust_Rx <- reactive({
               my_colour = my_colour))
   
   
+  
+})
+
+
+## GeneCor_Rx ----------
+
+GeneCor_Rx <- reactive({
+  
+  if(input$celltypeselect_geneCor == "leydig"){
+    MyCells <- datat[datat$FinalFinalPheno == "Leydig",]$barcode
+  } else {
+    if(input$celltypeselect_geneCor == "sertoli"){
+      MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
+    } else {
+      if(input$celltypeselect_geneCor == "neuro"){
+        MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
+      } else {
+        if(input$celltypeselect_geneCor == "myoid"){
+          MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
+        } else {
+          if(input$celltypeselect_geneCor == "endothelial"){
+            MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
+          } else {
+            if(input$celltypeselect_geneCor == "myeloid"){
+              MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
+            } else {
+              if(input$celltypeselect_geneCor == "adaptive"){
+                MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
+              } else {
+                if(input$celltypeselect_geneCor == "germ"){
+                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
+                                                                "Gamete_Meiotic_Pach_Dip_2nd_Scts",
+                                                                "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
+                                                                "Gamete_RoundSpermatid",
+                                                                "Gamete_UndiffSg"),]$barcode
+                } else {
+                  if(input$celltypeselect_geneCor == "all"){
+                    MyCells <- datat$barcode
+                  } else {
+                    if(input$celltypeselect_geneCor == "germ_DiffSgSct"){
+                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                    } else {
+                      if(input$celltypeselect_geneCor == "germ_PrePachSct"){
+                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
+                      } else {
+                        if(input$celltypeselect_geneCor == "germ_PachSct"){
+                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
+                        }  else {
+                          if(input$celltypeselect_geneCor == "germ_Std"){
+                            MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                          } else {
+                            if(input$celltypeselect_geneCor == "germ_UnDiffSgSct"){
+                              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }}}
+    
+  }
+  
+  
+  
+  GeneSet <- input$GeneSet_geneCor
+  
+  if(length(grep(",", GeneSet)) == 0){
+    
+    if(length(grep('"', GeneSet)) + length(grep("'", GeneSet))>0) {
+      GeneSet <- unlist(strsplit(gsub("'", '', gsub('"', '', GeneSet)), " "))
+    } else {
+      GeneSet <- unlist(strsplit(GeneSet, " "))
+    }
+    
+    #print(GeneSet)
+  }else {
+    GeneSet <- (unlist(strsplit(gsub(" ", "", gsub("'", '', gsub('"', '', GeneSet))), ",")))
+    #print(GeneSet)
+  }
+  GeneSet = unique(GeneSet)
+  
+  GeneSetNot <- GeneSet[!GeneSet %in% colnames(results$loadings[[1]][,])]
+  
+  print("length of your genes:")
+  print(length(GeneSet))
+  GeneSet <- GeneSet[GeneSet %in% colnames(results$loadings[[1]][,])]
+  print("length of your genes in this dataset:")
+  print(length(GeneSet))
+
+  GeneExpr <- results$scores[MyCells, ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% 
+    results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE), 
+                              GeneSet]
+  # tempCor = cor(GeneExpr) 
+  
+#   ph = pheatmap::pheatmap(tempCor)
+#   
+# 
+# corrplot::corrplot(tempCor[ph$tree_row$labels[ph$tree_row$order],
+#                            ph$tree_row$labels[ph$tree_row$order]], 
+#                    col = rev(corrplot::COL2('RdYlBu', 100)), is.corr = T)
+  cor(GeneExpr) 
   
 })
 

@@ -1,6 +1,30 @@
 
 # HISTA
 
+## V2.9.5
+
+### bug fixes
+
+tSNE - batch-removed imputed DGE was not loading, but now shows the tSNE is shown.
+
+### updates
+
+Color set updated to remove ambigious colors in set
+
+UMAP is computed and added to the Main tab, selectable from the data origin selection.
+UMAP is added to various tabs that were only tSNE; now they show both and thus tab names are updated from (tSNE) to (2D)
+
+Fingerprinting tab is now interactive with capacity to select several metadata and to cluster or not (order comps numerically)
+
+The menu/tab items have been rearranged, grouping similar analyses together
+
+New tab, Gene correlations added to explore gene-gene correlations per cell type populations
+new tab, Component correlations to evaluate component - component relationships given N top loadings; this is because the top N loadings drive the correlation, you may desire strict local evaluation by 
+reducing the N or global with higher N
+
+New tab, pseudotime Gene is designed to evaluate a gene expression across spermatogenesis pseudotime; although the pseudotime meta tab is also available to explore the mapping of metadata to this pseudotime, the pseudotime gene, also plots relative to the gene expression several metadata options
+
+
 
 ## V2.9.4
 
