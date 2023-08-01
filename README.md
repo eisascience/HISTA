@@ -5,6 +5,7 @@
 <a href="https://zenodo.org/record/8206586"><img src="https://zenodo.org/badge/271643615.svg" alt="DOI"></a>
 
 
+To use the latest version on the web:
 
 [https://conradlab.shinyapps.io/HISTA/](https://conradlab.shinyapps.io/HISTA/)
 
@@ -33,6 +34,11 @@ HISTA was initially used to identify molecular and cellular signatures that dist
 
 More recently, Nagirnaja, et al., utilized HISTA to identify molecular subforms of NOA. They observed differences in gene expression in patients with NOA who had different histological diagnoses (such as maturation arrest (MA), Sertoli cell only (SCO), or "unknown"). Using HISTA, they found that the gene signatures were different for patients with MA compared to those with SCO or "unknown" histology
 
+### For local runs
+
+You will need to download the rds file with the data once you install this code base. 
+
+https://zenodo.org/record/8206603
 
 ### Refs:
 
