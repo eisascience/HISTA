@@ -802,15 +802,60 @@ GeneExprSigMeta_Rx <- reactive({
   
   CellType = input$celltypeselect2
   
+  if(input$Genetext2 %in% colnames(results$loadings[[1]])){
+    geneN = input$Genetext2 
+  } else {
+    geneN = paste0(input$Genetext2 , " not in HISTA")
+  }
+    
   
   TestName = "Wilcox Rank Sum"
   
   ggboxplot(GeneExpr, x = "meta", y = "gene", palette = "jco",
             add = "jitter", col="meta") + 
-    stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
+    stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
     theme_classic(base_size = 10) + 
-    ggtitle( paste0(as.character(input$Genetext2), " expression :: ", TestName, " test :: ", CellType)) + 
-    xlab("") + ylab(as.character(input$Genetext2))
+    ggtitle( paste0(as.character(geneN), " expression :: ", TestName, " test :: ", CellType)) + 
+    xlab("") + ylab(as.character(geneN))  +
+    theme(legend.position="none",
+          legend.direction="horizontal",
+          legend.title = element_blank(),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) 
+  
+  
+})
+
+GeneExprSigMeta2_Rx <- reactive({
+  
+  GeneExpr <- GeneExprAcroosCellType_DF_Rx()$GeneExpr
+  my_comparisons <- GeneExprAcroosCellType_DF_Rx()$my_comparisons
+
+  
+  GeneExpr$meta <- factor(GeneExpr$meta)
+  GeneExpr$meta <- factor(GeneExpr$meta, levels = gtools::mixedsort(levels(GeneExpr$meta)) )
+  
+  if(input$Genetext3 %in% colnames(results$loadings[[1]])){
+    geneN = input$Genetext3 
+  } else {
+    geneN = paste0(input$Genetext3 , " not in HISTA")
+  }
+  
+  TestName = "Wilcox Rank Sum"
+  
+  
+  
+  ggboxplot(GeneExpr, x = "meta", y = "gene", palette = col_vector,
+            add = "jitter", col="meta") +
+    # stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
+    theme_classic(base_size = 10) +
+    ggtitle( paste0(as.character(geneN), " expression :: "
+                    #, TestName, " test "
+    )) +
+    xlab("") + ylab(as.character(geneN))  +
+    theme(legend.position="none",
+          legend.direction="horizontal",
+          legend.title = element_blank(),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip() 
   
   
 })

@@ -26,7 +26,7 @@ library(DT)
 library(knitr)
 
 
-library(HISTA)
+# library(HISTA)
 
 
 pathi = getwd()
@@ -69,7 +69,7 @@ col_vector = c("#7FC97F", "#38170B", "#BEAED4", "#BF1B0B", "#FFC465", "#386CB0",
 ## ui ------
 
 ui <- dashboardPage(
-  dashboardHeader(title = "HISTA v2.9.5"
+  dashboardHeader(title = "HISTA v2.9.6"
   ),
   
   ## dashboard items ------
@@ -746,10 +746,11 @@ ui <- dashboardPage(
                                ), selected = "cnt")
                 ),
                 box(
-                  title = "Gene Expression Stat. Sig. Meta", status = "primary", solidHeader = TRUE,
+                  title = "Gene Expression Stat. Sig. Meta", status = "primary", 
+                  solidHeader = TRUE,
                   collapsible = TRUE,
                   plotOutput("GeneExprSigMeta2"),
-                  width = 10
+                  width = 10, height = 50
                 )
                 
                 

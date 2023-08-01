@@ -33,7 +33,7 @@ output$CellScoreOrderSDA <- renderPlot({
                        ggtitle(paste0("Cells ordered by SDA Scores in SDA", input$ComponentNtext2)) +
                        xlab(paste0("Score : SDA", input$ComponentNtext2)) +
                        ylab(paste0("Rank : SDA", input$ComponentNtext2)) +
-                       theme_bw() + scale_color_manual(values=col_vector) +
+                       theme_classic(base_size = 10) + scale_color_manual(values=col_vector) +
                        theme(legend.position="below",
                              legend.direction="horizontal",
                              legend.title = element_blank(),
@@ -45,7 +45,7 @@ output$CellScoreOrderSDA <- renderPlot({
                        ggbeeswarm::geom_quasirandom(groupOnX = FALSE)  +
                        xlab(paste0("Score : SDA", input$ComponentNtext2)) + 
                        ylab("Categ.")  +
-                       theme_bw() + scale_color_manual(values=col_vector) +
+                       theme_classic(base_size = 10) + scale_color_manual(values=col_vector) +
                        theme(legend.position="bottom",
                              legend.direction="horizontal",
                              legend.title = element_blank(),
@@ -105,7 +105,7 @@ output$tSNEPseudoSDA <- renderPlot({
   if(input$metaselect_pseudo == "pseudotime") {
     
     ggplot(tempDF, aes(tSNE1, tSNE2, color=MetFacZ)) +
-      geom_point(size=0.1) + theme_bw() +
+      geom_point(size=0.1) + theme_classic(base_size = 10) +
       scale_color_viridis() +
       theme(legend.position = "bottom", aspect.ratio=1,
             legend.title = element_blank())  +
@@ -116,7 +116,7 @@ output$tSNEPseudoSDA <- renderPlot({
     
     #ggplotly
     ggplot(tempDF, aes(tSNE1, tSNE2, color=factor(as.character(MetFacZ)))) +
-      geom_point(size=0.1)+ theme_bw() +
+      geom_point(size=0.1)+ theme_classic(base_size = 10) +
       theme(legend.position = "bottom", aspect.ratio=1,
             legend.title = element_blank()) +
       ggtitle("Germ-cell Only t-SNE") +
@@ -168,7 +168,7 @@ output$PseudotimeSDA <- renderPlot({
   #   ylab("Cell Component Score") +
   #   xlab("Pseudotime") +
   #   # ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentNtext3)))+
-  #   theme_bw() +
+  #   theme_classic(base_size = 10) +
   #   theme(legend.position = "none") +
   #   ylim(-8,8)
   # 
@@ -209,45 +209,12 @@ output$SDAScoresChiNeg <- renderPlot({
 })
 
 output$GeneExprSigMeta <- renderPlot({
-  (GeneExprSigMeta_Rx())
+  GeneExprSigMeta_Rx()
 })
 
 output$GeneExprSigMeta2 <- renderPlot({
   
-  GeneExpr <- GeneExprAcroosCellType_DF_Rx()$GeneExpr
-  my_comparisons <- GeneExprAcroosCellType_DF_Rx()$my_comparisons
-  
-  # print(head(GeneExpr))
-  # print(head(my_comparisons))
-  
-  # CellType = input$celltypeselect
-  
-  
-  
-  GeneExpr$meta <- factor(GeneExpr$meta)
-  GeneExpr$meta <- factor(GeneExpr$meta, levels = gtools::mixedsort(levels(GeneExpr$meta)) )
-  
-  
-  TestName = "Wilcox Rank Sum"
-  
-  
-  
-  ggboxplot(GeneExpr, x = "meta", y = "gene", palette = col_vector,
-            add = "jitter", col="meta") +
-    #stat_compare_means(comparisons = my_comparisons, method = "wilcox.test") +
-    theme_bw() +
-    ggtitle( paste0(as.character(input$Genetext3), " expression :: "
-                    #, TestName, " test "
-    )) +
-    xlab("") + ylab(as.character(input$Genetext3))  +
-    theme(legend.position="bottom",
-          legend.direction="horizontal",
-          legend.title = element_blank(),
-          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-  
-  
-  
-  
+  GeneExprSigMeta2_Rx()
 })
 
 output$packageTablePos <- renderTable({
@@ -641,7 +608,7 @@ output$lncRNA_toploaded <- renderPlot({
   # print(head(SDAcountDFm))
   
   plot_multi_histogram(SDAcountDFm, 'value', 'cond') + 
-    theme_classic()
+    theme_classic(base_size = 10)
   
 })
 
@@ -712,7 +679,7 @@ output$TopLoadComp_Plot <- renderPlot({
   # print(head(SDAcountDFm))
   
   plot_multi_histogram(SDAcountDFm, 'value', 'cond') + 
-    theme_classic()
+    theme_classic(base_size = 10)
   
 })
 

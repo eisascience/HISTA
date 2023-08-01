@@ -4,8 +4,8 @@ Version: 1.2.0
 Authors@R: 
     person(given = "eisamahyari",
            role = c("aut", "cre"),
-           email = "mahyarie@ohsu.edu")
-Description: The goal of this app is to explore the Human Infertility Single-cell Testis Atlas.
+           DM = "@eisamahyari)
+Description: The goal of this app is to enable the exploration of the Human Infertility Single-cell Testis Atlas.
 License: `use_gpl3_license()`
 Encoding: UTF-8
 LazyData: true
@@ -35,14 +35,11 @@ Imports:
     shinyFiles,
     stringr,
     SDAtools,
-    viridis,
-    ShinySDA,
-    scCustFx
+    viridis
 Suggests:
     ggvis,
     devtools
 Remotes:
+    BiocManager::Bioconductor
     eisascience/HISTA,
-    marchinilab/SDAtools,
-    eisascience/ShinySDA,
-    eisascience/scCustFx
+    marchinilab/SDAtools

@@ -57,7 +57,7 @@ output$tSNEwGeneExpr_download <- downloadHandler(
   },
   content = function(file) {
     pdf(file, width = 9.5, height =9, compress = T, pointsize = 15)
-    plot(PseudotimeSDA())
+    plot(tSNE_geneExpr_Rx())
     dev.off()
   })
 

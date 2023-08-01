@@ -1,6 +1,10 @@
 
 # HISTA
 
+## V2.9.6
+
+download button for the gene-expression tSNE debugged and working. 
+
 ## V2.9.5
 
 ### bug fixes
