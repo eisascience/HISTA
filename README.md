@@ -40,6 +40,31 @@ You will need to download the rds file with the data once you install this code 
 
 https://zenodo.org/record/8206603
 
+#### ---- In R use this script
+
+# libraries
+
+library(dplyr)
+library(ggplot2)
+library(data.table)
+
+#this file is on the CoradLab/data folder, there may be an older version, the data is the same,
+#new version is mostly related to HISTA versioning
+
+SSls = readRDS("./inst/app/data/HISTAv1_dataLS_June2023.rds") 
+
+# select genes:
+GeneSet_Set = c("BLM", "ATM", "BRCA2")
+# GeneSet_Set = colnames(SSls$results$loadings[[1]][,]) # all genes
+
+#select cells:
+MyCells  = rownames(SSls$datat) # all cells
+
+#compute batch-removed DGE via dot product
+GeneExpr <- SSls$results$scores[MyCells, ifelse( SSls$StatFac$Lab == "Removed", FALSE, TRUE)] %*% SSls$results$loadings[[1]][ifelse( SSls$StatFac$Lab == "Removed", FALSE, TRUE), GeneSet]
+
+
+
 ### Refs:
 
 Mahyari, E. et al. Comparative single-cell analysis of biopsies clarifies pathogenic mechanisms in Klinefelter syndrome. Am. J. Hum. Genet. 108, 1924–1945 (2021).
