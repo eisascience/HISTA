@@ -40,6 +40,7 @@ You will need to download the rds file with the data once you install this code 
 
 https://zenodo.org/record/8206603
 
+``
 #### ---- In R use this script
 
 # libraries
@@ -63,7 +64,7 @@ MyCells  = rownames(SSls$datat) # all cells
 #compute batch-removed DGE via dot product
 GeneExpr <- SSls$results$scores[MyCells, ifelse( SSls$StatFac$Lab == "Removed", FALSE, TRUE)] %*% SSls$results$loadings[[1]][ifelse( SSls$StatFac$Lab == "Removed", FALSE, TRUE), GeneSet]
 
-
+``
 
 ### Refs:
 
