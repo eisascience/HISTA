@@ -1,5 +1,7 @@
 
+# Plots ----
 
+## home page -----
 
 # image2 sends pre-rendered images
 output$homepage <- renderImage({
@@ -12,6 +14,7 @@ output$homepage <- renderImage({
 }, deleteFile = FALSE)
 
 
+## CellScoreOrderSDA -----
 output$CellScoreOrderSDA <- renderPlot({
   
   Scores <- ComboTopSDAgenes_Rx()$Scores
@@ -57,6 +60,193 @@ output$CellScoreOrderSDA <- renderPlot({
   
   
 })
+
+
+
+
+## PseudotimeSDAgene -----
+output$PseudotimeSDAgeneMeta <- renderPlot({
+  PseudotimeSDA_geneMeta_Rx()
+})
+
+## PseudotimeSDAgene -----
+output$PseudotimeSDAgene <- renderPlot({
+  PseudotimeSDA_gene_Rx()
+})
+
+## PseudotimeSDA -----
+output$PseudotimeSDA <- renderPlot({
+  
+  # tempDF <- PseudotimeGeneral_RX()
+  # 
+  # merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
+  # 
+  # print("melted table")
+  # 
+  # # print(head(rownames(tempDF)))
+  # # print(head(rownames(Scores)))
+  # 
+  # # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
+  # # Scores <-Scores[rownames(tempDF),]
+  # # print(head(merge_sda_melt))
+  # # plot(merge_sda_melt$PT,
+  # #      merge_sda_melt$value)
+  # 
+  # 
+  # 
+  # ggpp = ggplot(merge_sda_melt, aes(PT, value, colour=(MetFacZ))) +
+  #   geom_point(alpha=1, size=.2) +
+  #   geom_smooth(method = lm, formula = y ~ splines::bs(x, 50), se = FALSE) +
+  #   # stat_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
+  #   ylab("Cell Component Score") +
+  #   xlab("Pseudotime") +
+  #   # ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentNtext3)))+
+  #   theme_classic(base_size = 10) +
+  #   theme(legend.position = "none") +
+  #   ylim(-8,8)
+  # 
+  # print("ggpp made")
+  # 
+  # if(input$metaselect_pseudo == "pseudotime") {
+  #   ggpp =  ggpp +  scale_color_viridis()
+  # } else {
+  #   ggpp =  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ,
+  #                                                                        ncol=3,
+  #                                                                        scales = "fixed")
+  # }
+  # 
+  # print("color type corrected")
+  # 
+  # ggpp
+  
+  PseudotimeSDA_Rx()
+  
+})
+
+
+## SDAScoresChiPos -----
+
+output$SDAScoresChiPos <- renderPlot({
+  tempLS <- SDAScoresChiPos_Rx()
+  
+  pheatmap::pheatmap(tempLS$obj,
+                     cluster_cols = tempLS$clustStat, cluster_rows = tempLS$clustStat,
+                     color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
+                     labels_col = tempLS$label_col)
+})
+
+## SDAScoresChiNeg -----
+
+output$SDAScoresChiNeg <- renderPlot({
+  tempLS <- SDAScoresChiNeg_Rx()
+  
+  pheatmap::pheatmap(tempLS$obj,
+                     cluster_cols = tempLS$clustStat, cluster_rows = tempLS$clustStat,
+                     color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
+                     labels_col = tempLS$label_col)
+})
+
+## celltypes_SDAperCT_box -----
+
+output$celltypes_SDAperCT_box <- renderPlot({
+  celltypes_SDAperCT_box_Rx()
+})
+
+## geneExprPerCond_box -----
+
+output$geneExprPerCond_box <- renderPlot({
+  geneExprPerCond_box_Rx()
+})
+
+## geneExprPerCT_box -----
+
+output$geneExprPerCT_box <- renderPlot({
+  
+  geneExprPerCT_box_Rx()
+})
+
+## packageTablePos -----
+
+output$packageTablePos <- renderTable({
+  print_gene_list(as.numeric(input$ComponentNtext), PosOnly = T) %>%
+    #group_by(package) %>%
+    #tally() %>%
+    #arrange(desc(n), tolower(package)) %>%
+    #mutate(percentage = n / nrow(pkgData()) * 100) %>%
+    #select("Package name" = package, "% of downloads" = percentage) %>%
+    as.data.frame() %>%
+    head(as.numeric(input$NoOfGenes))
+}, digits = 1)
+
+
+## packageTableNeg -----
+
+output$packageTableNeg <- renderTable({
+  print_gene_list(as.numeric(input$ComponentNtext), NegOnly = T) %>%
+    #group_by(package) %>%
+    #tally() %>%
+    #arrange(desc(n), tolower(package)) %>%
+    #mutate(percentage = n / nrow(pkgData()) * 100) %>%
+    #select("Package name" = package, "% of downloads" = percentage) %>%
+    as.data.frame() %>%
+    head(as.numeric(input$NoOfGenes))
+}, digits = 1)
+
+
+## tSNEwSDAScoreProj -----
+output$tSNEwSDAScoreProj <- renderPlot({
+  tSNEwSDAScoreProj_Rx()
+})
+
+## DimReduxCT -----
+output$DimReduxCT2D <- renderPlot({
+  tSNEwSDAScoreProjPerCT_Rx()
+})
+
+## DimReduxCT_GEX -----
+output$DimReduxCT_GEX <- renderPlot({
+  tSNEwSDAScoreProjPerCT_GEX_Rx()
+})
+
+## tSNEwMetaLegend -----
+output$tSNEwMetaLegend <- renderPlot({
+  
+  legend <- cowplot::get_legend(tSNEwMeta_Rx())
+  
+  #grid.newpage()
+  grid.draw(legend)
+})
+
+
+## tSNEwMeta -----
+#renderPlotly
+output$tSNEwMeta <- renderPlot({
+  tSNEwMeta_Rx()+
+    theme(legend.position = "none", aspect.ratio=1,
+          legend.title = element_blank())
+})
+
+## tSNE_geneExpr -----
+output$tSNE_geneExpr <- renderPlot({
+  tSNE_geneExpr_Rx()
+  
+})
+
+## DimReduxCT_meta -----
+output$DimReduxCT_meta2D <- renderPlot({
+  tSNEwMetaPerCT_Rx()
+})
+
+# output$tSNE_somaWLN <- renderPlot({
+#   cowplot::plot_grid(tSNE_somaWLN_Pheno3_Rx(), 
+#                      tSNE_somaWLN_COND.ID_Rx(), 
+#                      tSNE_somaWLN_DONR.ID_Rx(), 
+#                      tSNE_somaWLN_nCount_RNA_Rx(),
+#                      ncol=2)
+# })
+
+## tSNEPseudoSDA -----
+
 
 output$tSNEPseudoSDA <- renderPlot({
   
@@ -127,209 +317,17 @@ output$tSNEPseudoSDA <- renderPlot({
   }
   
   
-  
-  
-  
-  
-  
-})
-
-output$PseudotimeSDAgeneMeta <- renderPlot({
-  PseudotimeSDA_geneMeta_Rx()
-})
-
-output$PseudotimeSDAgene <- renderPlot({
-  PseudotimeSDA_gene_Rx()
-})
-
-output$PseudotimeSDA <- renderPlot({
-
-  # tempDF <- PseudotimeGeneral_RX()
-  # 
-  # merge_sda_melt <- reshape2::melt(tempDF, id.vars = c("barcode","tSNE1", "tSNE2", "GeneExpr", "MetFacZ", "PT"))
-  # 
-  # print("melted table")
-  # 
-  # # print(head(rownames(tempDF)))
-  # # print(head(rownames(Scores)))
-  # 
-  # # tempDF <- tempDF[!is.na(tempDF$tSNE1),]
-  # # Scores <-Scores[rownames(tempDF),]
-  # # print(head(merge_sda_melt))
-  # # plot(merge_sda_melt$PT,
-  # #      merge_sda_melt$value)
-  # 
-  # 
-  # 
-  # ggpp = ggplot(merge_sda_melt, aes(PT, value, colour=(MetFacZ))) +
-  #   geom_point(alpha=1, size=.2) +
-  #   geom_smooth(method = lm, formula = y ~ splines::bs(x, 50), se = FALSE) +
-  #   # stat_smooth(aes(PT, value), size=1, alpha = 0.6, method = "gam", formula = y ~ s(x, k = 20), se = F) +#colour="black",
-  #   ylab("Cell Component Score") +
-  #   xlab("Pseudotime") +
-  #   # ggtitle(paste0("SDA Comp: ", as.numeric(input$ComponentNtext3)))+
-  #   theme_classic(base_size = 10) +
-  #   theme(legend.position = "none") +
-  #   ylim(-8,8)
-  # 
-  # print("ggpp made")
-  # 
-  # if(input$metaselect_pseudo == "pseudotime") {
-  #   ggpp =  ggpp +  scale_color_viridis()
-  # } else {
-  #   ggpp =  ggpp +  scale_colour_manual(values=col_vector)  + facet_wrap(~MetFacZ,
-  #                                                                        ncol=3,
-  #                                                                        scales = "fixed")
-  # }
-  # 
-  # print("color type corrected")
-  # 
-  # ggpp
-  
-  PseudotimeSDA_Rx()
-  
-})
-
-output$SDAScoresChiPos <- renderPlot({
-  tempLS <- SDAScoresChiPos_Rx()
-  
-  pheatmap::pheatmap(tempLS$obj,
-                     cluster_cols = tempLS$clustStat, cluster_rows = tempLS$clustStat,
-                     color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
-                     labels_col = tempLS$label_col)
-})
-
-output$SDAScoresChiNeg <- renderPlot({
-  tempLS <- SDAScoresChiNeg_Rx()
-  
-  pheatmap::pheatmap(tempLS$obj,
-                           cluster_cols = tempLS$clustStat, cluster_rows = tempLS$clustStat,
-                           color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
-                           labels_col = tempLS$label_col)
-})
-
-output$GeneExprSigMeta <- renderPlot({
-  GeneExprSigMeta_Rx()
-})
-
-output$GeneExprSigMeta2 <- renderPlot({
-  
-  GeneExprSigMeta2_Rx()
-})
-
-output$packageTablePos <- renderTable({
-  print_gene_list(as.numeric(input$ComponentNtext), PosOnly = T) %>%
-    #group_by(package) %>%
-    #tally() %>%
-    #arrange(desc(n), tolower(package)) %>%
-    #mutate(percentage = n / nrow(pkgData()) * 100) %>%
-    #select("Package name" = package, "% of downloads" = percentage) %>%
-    as.data.frame() %>%
-    head(as.numeric(input$NoOfGenes))
-}, digits = 1)
-
-output$packageTableNeg <- renderTable({
-  print_gene_list(as.numeric(input$ComponentNtext), NegOnly = T) %>%
-    #group_by(package) %>%
-    #tally() %>%
-    #arrange(desc(n), tolower(package)) %>%
-    #mutate(percentage = n / nrow(pkgData()) * 100) %>%
-    #select("Package name" = package, "% of downloads" = percentage) %>%
-    as.data.frame() %>%
-    head(as.numeric(input$NoOfGenes))
-}, digits = 1)
-
-output$tSNEwSDAScoreProj <- renderPlot({
-  tSNEwSDAScoreProj_Rx()
-})
-
-output$tSNEperCellType <- renderPlot({
-  tSNEwSDAScoreProjPerCT_Rx()
-})
-
-output$tSNEperCellType_GEX <- renderPlot({
-  tSNEwSDAScoreProjPerCT_GEX_Rx()
-})
-
-output$tSNEwMetaLegend <- renderPlot({
-  
-  legend <- cowplot::get_legend(tSNEwMeta_Rx())
-  
-  #grid.newpage()
-  grid.draw(legend)
-})
-
-#renderPlotly
-
-output$tSNEwMeta <- renderPlot({
-  tSNEwMeta_Rx()+
-    theme(legend.position = "none", aspect.ratio=1,
-          legend.title = element_blank())
-})
-
-output$tSNE_geneExpr <- renderPlot({
-  tSNE_geneExpr_Rx()
-  
-})
-
-output$tSNEperCellType_meta <- renderPlot({
-  tSNEwMetaPerCT_Rx()
-})
-
-# output$tSNE_somaWLN <- renderPlot({
-#   cowplot::plot_grid(tSNE_somaWLN_Pheno3_Rx(), 
-#                      tSNE_somaWLN_COND.ID_Rx(), 
-#                      tSNE_somaWLN_DONR.ID_Rx(), 
-#                      tSNE_somaWLN_nCount_RNA_Rx(),
-#                      ncol=2)
-# })
-
-
-## Soma only with LN19 ------
-
-output$tSNE_somaWLN_Pheno3_Rx <- renderPlot({
-  tSNE_somaWLN_Pheno3_Rx()
-})
-output$tSNE_somaWLN_COND.ID_Rx <- renderPlot({
-  tSNE_somaWLN_COND.ID_Rx()
-})
-output$tSNE_somaWLN_DONR.ID_Rx <- renderPlot({
-  tSNE_somaWLN_DONR.ID_Rx()
-})
-output$tSNE_somaWLN_nCount_RNA_Rx <- renderPlot({
-  tSNE_somaWLN_nCount_RNA_Rx()
 })
 
 
-## LC with Zhao20 and LN19 ------
 
-output$DimRedux_LConly_donors_Rx <- renderPlot({
-  DimRedux_LConly_donors_Rx()
-})
-
-output$DimRedux_LConly_phenotype_Rx <- renderPlot({
-  DimRedux_LConly_phenotype_Rx()
-})
-
-output$DimRedux_LConlyZhao_phenotype_Rx <- renderPlot({
-  DimRedux_LConlyZhao_phenotype_Rx()
-})
-output$DimRedux_LConlyZhao_donors_Rx <- renderPlot({
-  DimRedux_LConlyZhao_donors_Rx()
-})
-output$DimRedux_LConlyZhao_phenotypeProp_Rx <- renderPlot({
-  DimRedux_LConlyZhao_phenotypeProp_Rx()
-})
-output$DimRedux_LConlyZhao_KeyGenesViolin_Rx <- renderPlot({
-  DimRedux_LConlyZhao_KeyGenesViolin_Rx()
-})
 
 ## GO enrichment plots ------
 
 output$GOpos <- renderPlot({
   
   SDAGOpos_Rx()
-
+  
 })
 
 output$GOneg <- renderPlot({
@@ -357,7 +355,7 @@ output$SDAScoresAcross <- renderPlot({
 
 
 ## Enrichment ------
-
+## packageTablePos -----
 output$PosEnrichPlot <- renderPlot({
   # N = total number of genes (usually not entire genome, since many have unk func)
   N=8025
@@ -403,6 +401,8 @@ output$PosEnrichPlot <- renderPlot({
   
 })
 
+
+## packageTableNeg -----
 output$NegEnrichPlot <- renderPlot({
   # N = total number of genes (usually not entire genome, since many have unk func)
   N=8025
@@ -464,6 +464,7 @@ output$NegEnrichPlot <- renderPlot({
 #   
 # })
 
+# lncRNA_Venn -----
 
 output$lncRNA_Venn <- renderPlot({
   ggvenn::ggvenn(list(Ensembl_lncRNA = unique(lincrna$hgnc_symbol), HISTA = colnames(results$loadings[[1]])))
@@ -471,6 +472,7 @@ output$lncRNA_Venn <- renderPlot({
   
 })
 
+# lncRNA_BarplotSDA -----
 
 output$lncRNA_BarplotSDA <- renderPlot({
   
@@ -479,7 +481,7 @@ output$lncRNA_BarplotSDA <- renderPlot({
                        id.var=c("comp", "Component.ID", "Pathology", "Cell.Type"))
   
   dfm$sig = ifelse(sigComps, "Sig", "NotSig")
-
+  
   
   # ggplot(data=dfm, aes(x=reorder(comp, -value), y=value, fill=sig)) +
   #   geom_bar(stat="identity", position=position_dodge())  + ggthemes::theme_base() +
@@ -542,6 +544,8 @@ output$lncRNA_BarplotSDA <- renderPlot({
   
 })
 
+
+# lncRNA_toploaded -----
 
 output$lncRNA_toploaded <- renderPlot({
   
@@ -619,7 +623,7 @@ output$TopLoadComp_Plot <- renderPlot({
   
   
   GeneSet <- input$GeneSet_TLC
-
+  
   #GeneSet <- "'PRM1', 'SPATA42', 'SPRR4', 'NUPR2', 'HBZ', 'DYNLL2'"
   
   
@@ -685,6 +689,7 @@ output$TopLoadComp_Plot <- renderPlot({
 
 
 
+# TopLoadedBarplot -----
 
 output$TopLoadedBarplot <- renderPlot({
   
@@ -709,9 +714,9 @@ output$TopLoadedBarplot <- renderPlot({
     #print(GeneSet)
   }
   
-
+  
   GeneSet <- GeneSet[GeneSet %in% colnames(results$loadings[[1]][,])]
- 
+  
   GeneSetLS = EnumSDA(geneV = GeneSet, Ladings = results$loadings[[1]])
   
   
@@ -741,22 +746,19 @@ output$TopLoadedBarplot <- renderPlot({
           plot.background=element_blank()) + 
     ggtitle("No of input genes in top 200 loaded genes\nComps that passed QC") + 
     facet_wrap(~variable, nrow = 2) #+
-    # geom_hline(yintercept= 22.3, color="black", linetype="dashed", size=.5)+
-    # geom_hline(yintercept= 18,  color="black", linetype="dotted", size=.5)+
-    # geom_hline(yintercept= 12.1,  color="black", linetype="solid", size=.5)
+  # geom_hline(yintercept= 22.3, color="black", linetype="dashed", size=.5)+
+  # geom_hline(yintercept= 18,  color="black", linetype="dotted", size=.5)+
+  # geom_hline(yintercept= 12.1,  color="black", linetype="solid", size=.5)
   
   
 })
 
 
 
-# CompCor -----
-
-
-
+# CompCorPlot -----
 
 output$CompCorPlot <- renderPlot({
-
+  
   tempLS = CompCor_Rx()
   
   pheatmap::pheatmap(asinh(cor(t(tempLS$lnRNASDAusageMat))), 
@@ -771,6 +773,7 @@ output$CompCorPlot <- renderPlot({
   
 })
 
+# CompCorCustPlot -----
 
 output$CompCorCustPlot <- renderPlot({
   
@@ -788,9 +791,7 @@ output$CompCorCustPlot <- renderPlot({
   
 })
 
-# CompCor -----
-
-
+# GeneCorPlot -----
 
 
 output$GeneCorPlot <- renderPlot({
@@ -800,4 +801,46 @@ output$GeneCorPlot <- renderPlot({
   pheatmap::pheatmap(tempCor)
   
   
+})
+
+
+
+## External data ------ 
+## Soma only with LN19 ------
+
+output$tSNE_somaWLN_Pheno3_Rx <- renderPlot({
+  tSNE_somaWLN_Pheno3_Rx()
+})
+output$tSNE_somaWLN_COND.ID_Rx <- renderPlot({
+  tSNE_somaWLN_COND.ID_Rx()
+})
+output$tSNE_somaWLN_DONR.ID_Rx <- renderPlot({
+  tSNE_somaWLN_DONR.ID_Rx()
+})
+output$tSNE_somaWLN_nCount_RNA_Rx <- renderPlot({
+  tSNE_somaWLN_nCount_RNA_Rx()
+})
+
+
+## LC with Zhao20 and LN19 ------
+
+output$DimRedux_LConly_donors_Rx <- renderPlot({
+  DimRedux_LConly_donors_Rx()
+})
+
+output$DimRedux_LConly_phenotype_Rx <- renderPlot({
+  DimRedux_LConly_phenotype_Rx()
+})
+
+output$DimRedux_LConlyZhao_phenotype_Rx <- renderPlot({
+  DimRedux_LConlyZhao_phenotype_Rx()
+})
+output$DimRedux_LConlyZhao_donors_Rx <- renderPlot({
+  DimRedux_LConlyZhao_donors_Rx()
+})
+output$DimRedux_LConlyZhao_phenotypeProp_Rx <- renderPlot({
+  DimRedux_LConlyZhao_phenotypeProp_Rx()
+})
+output$DimRedux_LConlyZhao_KeyGenesViolin_Rx <- renderPlot({
+  DimRedux_LConlyZhao_KeyGenesViolin_Rx()
 })

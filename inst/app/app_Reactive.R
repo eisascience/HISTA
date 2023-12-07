@@ -1,4 +1,5 @@
-################################ Reactive sections
+# Reactive sections
+
 
 #returns DF of tSNE
 tSNE_AllCells_DF_Rx <- reactive({
@@ -60,7 +61,7 @@ tSNEwSDAScoreProj_Rx <- reactive({
   #ggplotly
   tempDF <- tSNE_AllCells_DF_Rx()
   
-
+  
   ggplot(cbind(tempDF, SDAComp=datat[,get(paste0("SDAV", input$ComponentNtext, sep=""))]), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = c(-Inf, -1, -.5, 0, .5, 1, Inf)))) +
     geom_point(size=0.1) + theme_classic(base_size = 10) +
@@ -82,7 +83,7 @@ tSNEwSDAScoreProjPerCT_GEX_Rx <- reactive({
   tempDF <- tSNE_SDA_CT_GEX_Rx()
   # print(head(tempDF))
   
-  if(input$tsnepercelltype_ctselect_gex == "all"){
+  if(input$DimReduxCT_ctselect_gex == "all"){
     percH = .5
     percL = percH
   } else {
@@ -149,7 +150,7 @@ tSNEwSDAScoreProjPerCT_Rx <- reactive({
   # limValY = limValY + limValY*0.1
   
   # print(head(tempDF))
-  if(input$tsnepercelltype_ctselect == "all"){
+  if(input$DimReduxCT_ctselect == "all"){
     percH = .5
     percL = percH
   } else {
@@ -158,27 +159,27 @@ tSNEwSDAScoreProjPerCT_Rx <- reactive({
   }
   
   
-  tempMeta <- datat[,get(paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""))]
+  tempMeta <- datat[,get(paste0("SDAV", input$ComponentNtext_DimReduxCT, sep=""))]
   names(tempMeta) <- datat$barcode
   tempMeta <- tempMeta[rownames(tempDF)]
   # print(head(tempMeta))
   
-  if(input$ComponentNtext_tsnepercelltype > 150) {
+  if(input$ComponentNtext_DimReduxCT > 150) {
     BREAKS = c(-Inf, round(as.numeric(quantile(asinh(tempMeta), c(.15,.25,.5,.75,.85))), 5), Inf)
     
-      if(input$ComponentNtext_tsnepercelltype > 203) {
-        TITLE = ggtitle(paste0("DiffComp-Rank", as.numeric(input$ComponentNtext_tsnepercelltype)-199))
-      } else {
-        TITLE = ggtitle(paste0("DiffComp", as.numeric(input$ComponentNtext_tsnepercelltype)-199))
-      }
-    
+    if(input$ComponentNtext_DimReduxCT > 203) {
+      TITLE = ggtitle(paste0("DiffComp-Rank", as.numeric(input$ComponentNtext_DimReduxCT)-199))
     } else {
-      BREAKS = c(-Inf, -1, -.5, 0, .5, 1, Inf)
-      TITLE = ggtitle(paste0("SDAV", input$ComponentNtext_tsnepercelltype, " \n", 
-                             StatFac[paste0("SDAV", input$ComponentNtext_tsnepercelltype, sep=""),2], sep=""))
-
+      TITLE = ggtitle(paste0("DiffComp", as.numeric(input$ComponentNtext_DimReduxCT)-199))
     }
-
+    
+  } else {
+    BREAKS = c(-Inf, -1, -.5, 0, .5, 1, Inf)
+    TITLE = ggtitle(paste0("SDAV", input$ComponentNtext_DimReduxCT, " \n", 
+                           StatFac[paste0("SDAV", input$ComponentNtext_DimReduxCT, sep=""),2], sep=""))
+    
+  }
+  
   
   ggplot(cbind(tempDF, SDAComp=tempMeta), 
          aes(tSNE1, tSNE2, color=cut(asinh(SDAComp), breaks = BREAKS))) +
@@ -236,7 +237,7 @@ tSNEwMetaPerCT_Rx <- reactive({
     }
   }
   
-  if(input$tsnepercelltype_ctselect_meta == "all"){
+  if(input$DimReduxCT_ctselect_meta == "all"){
     percH = .5
     percL = percH
   } else {
@@ -309,51 +310,53 @@ tSNEwMeta_Rx <- reactive({
 
 tSNE_SDA_CT_Rx <- reactive({
   
-  if(input$tsnepercelltype_ctselect == "leydig"){
+  if(input$DimReduxCT_ctselect == "leydig"){
     MyCells <- datat[datat$FinalFinalPheno == "Leydig",]$barcode
   } else {
-    if(input$tsnepercelltype_ctselect == "neuro"){
+    if(input$DimReduxCT_ctselect == "neuro"){
       MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
     } else {
-      if(input$tsnepercelltype_ctselect == "myoid"){
+      if(input$DimReduxCT_ctselect == "myoid"){
         MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
       } else {
-    if(input$tsnepercelltype_ctselect == "sertoli"){
-      MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
-    } else {
-      if(input$tsnepercelltype_ctselect == "endothelial"){
-        MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
-      } else {
-        if(input$tsnepercelltype_ctselect == "myeloid"){
-          MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
+        if(input$DimReduxCT_ctselect == "sertoli"){
+          MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
         } else {
-          if(input$tsnepercelltype_ctselect == "adaptive"){
-            MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
+          if(input$DimReduxCT_ctselect == "endothelial"){
+            MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
           } else {
-            if(input$tsnepercelltype_ctselect == "germ"){
-              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
-                                                            "Gamete_Meiotic_Pach_Dip_2nd_Scts",
-                                                            "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
-                                                            "Gamete_RoundSpermatid",
-                                                            "Gamete_UndiffSg"),]$barcode
+            if(input$DimReduxCT_ctselect == "myeloid"){
+              MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
             } else {
-              if(input$tsnepercelltype_ctselect == "all"){
-                MyCells <- datat$barcode
+              if(input$DimReduxCT_ctselect == "adaptive"){
+                MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
               } else {
-                if(input$tsnepercelltype_ctselect == "germ_DiffSgSct"){
-                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                if(input$DimReduxCT_ctselect == "germ"){
+                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
+                                                                "Gamete_Meiotic_Pach_Dip_2nd_Scts",
+                                                                "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
+                                                                "Gamete_RoundSpermatid",
+                                                                "Gamete_UndiffSg"),]$barcode
                 } else {
-                  if(input$tsnepercelltype_ctselect == "germ_PrePachSct"){
-                    MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
+                  if(input$DimReduxCT_ctselect == "all"){
+                    MyCells <- datat$barcode
                   } else {
-                    if(input$tsnepercelltype_ctselect == "germ_PachSct"){
-                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
-                    }  else {
-                      if(input$tsnepercelltype_ctselect == "germ_Std"){
-                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                    if(input$DimReduxCT_ctselect == "germ_DiffSgSct"){
+                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                    } else {
+                      if(input$DimReduxCT_ctselect == "germ_PrePachSct"){
+                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
                       } else {
-                        if(input$tsnepercelltype_ctselect == "germ_UnDiffSgSct"){
-                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                        if(input$DimReduxCT_ctselect == "germ_PachSct"){
+                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
+                        }  else {
+                          if(input$DimReduxCT_ctselect == "germ_Std"){
+                            MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                          } else {
+                            if(input$DimReduxCT_ctselect == "germ_UnDiffSgSct"){
+                              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                            }
+                          }
                         }
                       }
                     }
@@ -363,8 +366,6 @@ tSNE_SDA_CT_Rx <- reactive({
             }
           }
         }
-      }
-    }
       }
     }
     
@@ -415,50 +416,50 @@ tSNE_SDA_CT_Rx <- reactive({
 
 tSNE_SDA_CT_GEX_Rx <- reactive({
   
-  if(input$tsnepercelltype_ctselect_gex == "leydig"){
+  if(input$DimReduxCT_ctselect_gex == "leydig"){
     MyCells <- datat[datat$FinalFinalPheno == "Leydig",]$barcode
   } else {
-    if(input$tsnepercelltype_ctselect_gex == "neuro"){
+    if(input$DimReduxCT_ctselect_gex == "neuro"){
       MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
     } else {
-      if(input$tsnepercelltype_ctselect_gex == "myoid"){
+      if(input$DimReduxCT_ctselect_gex == "myoid"){
         MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
       } else {
-        if(input$tsnepercelltype_ctselect_gex == "sertoli"){
+        if(input$DimReduxCT_ctselect_gex == "sertoli"){
           MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
         } else {
-          if(input$tsnepercelltype_ctselect_gex == "endothelial"){
+          if(input$DimReduxCT_ctselect_gex == "endothelial"){
             MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
           } else {
-            if(input$tsnepercelltype_ctselect_gex == "myeloid"){
+            if(input$DimReduxCT_ctselect_gex == "myeloid"){
               MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
             } else {
-              if(input$tsnepercelltype_ctselect_gex == "adaptive"){
+              if(input$DimReduxCT_ctselect_gex == "adaptive"){
                 MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
               } else {
-                if(input$tsnepercelltype_ctselect_gex == "germ"){
+                if(input$DimReduxCT_ctselect_gex == "germ"){
                   MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
                                                                 "Gamete_Meiotic_Pach_Dip_2nd_Scts",
                                                                 "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
                                                                 "Gamete_RoundSpermatid",
                                                                 "Gamete_UndiffSg"),]$barcode
                 } else {
-                  if(input$tsnepercelltype_ctselect_gex == "all"){
+                  if(input$DimReduxCT_ctselect_gex == "all"){
                     MyCells <- datat$barcode
                   } else {
-                    if(input$tsnepercelltype_ctselect_gex == "germ_DiffSgSct"){
+                    if(input$DimReduxCT_ctselect_gex == "germ_DiffSgSct"){
                       MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
                     } else {
-                      if(input$tsnepercelltype_ctselect_gex == "germ_PrePachSct"){
+                      if(input$DimReduxCT_ctselect_gex == "germ_PrePachSct"){
                         MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
                       } else {
-                        if(input$tsnepercelltype_ctselect_gex == "germ_PachSct"){
+                        if(input$DimReduxCT_ctselect_gex == "germ_PachSct"){
                           MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
                         }  else {
-                          if(input$tsnepercelltype_ctselect_gex == "germ_Std"){
+                          if(input$DimReduxCT_ctselect_gex == "germ_Std"){
                             MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
                           } else {
-                            if(input$tsnepercelltype_ctselect_gex == "germ_UnDiffSgSct"){
+                            if(input$DimReduxCT_ctselect_gex == "germ_UnDiffSgSct"){
                               MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
                             }
                           }
@@ -517,51 +518,53 @@ tSNE_SDA_CT_GEX_Rx <- reactive({
 
 tSNE_META_CT_Rx <- reactive({
   
-  if(input$tsnepercelltype_ctselect_meta == "leydig"){
+  if(input$DimReduxCT_ctselect_meta == "leydig"){
     MyCells <- datat[datat$FinalFinalPheno == "Leydig",]$barcode
   } else {
-    if(input$tsnepercelltype_ctselect_meta == "sertoli"){
+    if(input$DimReduxCT_ctselect_meta == "sertoli"){
       MyCells <- datat[datat$FinalFinalPheno == "Sertoli",]$barcode
     } else {
-      if(input$tsnepercelltype_ctselect_meta == "neuro"){
+      if(input$DimReduxCT_ctselect_meta == "neuro"){
         MyCells <- datat[datat$FinalFinalPheno == "Neuro",]$barcode
       } else {
-        if(input$tsnepercelltype_ctselect_meta == "myoid"){
+        if(input$DimReduxCT_ctselect_meta == "myoid"){
           MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
         } else {
-      if(input$tsnepercelltype_ctselect_meta == "endothelial"){
-        MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
-      } else {
-        if(input$tsnepercelltype_ctselect_meta == "myeloid"){
-          MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
-        } else {
-          if(input$tsnepercelltype_ctselect_meta == "adaptive"){
-            MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
+          if(input$DimReduxCT_ctselect_meta == "endothelial"){
+            MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
           } else {
-            if(input$tsnepercelltype_ctselect_meta == "germ"){
-              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
-                                                            "Gamete_Meiotic_Pach_Dip_2nd_Scts",
-                                                            "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
-                                                            "Gamete_RoundSpermatid",
-                                                            "Gamete_UndiffSg"),]$barcode
+            if(input$DimReduxCT_ctselect_meta == "myeloid"){
+              MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
             } else {
-              if(input$tsnepercelltype_ctselect_meta == "all"){
-                MyCells <- datat$barcode
+              if(input$DimReduxCT_ctselect_meta == "adaptive"){
+                MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
               } else {
-                if(input$tsnepercelltype_ctselect_meta == "germ_DiffSgSct"){
-                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                if(input$DimReduxCT_ctselect_meta == "germ"){
+                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
+                                                                "Gamete_Meiotic_Pach_Dip_2nd_Scts",
+                                                                "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
+                                                                "Gamete_RoundSpermatid",
+                                                                "Gamete_UndiffSg"),]$barcode
                 } else {
-                  if(input$tsnepercelltype_ctselect_meta == "germ_PrePachSct"){
-                    MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
+                  if(input$DimReduxCT_ctselect_meta == "all"){
+                    MyCells <- datat$barcode
                   } else {
-                    if(input$tsnepercelltype_ctselect_meta == "germ_PachSct"){
-                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
-                    }  else {
-                      if(input$tsnepercelltype_ctselect_meta == "germ_Std"){
-                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                    if(input$DimReduxCT_ctselect_meta == "germ_DiffSgSct"){
+                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                    } else {
+                      if(input$DimReduxCT_ctselect_meta == "germ_PrePachSct"){
+                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
                       } else {
-                        if(input$tsnepercelltype_ctselect_meta == "germ_UnDiffSgSct"){
-                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                        if(input$DimReduxCT_ctselect_meta == "germ_PachSct"){
+                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
+                        }  else {
+                          if(input$DimReduxCT_ctselect_meta == "germ_Std"){
+                            MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                          } else {
+                            if(input$DimReduxCT_ctselect_meta == "germ_UnDiffSgSct"){
+                              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                            }
+                          }
                         }
                       }
                     }
@@ -570,9 +573,7 @@ tSNE_META_CT_Rx <- reactive({
               }
             }
           }
-        }
-      }
-    }}}
+        }}}
     
   }
   
@@ -631,39 +632,41 @@ GeneExprPerCellType_DF_Rx <- reactive({
         if(input$celltypeselect2 == "myoid"){
           MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
         } else {
-      if(input$celltypeselect2 == "endothelial"){
-        MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
-      } else {
-        if(input$celltypeselect2 == "myeloid"){
-          MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
-        } else {
-          if(input$celltypeselect2 == "adaptive"){
-            MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
+          if(input$celltypeselect2 == "endothelial"){
+            MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
           } else {
-            if(input$celltypeselect2 == "germ"){
-              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
-                                                            "Gamete_Meiotic_Pach_Dip_2nd_Scts",
-                                                            "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
-                                                            "Gamete_RoundSpermatid",
-                                                            "Gamete_UndiffSg"),]$barcode
+            if(input$celltypeselect2 == "myeloid"){
+              MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
             } else {
-              if(input$celltypeselect2 == "all"){
-                MyCells <- datat$barcode
+              if(input$celltypeselect2 == "adaptive"){
+                MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
               } else {
-                if(input$celltypeselect2 == "germ_DiffSgSct"){
-                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                if(input$celltypeselect2 == "germ"){
+                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
+                                                                "Gamete_Meiotic_Pach_Dip_2nd_Scts",
+                                                                "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
+                                                                "Gamete_RoundSpermatid",
+                                                                "Gamete_UndiffSg"),]$barcode
                 } else {
-                  if(input$celltypeselect2 == "germ_PrePachSct"){
-                    MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
+                  if(input$celltypeselect2 == "all"){
+                    MyCells <- datat$barcode
                   } else {
-                    if(input$celltypeselect2 == "germ_PachSct"){
-                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
-                    }  else {
-                      if(input$celltypeselect2 == "germ_Std"){
-                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                    if(input$celltypeselect2 == "germ_DiffSgSct"){
+                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                    } else {
+                      if(input$celltypeselect2 == "germ_PrePachSct"){
+                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
                       } else {
-                        if(input$celltypeselect2 == "germ_UnDiffSgSct"){
-                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                        if(input$celltypeselect2 == "germ_PachSct"){
+                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
+                        }  else {
+                          if(input$celltypeselect2 == "germ_Std"){
+                            MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                          } else {
+                            if(input$celltypeselect2 == "germ_UnDiffSgSct"){
+                              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                            }
+                          }
                         }
                       }
                     }
@@ -672,9 +675,7 @@ GeneExprPerCellType_DF_Rx <- reactive({
               }
             }
           }
-        }
-      }
-    }}}
+        }}}
     
   }
   
@@ -699,7 +700,7 @@ GeneExprPerCellType_DF_Rx <- reactive({
   
   if(input$Genetext2 %in% colnames(results$loadings[[1]])){
     # results$loadings[[1]][,"PRM1"]
-   
+    
     
     GeneExpr <- results$scores[,ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE),as.character(input$Genetext2)]
   } else {
@@ -794,7 +795,7 @@ GeneExprAcroosCellType_DF_Rx <- reactive({
   
 })
 
-GeneExprSigMeta_Rx <- reactive({
+geneExprPerCond_box_Rx <- reactive({
   
   GeneExpr <- GeneExprPerCellType_DF_Rx()$GeneExpr
   my_comparisons <- GeneExprPerCellType_DF_Rx()$my_comparisons
@@ -807,7 +808,7 @@ GeneExprSigMeta_Rx <- reactive({
   } else {
     geneN = paste0(input$Genetext2 , " not in HISTA")
   }
-    
+  
   
   TestName = "Wilcox Rank Sum"
   
@@ -825,11 +826,11 @@ GeneExprSigMeta_Rx <- reactive({
   
 })
 
-GeneExprSigMeta2_Rx <- reactive({
+geneExprPerCT_box_Rx <- reactive({
   
   GeneExpr <- GeneExprAcroosCellType_DF_Rx()$GeneExpr
   my_comparisons <- GeneExprAcroosCellType_DF_Rx()$my_comparisons
-
+  
   
   GeneExpr$meta <- factor(GeneExpr$meta)
   GeneExpr$meta <- factor(GeneExpr$meta, levels = gtools::mixedsort(levels(GeneExpr$meta)) )
@@ -860,6 +861,69 @@ GeneExprSigMeta2_Rx <- reactive({
   
 })
 
+## celltypes_SDAperCT_box_Rx ----
+celltypes_SDAperCT_box_Rx <- reactive({
+  
+  if(input$celltypes_condSelect == "all"){
+    MyCells <- datat$barcode
+  } else {
+    
+    if(input$celltypes_condSelect == "cnt"){
+      MyCells <- datat[datat$DONR.ID %in% c("AdHu173", "AdHu174", "AdHu175", "UtahD1", "UtahD2", "UtahD3"),]$barcode
+    } else {
+      if(input$celltypes_condSelect == "inf1"){
+        MyCells <- datat[datat$DONR.ID %in% c("UtahI1"),]$barcode
+      } else {
+        if(input$celltypes_condSelect == "inf2"){
+          MyCells <- datat[datat$DONR.ID %in% c("UtahI2"),]$barcode
+        } else{
+          if(input$celltypes_condSelect == "ks"){
+            MyCells <- datat[datat$DONR.ID %in% c("UtahK1", "UtahK2"),]$barcode
+          } else{
+            if(input$celltypes_condSelect == "juv"){
+              MyCells <- datat[datat$DONR.ID %in% c("Juv1", "Juv2"),]$barcode
+            } 
+          }
+          
+        }
+        
+      }
+      
+    }
+    
+  }
+  
+  print(MyCells)
+
+ compID = paste0("SDAV", input$celltypes_sdaN_in, sep="")
+
+  tempMeta <- as.data.frame(datat)[,c(compID,
+                      "FinalFinalPheno_old" )] 
+  
+  rownames(tempMeta) <- datat$barcode
+
+  tempMeta = tempMeta[MyCells,]
+
+  colnames(tempMeta) = c("score", "pheno")
+
+  ggboxplot(tempMeta, x = "pheno", y = "score", palette = col_vector,
+            add = "jitter", col="pheno") +
+    # stat_compare_means(comparisons = my_comparisons, method = "wilcox.test", label = "p.signif") +
+    theme_classic(base_size = 10) +
+    ggtitle( paste0(as.character(compID), " expression :: "
+                    #, TestName, " test "
+    )) +
+    xlab("") + ylab(as.character(compID))  +
+    theme(legend.position="none",
+          legend.direction="horizontal",
+          legend.title = element_blank(),
+          axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) + coord_flip()
+  
+  
+})
+
+
+
 ComboTopSDAgenes_Rx <- reactive({
   
   if(input$celltypeselect3 == "leydig"){
@@ -874,39 +938,41 @@ ComboTopSDAgenes_Rx <- reactive({
         if(input$celltypeselect3 == "myoid"){
           MyCells <- datat[datat$FinalFinalPheno == "Myoid",]$barcode
         } else {
-      if(input$celltypeselect3 == "endothelial"){
-        MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
-      } else {
-        if(input$celltypeselect3 == "myeloid"){
-          MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
-        } else {
-          if(input$celltypeselect3 == "adaptive"){
-            MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
+          if(input$celltypeselect3 == "endothelial"){
+            MyCells <- datat[datat$FinalFinalPheno == "Endothelial",]$barcode
           } else {
-            if(input$celltypeselect3 == "germ"){
-              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
-                                                            "Gamete_Meiotic_Pach_Dip_2nd_Scts",
-                                                            "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
-                                                            "Gamete_RoundSpermatid",
-                                                            "Gamete_UndiffSg"),]$barcode
+            if(input$celltypeselect3 == "myeloid"){
+              MyCells <- datat[datat$FinalFinalPheno %in% c("Macrophage-M2", "Macrophage-M1"),]$barcode
             } else {
-              if(input$celltypeselect3 == "all"){
-                MyCells <- datat$barcode
+              if(input$celltypeselect3 == "adaptive"){
+                MyCells <- datat[datat$FinalFinalPheno %in% c("Lymphoid-Bcell", "Lymphoid-Tcell"),]$barcode
               } else {
-                if(input$celltypeselect3 == "germ_DiffSgSct"){
-                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                if(input$celltypeselect3 == "germ"){
+                  MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct", 
+                                                                "Gamete_Meiotic_Pach_Dip_2nd_Scts",
+                                                                "Gamete_Meiotic_preLep_Lep_Zyg_Scts",
+                                                                "Gamete_RoundSpermatid",
+                                                                "Gamete_UndiffSg"),]$barcode
                 } else {
-                  if(input$celltypeselect3 == "germ_PrePachSct"){
-                    MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
+                  if(input$celltypeselect3 == "all"){
+                    MyCells <- datat$barcode
                   } else {
-                    if(input$celltypeselect3 == "germ_PachSct"){
-                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
-                    }  else {
-                      if(input$celltypeselect3 == "germ_Std"){
-                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                    if(input$celltypeselect3 == "germ_DiffSgSct"){
+                      MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_DifferentiatingSgSct"),]$barcode
+                    } else {
+                      if(input$celltypeselect3 == "germ_PrePachSct"){
+                        MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_preLep_Lep_Zyg_Scts"),]$barcode
                       } else {
-                        if(input$celltypeselect3 == "germ_UnDiffSgSct"){
-                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                        if(input$celltypeselect3 == "germ_PachSct"){
+                          MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_Meiotic_Pach_Dip_2nd_Scts"),]$barcode
+                        }  else {
+                          if(input$celltypeselect3 == "germ_Std"){
+                            MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_RoundSpermatid"),]$barcode
+                          } else {
+                            if(input$celltypeselect3 == "germ_UnDiffSgSct"){
+                              MyCells <- datat[datat$FinalFinalPheno %in% c("Gamete_UndiffSg"),]$barcode
+                            }
+                          }
                         }
                       }
                     }
@@ -915,9 +981,7 @@ ComboTopSDAgenes_Rx <- reactive({
               }
             }
           }
-        }
-      }
-    }}}
+        }}}
     
   }
   
@@ -991,7 +1055,7 @@ PseudotimeGEX_RX <- reactive({
   
   
   
-
+  
   if(input$metaselect_pseudo_gene == "celltype") {
     MetaFac <- (datat$FinalFinalPheno_old)
   } else {
@@ -1018,25 +1082,25 @@ PseudotimeGEX_RX <- reactive({
       }
     }
   }
-    
   
   
-
+  
+  
   tempDF$MetFacZ <- MetaFac
   tempDF$PT <- datat$PseudoTime
-
+  
   tempDF <- tempDF[!is.na(tempDF$tSNE1),]
-
+  
   # tempDF$Scores <- Scores[rownames(tempDF), paste0("SDAV", as.numeric(input$ComponentName_pseudo))]
   # tempDF$barcode <- rownames(tempDF)
   # input = list(Genetext_pseudo = "PRM1")
-
+  
   if(input$Genetext_pseudo %in% colnames(results$loadings[[1]])){
     # results$loadings[[1]][,"PRM1"]
     GeneExpr <- results$scores[,ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE),as.character(input$Genetext_pseudo)]
   } else {
     GeneExpr <- results$scores[,ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% rep(0, nrow(results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE), ]))
-
+    
   }
   
   tempDF$GeneExpr = GeneExpr[rownames(tempDF), ]
@@ -1263,7 +1327,7 @@ SDAScoresChi_DF_Rx <- reactive({
     }
   }
   
- 
+  
   
   
   NegCompsDF <- as.data.frame(lapply(levels(factor(MetaFac)), function(CondX){
@@ -1346,8 +1410,8 @@ SDAScoresChiNeg_Rx <- reactive({
   #                    color = colorRampPalette(rev(brewer.pal(n = 7, name ="RdBu")))(10),
   #                    labels_col = paste0(rownames(NegCompsDF), " sd_", ChiResSD))
   outLS <- list(obj=(t(ChiT$residuals)),
-       clustStat = clustStat,
-       label_col = paste0(rownames(NegCompsDF), " sd_", ChiResSD))
+                clustStat = clustStat,
+                label_col = paste0(rownames(NegCompsDF), " sd_", ChiResSD))
   
   # return((HM$gtable))
   return(outLS)
@@ -1438,10 +1502,10 @@ SDAScoresAcross_Rx <- reactive({
     ComponentN <- as.numeric(input$ComponentNtext)
     
     ggplot(data.table(cell_index = 1:nrow(SDAScores), 
-                             score = SDAScores[, paste0("SDAV", ComponentN)], 
-                             experiment = gsub("_.*", "", gsub("[A-Z]+\\.", "", rownames(SDAScores))), 
-                             ColFac = ColFac_DONR.ID), 
-                  aes(cell_index, score, colour = ColFac)) + 
+                      score = SDAScores[, paste0("SDAV", ComponentN)], 
+                      experiment = gsub("_.*", "", gsub("[A-Z]+\\.", "", rownames(SDAScores))), 
+                      ColFac = ColFac_DONR.ID), 
+           aes(cell_index, score, colour = ColFac)) + 
       geom_point(size = 0.5, stroke = 0) + 
       xlab("Cell Index") + ylab("Score") + 
       #scale_color_brewer(palette = "Paired") + 
@@ -1507,7 +1571,7 @@ tSNE_somaWLN_Pheno3_Rx <- reactive({
     scale_color_manual(values = col_vector) + 
     guides(colour = guide_legend(override.aes = list(size=2, alpha=1), ncol = 3))
   
-
+  
 })
 
 tSNE_somaWLN_COND.ID_Rx <- reactive({
@@ -1548,8 +1612,8 @@ tSNE_somaWLN_nCount_RNA_Rx <- reactive({
 ## LC only figs ----------------
 
 DimRedux_LConly_donors_Rx <- reactive({
-
-
+  
+  
   
   ggplot(datat_LConlyLS$LC_UMAP, aes(UMAP1, UMAP2, color=donor))  +
     geom_point(size=0.6, alpha = 0.6) + theme_classic(base_size = 10) +
@@ -1608,9 +1672,9 @@ DimRedux_LConlyZhao_phenotypeProp_Rx <- reactive({
   
   # head(datat_LConlyLS$LC_UMAP_zhao)
   
-
-barplot(datat_LConlyLS$LC_UMAP_type_prop, col = c("#7FC97F", "#E5C494", "#BEAED4"), 
-        legend.text = T, xlim = c(0,5), main="SDA Proportions by Condition", names = c("CNT", "KS", "INFiNOA"), cex.names=1.5, cex.axis=1.5, border=NA, args.legend = list(x="topright"))
+  
+  barplot(datat_LConlyLS$LC_UMAP_type_prop, col = c("#7FC97F", "#E5C494", "#BEAED4"), 
+          legend.text = T, xlim = c(0,5), main="SDA Proportions by Condition", names = c("CNT", "KS", "INFiNOA"), cex.names=1.5, cex.axis=1.5, border=NA, args.legend = list(x="topright"))
   
 })
 
@@ -1622,8 +1686,8 @@ DimRedux_LConlyZhao_KeyGenesViolin_Rx <- reactive({
   
   
   KeyLCgenes = c("FZD1", "SRD5A1", "SHROOM2", "NOTCH2", "DLK1", "IGF1",
-    "IGF2", "CFD", "PTCH2", "CYP17A1", "LHCGR", "STAR", "HSD17B3", "IGFBP7", "IGFBP3", "SFRP1")
-
+                 "IGF2", "CFD", "PTCH2", "CYP17A1", "LHCGR", "STAR", "HSD17B3", "IGFBP7", "IGFBP3", "SFRP1")
+  
   # head(reshape2::melt(datat_LConlyLS$LC_UMAP_zhao[,c(KeyLCgenes, "origin", "experiment", "donor", "phenotype")]))
   
   ggplot(reshape2::melt(datat_LConlyLS$LC_UMAP_zhao[,c(KeyLCgenes, "origin", "experiment", "donor", "phenotype")]), 
@@ -1636,8 +1700,8 @@ DimRedux_LConlyZhao_KeyGenesViolin_Rx <- reactive({
           axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
   
   
-
-
+  
+  
 })
 
 
@@ -1721,7 +1785,7 @@ CompCor_Rx <- reactive({
   annotDF = subset(annotDF, Pathology != "Removed")
   annotDF = subset(annotDF, Germ.Soma != "Multiple cell types")
   
-
+  
   
   lnRNASDAusageMat = results$loadings[[1]][,c(SDA_Top100neg[1:input$CompCorSDAnum_ngene,as.numeric(input$CompCorSDAnum)],
                                               SDA_Top100pos[1:input$CompCorSDAnum_ngene,as.numeric(input$CompCorSDAnum)])]
@@ -1767,7 +1831,7 @@ CompCorCust_Rx <- reactive({
   annotDF = subset(annotDF, Pathology != "Removed")
   annotDF = subset(annotDF, Germ.Soma != "Multiple cell types")
   
-
+  
   GeneSet <- input$GeneSet_TLC
   
   #GeneSet <- "'PRM1', 'SPATA42', 'SPRR4', 'NUPR2', 'HBZ', 'DYNLL2'"
@@ -1909,18 +1973,18 @@ GeneCor_Rx <- reactive({
   GeneSet <- GeneSet[GeneSet %in% colnames(results$loadings[[1]][,])]
   print("length of your genes in this dataset:")
   print(length(GeneSet))
-
+  
   GeneExpr <- results$scores[MyCells, ifelse( StatFac$Lab == "Removed", FALSE, TRUE)] %*% 
     results$loadings[[1]][ifelse( StatFac$Lab == "Removed", FALSE, TRUE), 
-                              GeneSet]
+                          GeneSet]
   # tempCor = cor(GeneExpr) 
   
-#   ph = pheatmap::pheatmap(tempCor)
-#   
-# 
-# corrplot::corrplot(tempCor[ph$tree_row$labels[ph$tree_row$order],
-#                            ph$tree_row$labels[ph$tree_row$order]], 
-#                    col = rev(corrplot::COL2('RdYlBu', 100)), is.corr = T)
+  #   ph = pheatmap::pheatmap(tempCor)
+  #   
+  # 
+  # corrplot::corrplot(tempCor[ph$tree_row$labels[ph$tree_row$order],
+  #                            ph$tree_row$labels[ph$tree_row$order]], 
+  #                    col = rev(corrplot::COL2('RdYlBu', 100)), is.corr = T)
   cor(GeneExpr) 
   
 })

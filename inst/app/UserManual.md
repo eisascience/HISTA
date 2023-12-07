@@ -1,14 +1,6 @@
-
 # HISTA
 
-## User Manual (V2.9.4)
-
-## Description of tabs
-
-
-# HISTA
-
-## User Manual (V2.9.4)
+## User Manual (V2.9.7)
 
 ## Description of tabs
 
@@ -20,23 +12,22 @@
 
         	This is the 'Main’ tab that HISTA loads. On the center top, two information boxes provide available background information for the selected SDA component and gene found in the interactive menu on the left panel of this tab. This menu has several parameters to change that alter what is being displayed.
 
-From top to bottom of the page:
-
-* In the Inputs sections, the first input allows searching SDA components via a numerical input.
-* In the next box, genes (human symbols e.g. PRM1) can be searched to display the gene's t-SNE projected expression. Additionally, HISTA will highlight the components that the gene of interest is mostly found or, in other words, highly loaded.
-* In the next selection, via the radio button provided, it is possible to select which of the pre-processed t-SNE plots are shown (there are four options):
-The batch-removed SDA cell score matrix t-SNE (default). This t-SNE was produced on non-batch components of the SDA score matrix i.e., cells by components
-The batch-removed SDA cell score matrix UMAP.
-The pre-SDA DropSim-normalized expression matrix t-SNE. This t-SNE was produced on the gene expression matrix normalized by DropSim, which includes a square-root-based transformation.
-the batch-removed SDA-imputed expression matrix t-SNE. As explained earlier, by performing dot-product of the gene loading and cell score matrices, with only the non-batch components, we impute a batch-removed gene expression matrix on which t-SNE was run.
-* The next set of radio buttons is to visualize available metadata such as donors, replicates, conditions, experiments, cell cycle, and cell type (default).
-* The final items in the interactive menu are several buttons to download the top-loaded gene lists for export as well as manual navigation of the SDA components.
-* The figures below the input section from top to bottom include 
-the gene expression, cell score, and metadata 2D projection (t-SNE or UMAP).
-The cell score across donors scatter plot, which aids in seeing the selected component’s score distribution
-* The gene ontology (GO) plots proved a pre-computed analysis of the top loaded genes that aid in translating the general signature observed.
-* The chromosome location highlights the loading weight of each gene relative to their position across the chromosomes. 
-* At the bottom of this tab, the top loaded positive or negative genes are ranked and listed, but how many are shown can be inputted, with 20 being the default.
+        From top to bottom of the page:
+    * In the Inputs sections, the first input allows searching SDA components via a numerical input.
+    * In the next box, genes (human symbols e.g. PRM1) can be searched to display the gene's t-SNE projected expression. Additionally, HISTA will highlight the components that the gene of interest is mostly found or, in other words, highly loaded.
+    * In the next selection, via the radio button provided, it is possible to select which of the pre-processed t-SNE plots are shown (there are four options):
+        The batch-removed SDA cell score matrix t-SNE (default). This t-SNE was produced on non-batch components of the SDA score matrix i.e., cells by components
+        The batch-removed SDA cell score matrix UMAP.
+        The pre-SDA DropSim-normalized expression matrix t-SNE. This t-SNE was produced on the gene expression matrix normalized by DropSim, which includes a square-root-based transformation.
+        The batch-removed SDA-imputed expression matrix t-SNE. As explained earlier, by performing dot-product of the gene loading and cell score matrices, with only the non-batch components, we impute a batch-removed gene expression matrix on which t-SNE was run.
+    * The next set of radio buttons is to visualize available metadata such as donors, replicates, conditions, experiments, cell cycle, and cell type (default).
+    * The final items in the interactive menu are several buttons to download the top-loaded gene lists for export as well as manual navigation of the SDA components.
+    * The figures below the input section from top to bottom include:
+        The gene expression, cell score, and metadata 2D projection (t-SNE or UMAP).
+        The cell score across donors scatter plot, which aids in seeing the selected component’s score distribution
+    * The gene ontology (GO) plots proved a pre-computed analysis of the top loaded genes that aid in translating the general signature observed.
+    * The chromosome location highlights the loading weight of each gene relative to their position across the chromosomes. 
+    * At the bottom of this tab, the top loaded positive or negative genes are ranked and listed, but how many are shown can be inputted, with 20 being the default.
 
 ### Index of Components:
 
@@ -57,7 +48,11 @@ The cell score across donors scatter plot, which aids in seeing the selected com
 ### Gene Expression per cell type (2D):
 
         	Gene expression of a searched gene, batch-corrected, mapped on the t-SNE projection, with the ability to subset by cell type. Additional radio buttons allow selecting which 2D plot to show, e.g., t-SNE or UMAP, on various scopes of our data.
-        	
+
+### Cell scores per cell type (boxplot):
+
+        	Scores of a searched component, mapped on the defined cell types, with the ability to subset donor sets. This enables to explore the scoring of each component relative to the cell types. combined with Gene Expression per cell type (boxplot) each cell type can be deeply investigated.
+
 ### Cell scores per cell type (2D):
 
         	Scores of a searched component, mapped on the 2D (t-SNE or UMAP) projection, with the ability to subset by cell type. To provide a deeper scope of visualizing the cell scores projected on the pre-computed 2D representation. In this tab, it is possible to subset the figure by cell type using the available radio buttons. For example, SDA component 1 demonstrates that the highest absolute scores are found in the spermatid population of the germ cells. By zooming in on these cells, we can better observe the distinct banding pattern that positively scores the last and early spermatids but negatively scores the spermatids between them. Digging into the gene loadings of this component, we observe specific gene regulation patterns that explain the banding observed in the cell scores; for example, the top positively loaded genes contain SPRR4 and PRM1, whereas the top negatively loaded genes contain FSCN3 and PRM3 supporting the regulation of spermiogenesis as the spermatids finish their maturation.
@@ -106,15 +101,15 @@ The cell score across donors scatter plot, which aids in seeing the selected com
           
           In 2019 a new Klinefelter scRNA-Seq was made available through collaboration with Leurentino et al., but after our initial data freeze, the SDA-HISTA analysis. Furthermore, after integrating this new single KS donor using our customized Seurat pipelines, we found evidence for differences that we believe are correlated with the sampling procedure and the age and health of the donor. Therefore, we plan to combine this data in later releases of HISTA. However, we limited our analysis to only validating our results with this new data for the current scope and release. This tab is provided as support material for our KS manuscript 1.
           
-Brief notes:
+    Brief notes:
 
-* As with the existing KS donors, there were no germ cells in this new patient, so we could only focus on the somatic cells.
-* There is a single large cluster of Sertoli cells (SC) comprising at least 3 sub-clusters.
-*  The two smaller in diameter subclusters are enriched with JUV SC, but only one is enriched with the SC from other adults.
-*   The largest SC subcluster is mostly derived from LN19.
-* We previously defined 3 major subtypes of Leydig cells (LC); the progenitors (PLC), the immature (ILC), and the mature (MLC) groups.
-*   The LN19 LC are found mostly in PLC and MLC clusters.
-* LN19 contributes a distinct cluster of cells that we believed to be of myoid phenotype.
+    * As with the existing KS donors, there were no germ cells in this new patient, so we could only focus on the somatic cells.
+    * There is a single large cluster of Sertoli cells (SC) comprising at least 3 sub-clusters.
+    *  The two smaller in diameter subclusters are enriched with JUV SC, but only one is enriched with the SC from other adults.
+    *   The largest SC subcluster is mostly derived from LN19.
+    * We previously defined 3 major subtypes of Leydig cells (LC); the progenitors (PLC), the immature (ILC), and the mature (MLC) groups.
+    *   The LN19 LC are found mostly in PLC and MLC clusters.
+    * LN19 contributes a distinct cluster of cells that we believed to be of myoid phenotype.
  
 ### LC only W. Zhao21:
 
@@ -122,15 +117,15 @@ Brief notes:
  
 ## HISTA Case Examples:
 
-Case example 1: You have one or more genes, and wish to learn more about them within HISTA.
+    Case example 1: You have one or more genes, and wish to learn more about them within HISTA.
 
-* To look at the expression of each gene, search for the gene in the main tab
+      * To look at the expression of each gene, search for the gene in the main tab
 
-* The figure header of the 2D (t-SNE or UMAP) expression plot in the main tab also lists in order of the SDA components and the associated loading, which enables identifying gene sets that correlate with the gene of interest
+      * The figure header of the 2D (t-SNE or UMAP) expression plot in the main tab also lists in order of the SDA components and the associated loading, which enables identifying gene sets that correlate with the gene of interest
 
-* To test pathology differential expression, on specific cell type (or all cells), the 'gene expression per pathology’ tab visualizes this with Wilcox statistics.
-*     To visualize expression across cell types but in specific pathologies, use the 'gene expression per cell type' tab. 
-* If this gene is a germ cell expressed gene, try the 'pseudotime expr’ tab to observe the expression pattern across pseudotime.
-* If you have more than ~3 genes, you can use the 'Enrichment analysis’ tab to find which components they are enriched in and search those components for annotation and find additional correlating genes. You can also use the 'top loaded components’ tab if your set of genes is fairly large. 
+      * To test pathology differential expression, on specific cell type (or all cells), the 'gene expression per pathology’ tab visualizes this with Wilcox statistics.
+      *     To visualize expression across cell types but in specific pathologies, use the 'gene expression per cell type' tab. 
+      * If this gene is a germ cell expressed gene, try the 'pseudotime expr’ tab to observe the expression pattern across pseudotime.
+      * If you have more than ~3 genes, you can use the 'Enrichment analysis’ tab to find which components they are enriched in and search those components for annotation and find additional correlating genes. You can also use the 'top loaded components’ tab if your set of genes is fairly large. 
 
 

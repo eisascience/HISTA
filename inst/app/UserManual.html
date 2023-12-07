@@ -354,19 +354,10 @@ display: none;
 
 <div id="hista" class="section level1">
 <h1>HISTA</h1>
-<div id="user-manual-v2.9.4" class="section level2">
-<h2>User Manual (V2.9.4)</h2>
+<div id="user-manual-v2.9.7" class="section level2">
+<h2>User Manual (V2.9.7)</h2>
 </div>
 <div id="description-of-tabs" class="section level2">
-<h2>Description of tabs</h2>
-</div>
-</div>
-<div id="hista-1" class="section level1">
-<h1>HISTA</h1>
-<div id="user-manual-v2.9.4-1" class="section level2">
-<h2>User Manual (V2.9.4)</h2>
-</div>
-<div id="description-of-tabs-1" class="section level2">
 <h2>Description of tabs</h2>
 <div id="home-page" class="section level3">
 <h3>Home Page:</h3>
@@ -374,46 +365,24 @@ display: none;
 </div>
 <div id="main-tab" class="section level3">
 <h3>Main tab:</h3>
-<pre><code>        This is the &#39;Main’ tab that HISTA loads. On the center top, two information boxes provide available background information for the selected SDA component and gene found in the interactive menu on the left panel of this tab. This menu has several parameters to change that alter what is being displayed.</code></pre>
-<p>From top to bottom of the page:</p>
-<ul>
-<li>In the Inputs sections, the first input allows searching SDA
-components via a numerical input.</li>
-<li>In the next box, genes (human symbols e.g. PRM1) can be searched to
-display the gene’s t-SNE projected expression. Additionally, HISTA will
-highlight the components that the gene of interest is mostly found or,
-in other words, highly loaded.</li>
-<li>In the next selection, via the radio button provided, it is possible
-to select which of the pre-processed t-SNE plots are shown (there are
-four options): The batch-removed SDA cell score matrix t-SNE (default).
-This t-SNE was produced on non-batch components of the SDA score matrix
-i.e., cells by components The batch-removed SDA cell score matrix UMAP.
-The pre-SDA DropSim-normalized expression matrix t-SNE. This t-SNE was
-produced on the gene expression matrix normalized by DropSim, which
-includes a square-root-based transformation. the batch-removed
-SDA-imputed expression matrix t-SNE. As explained earlier, by performing
-dot-product of the gene loading and cell score matrices, with only the
-non-batch components, we impute a batch-removed gene expression matrix
-on which t-SNE was run.</li>
-<li>The next set of radio buttons is to visualize available metadata
-such as donors, replicates, conditions, experiments, cell cycle, and
-cell type (default).</li>
-<li>The final items in the interactive menu are several buttons to
-download the top-loaded gene lists for export as well as manual
-navigation of the SDA components.</li>
-<li>The figures below the input section from top to bottom include the
-gene expression, cell score, and metadata 2D projection (t-SNE or UMAP).
-The cell score across donors scatter plot, which aids in seeing the
-selected component’s score distribution</li>
-<li>The gene ontology (GO) plots proved a pre-computed analysis of the
-top loaded genes that aid in translating the general signature
-observed.</li>
-<li>The chromosome location highlights the loading weight of each gene
-relative to their position across the chromosomes.</li>
-<li>At the bottom of this tab, the top loaded positive or negative genes
-are ranked and listed, but how many are shown can be inputted, with 20
-being the default.</li>
-</ul>
+<pre><code>        This is the &#39;Main’ tab that HISTA loads. On the center top, two information boxes provide available background information for the selected SDA component and gene found in the interactive menu on the left panel of this tab. This menu has several parameters to change that alter what is being displayed.
+
+    From top to bottom of the page:
+* In the Inputs sections, the first input allows searching SDA components via a numerical input.
+* In the next box, genes (human symbols e.g. PRM1) can be searched to display the gene&#39;s t-SNE projected expression. Additionally, HISTA will highlight the components that the gene of interest is mostly found or, in other words, highly loaded.
+* In the next selection, via the radio button provided, it is possible to select which of the pre-processed t-SNE plots are shown (there are four options):
+    The batch-removed SDA cell score matrix t-SNE (default). This t-SNE was produced on non-batch components of the SDA score matrix i.e., cells by components
+    The batch-removed SDA cell score matrix UMAP.
+    The pre-SDA DropSim-normalized expression matrix t-SNE. This t-SNE was produced on the gene expression matrix normalized by DropSim, which includes a square-root-based transformation.
+    The batch-removed SDA-imputed expression matrix t-SNE. As explained earlier, by performing dot-product of the gene loading and cell score matrices, with only the non-batch components, we impute a batch-removed gene expression matrix on which t-SNE was run.
+* The next set of radio buttons is to visualize available metadata such as donors, replicates, conditions, experiments, cell cycle, and cell type (default).
+* The final items in the interactive menu are several buttons to download the top-loaded gene lists for export as well as manual navigation of the SDA components.
+* The figures below the input section from top to bottom include:
+    The gene expression, cell score, and metadata 2D projection (t-SNE or UMAP).
+    The cell score across donors scatter plot, which aids in seeing the selected component’s score distribution
+* The gene ontology (GO) plots proved a pre-computed analysis of the top loaded genes that aid in translating the general signature observed.
+* The chromosome location highlights the loading weight of each gene relative to their position across the chromosomes. 
+* At the bottom of this tab, the top loaded positive or negative genes are ranked and listed, but how many are shown can be inputted, with 20 being the default.</code></pre>
 </div>
 <div id="index-of-components" class="section level3">
 <h3>Index of Components:</h3>
@@ -434,8 +403,11 @@ being the default.</li>
 </div>
 <div id="gene-expression-per-cell-type-2d" class="section level3">
 <h3>Gene Expression per cell type (2D):</h3>
-<pre><code>        Gene expression of a searched gene, batch-corrected, mapped on the t-SNE projection, with the ability to subset by cell type. Additional radio buttons allow selecting which 2D plot to show, e.g., t-SNE or UMAP, on various scopes of our data.
-        </code></pre>
+<pre><code>        Gene expression of a searched gene, batch-corrected, mapped on the t-SNE projection, with the ability to subset by cell type. Additional radio buttons allow selecting which 2D plot to show, e.g., t-SNE or UMAP, on various scopes of our data.</code></pre>
+</div>
+<div id="cell-scores-per-cell-type-boxplot" class="section level3">
+<h3>Cell scores per cell type (boxplot):</h3>
+<pre><code>        Scores of a searched component, mapped on the defined cell types, with the ability to subset donor sets. This enables to explore the scoring of each component relative to the cell types. combined with Gene Expression per cell type (boxplot) each cell type can be deeply investigated.</code></pre>
 </div>
 <div id="cell-scores-per-cell-type-2d" class="section level3">
 <h3>Cell scores per cell type (2D):</h3>
@@ -484,22 +456,16 @@ being the default.</li>
 <div id="soma-only-w.-ln19" class="section level3">
 <h3>Soma only W. LN19:</h3>
 <pre><code>      In 2019 a new Klinefelter scRNA-Seq was made available through collaboration with Leurentino et al., but after our initial data freeze, the SDA-HISTA analysis. Furthermore, after integrating this new single KS donor using our customized Seurat pipelines, we found evidence for differences that we believe are correlated with the sampling procedure and the age and health of the donor. Therefore, we plan to combine this data in later releases of HISTA. However, we limited our analysis to only validating our results with this new data for the current scope and release. This tab is provided as support material for our KS manuscript 1.
-      </code></pre>
-<p>Brief notes:</p>
-<ul>
-<li>As with the existing KS donors, there were no germ cells in this new
-patient, so we could only focus on the somatic cells.</li>
-<li>There is a single large cluster of Sertoli cells (SC) comprising at
-least 3 sub-clusters.</li>
-<li>The two smaller in diameter subclusters are enriched with JUV SC,
-but only one is enriched with the SC from other adults.</li>
-<li>The largest SC subcluster is mostly derived from LN19.</li>
-<li>We previously defined 3 major subtypes of Leydig cells (LC); the
-progenitors (PLC), the immature (ILC), and the mature (MLC) groups.</li>
-<li>The LN19 LC are found mostly in PLC and MLC clusters.</li>
-<li>LN19 contributes a distinct cluster of cells that we believed to be
-of myoid phenotype.</li>
-</ul>
+      
+Brief notes:
+
+* As with the existing KS donors, there were no germ cells in this new patient, so we could only focus on the somatic cells.
+* There is a single large cluster of Sertoli cells (SC) comprising at least 3 sub-clusters.
+*  The two smaller in diameter subclusters are enriched with JUV SC, but only one is enriched with the SC from other adults.
+*   The largest SC subcluster is mostly derived from LN19.
+* We previously defined 3 major subtypes of Leydig cells (LC); the progenitors (PLC), the immature (ILC), and the mature (MLC) groups.
+*   The LN19 LC are found mostly in PLC and MLC clusters.
+* LN19 contributes a distinct cluster of cells that we believed to be of myoid phenotype.</code></pre>
 </div>
 <div id="lc-only-w.-zhao21" class="section level3">
 <h3>LC only W. Zhao21:</h3>
@@ -508,27 +474,16 @@ of myoid phenotype.</li>
 </div>
 <div id="hista-case-examples" class="section level2">
 <h2>HISTA Case Examples:</h2>
-<p>Case example 1: You have one or more genes, and wish to learn more
-about them within HISTA.</p>
-<ul>
-<li><p>To look at the expression of each gene, search for the gene in
-the main tab</p></li>
-<li><p>The figure header of the 2D (t-SNE or UMAP) expression plot in
-the main tab also lists in order of the SDA components and the
-associated loading, which enables identifying gene sets that correlate
-with the gene of interest</p></li>
-<li><p>To test pathology differential expression, on specific cell type
-(or all cells), the ‘gene expression per pathology’ tab visualizes this
-with Wilcox statistics.</p></li>
-<li><pre><code>To visualize expression across cell types but in specific pathologies, use the &#39;gene expression per cell type&#39; tab. </code></pre></li>
-<li><p>If this gene is a germ cell expressed gene, try the ‘pseudotime
-expr’ tab to observe the expression pattern across pseudotime.</p></li>
-<li><p>If you have more than ~3 genes, you can use the ‘Enrichment
-analysis’ tab to find which components they are enriched in and search
-those components for annotation and find additional correlating genes.
-You can also use the ‘top loaded components’ tab if your set of genes is
-fairly large.</p></li>
-</ul>
+<pre><code>Case example 1: You have one or more genes, and wish to learn more about them within HISTA.
+
+  * To look at the expression of each gene, search for the gene in the main tab
+
+  * The figure header of the 2D (t-SNE or UMAP) expression plot in the main tab also lists in order of the SDA components and the associated loading, which enables identifying gene sets that correlate with the gene of interest
+
+  * To test pathology differential expression, on specific cell type (or all cells), the &#39;gene expression per pathology’ tab visualizes this with Wilcox statistics.
+  *     To visualize expression across cell types but in specific pathologies, use the &#39;gene expression per cell type&#39; tab. 
+  * If this gene is a germ cell expressed gene, try the &#39;pseudotime expr’ tab to observe the expression pattern across pseudotime.
+  * If you have more than ~3 genes, you can use the &#39;Enrichment analysis’ tab to find which components they are enriched in and search those components for annotation and find additional correlating genes. You can also use the &#39;top loaded components’ tab if your set of genes is fairly large. </code></pre>
 </div>
 </div>
 

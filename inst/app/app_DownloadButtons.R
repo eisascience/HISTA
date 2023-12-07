@@ -9,23 +9,56 @@ output$TXTall <- downloadHandler(
   }
 )
 
-output$geneexprstatsig_download <- downloadHandler(
+output$geneExprPerCond_download <- downloadHandler(
   filename = function(){
-    paste("geneexprstatsig_download", Sys.Date(), ".pdf", sep = "")
+    paste("geneExprPerCond_download", Sys.Date(), ".pdf", sep = "")
     # "test.pdf"
   },
   content = function(file) {
     pdf(file, width = 12, height =9, compress = T, pointsize = 15)
     # grid.text("This is some initial text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
     # grid::grid.newpage()
-    plot(GeneExprSigMeta_Rx())
+    plot(geneExprPerCond_box_Rx())
     # grid::grid.newpage()
     # grid.text("This is some final text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
-    # ggsave(file,GeneExprSigMeta_Rx(), width = 12, height =9,  units="in", device = "pdf")
+    # ggsave(file,geneExprPerCond_box_Rx(), width = 12, height =9,  units="in", device = "pdf")
     
     dev.off()
   })
 
+output$geneExprPerCT_download <- downloadHandler(
+  filename = function(){
+    paste("geneExprPerCT_download", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 7, height =5, compress = T, pointsize = 15)
+    # grid.text("This is some initial text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+    # grid::grid.newpage()
+    plot(geneExprPerCT_box_Rx())
+    # grid::grid.newpage()
+    # grid.text("This is some final text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+    # ggsave(file,geneExprPerCT_box_Rx(), width = 12, height =9,  units="in", device = "pdf")
+    
+    dev.off()
+  })
+
+output$celltypes_SDAperCT_box_download <- downloadHandler(
+  filename = function(){
+    paste("celltypes_SDAperCT_box_download", Sys.Date(), ".pdf", sep = "")
+    # "test.pdf"
+  },
+  content = function(file) {
+    pdf(file, width = 7, height =5, compress = T, pointsize = 15)
+    # grid.text("This is some initial text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+    # grid::grid.newpage()
+    plot(celltypes_SDAperCT_box_Rx())
+    # grid::grid.newpage()
+    # grid.text("This is some final text",  x=0.5, y=.9, gp=gpar(fontsize=18), check=TRUE)
+    # ggsave(file,geneExprPerCT_box_Rx(), width = 12, height =9,  units="in", device = "pdf")
+    
+    dev.off()
+  })
 
 
 output$tSNEwSDAScoreProj_download <- downloadHandler(
@@ -85,9 +118,9 @@ output$PseudotimeSDA_download <- downloadHandler(
     dev.off()
   })
 
-output$tsnepercelltype_download <- downloadHandler(
+output$DimReduxCT_download <- downloadHandler(
   filename = function(){
-    paste("tsnepercelltype_download_9x9", Sys.Date(), ".pdf", sep = "")
+    paste("DimReduxCT_download_9x9", Sys.Date(), ".pdf", sep = "")
     # "test.pdf"
   },
   content = function(file) {
@@ -96,9 +129,9 @@ output$tsnepercelltype_download <- downloadHandler(
     dev.off()
   })
 
-output$tsnepercelltype_gex_download<- downloadHandler(
+output$DimReduxCT_gex_download<- downloadHandler(
   filename = function(){
-    paste("tsnepercelltype_GEX_download_9x9", Sys.Date(), ".pdf", sep = "")
+    paste("DimReduxCT_GEX_download_9x9", Sys.Date(), ".pdf", sep = "")
     # "test.pdf"
   },
   content = function(file) {
@@ -107,9 +140,9 @@ output$tsnepercelltype_gex_download<- downloadHandler(
     dev.off()
   })
 
-output$tsnepercelltype_meta_download <- downloadHandler(
+output$DimReduxCT_meta_download <- downloadHandler(
   filename = function(){
-    paste("tsnepercelltype_meta_download_9x9", Sys.Date(), ".pdf", sep = "")
+    paste("DimReduxCT_meta_download_9x9", Sys.Date(), ".pdf", sep = "")
     # "test.pdf"
   },
   content = function(file) {
@@ -250,7 +283,7 @@ output$CompCorPlot_download <- downloadHandler(
   content = function(file) {
     tempLS = CompCor_Rx()
     
-  
+    
     
     pdf(file, width = 10, height =9, compress = T, pointsize = 15)
     
@@ -277,7 +310,7 @@ output$CompCorCustPlot_download <- downloadHandler(
   },
   content = function(file) {
     tempLS = CompCorCust_Rx()
-
+    
     
     pdf(file, width = 10, height =9, compress = T, pointsize = 15)
     

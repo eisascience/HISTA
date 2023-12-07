@@ -1,6 +1,16 @@
 
 # HISTA
 
+## V2.9.7 <current>
+
+### new feature
+
+Added new tab 'SDA score per Cell types' which allows selection of the SDA component and visualizes it by box plots relative to the cell types. This way, with the use of another similar tab called 'Gene Expression per Cell Types' one can rigoriously investigate the expression patterns of components and genes on each cell type; increasing transparency over the defined populations. 
+
+### bug fixes
+
+added download button for missing figs
+ 
 ## V2.9.6
 
 download button for the gene-expression tSNE debugged and working. 
@@ -58,7 +68,7 @@ The original code had a bug which prevented download of the pseudotime plot as a
 The original code had a bug which the metadata was not properly merged so wrong labels were shown.
 
 
-## V2.9 <current>
+## V2.9
 
 ### Computation of Gene expression, fliter for selected cells prior to dot-product of SDA matrices
 
