@@ -357,133 +357,672 @@ display: none;
 <div id="user-manual-v2.9.7" class="section level2">
 <h2>User Manual (V2.9.7)</h2>
 </div>
+<div id="tabs-overview" class="section level2">
+<h2>Tabs Overview</h2>
+<div id="home-page" class="section level3">
+<h3>Home Page</h3>
+<p>Graphical introduction to HISTA with a tabbed menu bar.</p>
+</div>
+<div id="main-tab" class="section level3">
+<h3>Main Tab</h3>
+<p>Default tab with interactive menu for SDA components and gene
+exploration.</p>
+</div>
+<div id="index-of-components" class="section level3">
+<h3>Index of Components</h3>
+<p>Table summarizing SDA components and observations.</p>
+</div>
+<div id="fingerprinting-heatmap" class="section level3">
+<h3>Fingerprinting (Heatmap)</h3>
+<p>Heatmaps identifying signature patterns for positive and negative
+cell scores.</p>
+</div>
+<div id="gene-expression-per-pathology-boxplot" class="section level3">
+<h3>Gene Expression per Pathology (Boxplot)</h3>
+<p>Gene expression boxplots across pathologies with Wilcox testing.</p>
+</div>
+<div id="gene-expression-per-cell-type-boxplot" class="section level3">
+<h3>Gene Expression per Cell Type (Boxplot)</h3>
+<p>Gene expression boxplots across cell types.</p>
+</div>
+<div id="gene-expression-per-cell-type-2d" class="section level3">
+<h3>Gene Expression per Cell Type (2D)</h3>
+<p>Gene expression on t-SNE projection, subset by cell type.</p>
+</div>
+<div id="cell-scores-per-cell-type-boxplot" class="section level3">
+<h3>Cell Scores per Cell Type (Boxplot)</h3>
+<p>Scores of a searched component, mapped on defined cell types.</p>
+</div>
+<div id="cell-scores-per-cell-type-2d" class="section level3">
+<h3>Cell Scores per Cell Type (2D)</h3>
+<p>Scores of a searched component, mapped on 2D projection.</p>
+</div>
+<div id="metadata-per-cell-type-2d" class="section level3">
+<h3>Metadata per Cell Type (2D)</h3>
+<p>Metadata mapped on 2D projection, subset by cell type.</p>
+</div>
+<div id="gene-correlations" class="section level3">
+<h3>Gene Correlations</h3>
+<p>Heatmap of gene-gene correlations within selected cells.</p>
+</div>
+<div id="component-correlations" class="section level3">
+<h3>Component Correlations</h3>
+<p>Heatmap of component-component correlation based on top-loaded
+genes.</p>
+</div>
+<div id="pseudotime-meta-germ-only" class="section level3">
+<h3>Pseudotime Meta (Germ Only)</h3>
+<p>Pseudotime trajectory visualizing cell scores of SDA components
+across germ cells.</p>
+</div>
+<div id="pseudotime-gene-germ-only" class="section level3">
+<h3>Pseudotime Gene (Germ Only)</h3>
+<p>Visualize gene expression across pseudotime for a searched gene.</p>
+</div>
+<div id="pseudotime-component-index" class="section level3">
+<h3>Pseudotime Component Index</h3>
+<p>Index of SDA components pertaining to germ cells and
+observations.</p>
+</div>
+<div id="enrichment-analysis" class="section level3">
+<h3>Enrichment Analysis</h3>
+<p>Hypergeometric testing to identify components enriched with a set of
+genes.</p>
+</div>
+<div id="top-loaded-components" class="section level3">
+<h3>Top Loaded Components</h3>
+<p>Statistical approach to identify key components enriched or depleted
+of a gene set.</p>
+</div>
+<div id="degenes" class="section level3">
+<h3>DEgenes</h3>
+<p>Explore Differentially Expressed (DE) Gene tables derived in the
+original analysis.</p>
+</div>
+<div id="lncrnas" class="section level3">
+<h3>lncRNAs</h3>
+<p>Explore long non-coding RNAs (lncRNAs) associated with a specific
+component.</p>
+</div>
+<div id="soma-only-w.-ln19" class="section level3">
+<h3>Soma Only W. LN19</h3>
+<p>Analysis limited to somatic cells with a new Klinefelter scRNA-Seq
+dataset.</p>
+</div>
+<div id="lc-only-w.-zhao21" class="section level3">
+<h3>LC Only W. Zhao21</h3>
+<p>Validation of Leydig cell findings with a new scRNA-Seq dataset.</p>
+</div>
+</div>
 <div id="description-of-tabs" class="section level2">
 <h2>Description of tabs</h2>
-<div id="home-page" class="section level3">
+<div id="home-page-1" class="section level3">
 <h3>Home Page:</h3>
 <pre><code>        The Home page of HISTA provides a graphical introduction to navigating HISTA. On the left is a tabbed menu bar to navigate the main features of HISTA, described in detail below.</code></pre>
 </div>
-<div id="main-tab" class="section level3">
+<div id="main-tab-1" class="section level3">
 <h3>Main tab:</h3>
-<pre><code>        This is the &#39;Main’ tab that HISTA loads. On the center top, two information boxes provide available background information for the selected SDA component and gene found in the interactive menu on the left panel of this tab. This menu has several parameters to change that alter what is being displayed.
-
-    From top to bottom of the page:
-* In the Inputs sections, the first input allows searching SDA components via a numerical input.
-* In the next box, genes (human symbols e.g. PRM1) can be searched to display the gene&#39;s t-SNE projected expression. Additionally, HISTA will highlight the components that the gene of interest is mostly found or, in other words, highly loaded.
-* In the next selection, via the radio button provided, it is possible to select which of the pre-processed t-SNE plots are shown (there are four options):
-    The batch-removed SDA cell score matrix t-SNE (default). This t-SNE was produced on non-batch components of the SDA score matrix i.e., cells by components
-    The batch-removed SDA cell score matrix UMAP.
-    The pre-SDA DropSim-normalized expression matrix t-SNE. This t-SNE was produced on the gene expression matrix normalized by DropSim, which includes a square-root-based transformation.
-    The batch-removed SDA-imputed expression matrix t-SNE. As explained earlier, by performing dot-product of the gene loading and cell score matrices, with only the non-batch components, we impute a batch-removed gene expression matrix on which t-SNE was run.
-* The next set of radio buttons is to visualize available metadata such as donors, replicates, conditions, experiments, cell cycle, and cell type (default).
-* The final items in the interactive menu are several buttons to download the top-loaded gene lists for export as well as manual navigation of the SDA components.
-* The figures below the input section from top to bottom include:
-    The gene expression, cell score, and metadata 2D projection (t-SNE or UMAP).
-    The cell score across donors scatter plot, which aids in seeing the selected component’s score distribution
-* The gene ontology (GO) plots proved a pre-computed analysis of the top loaded genes that aid in translating the general signature observed.
-* The chromosome location highlights the loading weight of each gene relative to their position across the chromosomes. 
-* At the bottom of this tab, the top loaded positive or negative genes are ranked and listed, but how many are shown can be inputted, with 20 being the default.</code></pre>
+<p>The ‘Main’ tab is the primary landing page when HISTA is launched. At
+the center-top, two information boxes present background details for the
+selected SDA component and gene, accessible through the interactive menu
+on the left panel of this tab. The menu offers various parameters to
+modify and customize the displayed content.</p>
+<p>Starting from the top and progressing downwards on the page:</p>
+<ul>
+<li><strong>Inputs Section:</strong>
+<ul>
+<li>The initial input field enables the search for SDA components using
+numerical input.</li>
+<li>In the subsequent box, genes (human symbols, e.g., PRM1) can be
+queried to reveal the gene’s t-SNE projected expression. HISTA also
+highlights the components where the gene of interest is predominantly
+found or highly loaded.</li>
+<li>The following selection, through a provided radio button, allows the
+user to choose which pre-processed t-SNE plots to display. Options
+include:
+<ul>
+<li>The default batch-removed SDA cell score matrix t-SNE, produced on
+non-batch components of the SDA score matrix (cells by components).</li>
+<li>The batch-removed SDA cell score matrix UMAP.</li>
+<li>The pre-SDA DropSim-normalized expression matrix t-SNE, derived from
+gene expression matrix normalization by DropSim, featuring a
+square-root-based transformation.</li>
+<li>The batch-removed SDA-imputed expression matrix t-SNE, obtained by
+performing a dot-product of the gene loading and cell score matrices,
+considering only non-batch components, resulting in a batch-removed gene
+expression matrix on which t-SNE was executed.</li>
+</ul></li>
+</ul></li>
+<li><strong>Visualization Options:</strong>
+<ul>
+<li>The subsequent set of radio buttons facilitates the visualization of
+available metadata, such as donors, replicates, conditions, experiments,
+cell cycle, and cell type (default).</li>
+<li>The final elements in the interactive menu include buttons for
+downloading top-loaded gene lists for export and manually navigating the
+SDA components.</li>
+</ul></li>
+<li><strong>Figures Below Input Section:</strong>
+<ul>
+<li>Gene expression, cell score, and metadata 2D projection (t-SNE or
+UMAP).</li>
+<li>Scatter plot of cell score across donors, providing insight into the
+distribution of scores for the selected component.</li>
+<li>Gene ontology (GO) plots offering a pre-computed analysis of
+top-loaded genes, aiding in translating the observed general
+signature.</li>
+<li>Chromosome location highlighting the loading weight of each gene
+relative to its position across the chromosomes.</li>
+</ul></li>
+<li><strong>Bottom of the Tab:</strong>
+<ul>
+<li>The top-loaded positive or negative genes are ranked and listed.
+Users can specify the number of displayed genes, with 20 being the
+default.</li>
+</ul></li>
+</ul>
 </div>
-<div id="index-of-components" class="section level3">
+<div id="index-of-components-1" class="section level3">
 <h3>Index of Components:</h3>
-<pre><code>        A table of the SDA components and our observations summarized pertaining to each. To curate this table, iterative rounds of analysis were performed on each component, representing a summarized form of our SDA findings.</code></pre>
+<p>A table of the SDA components and our observations summarized
+pertaining to each. To curate this table, iterative rounds of analysis
+were performed on each component, representing a summarized form of our
+SDA findings.</p>
 </div>
-<div id="fingerprinting-heatmap" class="section level3">
+<div id="fingerprinting-heatmap-1" class="section level3">
 <h3>Fingerprinting (heatmap):</h3>
-<pre><code>        Two heatmaps, identifying signature/barcode pattern, annotating each component quantitatively, one for positive and one for negative cell scores. Chi-squared analysis of the number of cells (positive or negative) per component identifies the enrichment of these cells per component. When contrasted by pathology (CNT, INF1, INF2, KS, JUV), we add an extra dimension to the enrichment analysis. The pair-wise hierarchical clustering (which can be turned off using the radio buttons provided) identifies similar enrichment patterns for positively or negatively scored cells, split by available metadata options, selectable via radio buttons, e.g., cell types, donors, pathology, etc. The columns represent the SDA components, and the rows are the experimental conditions. By defining thresholds on the cell score matrix, the number of cells that are scored positively or negatively are enumerated and passed through a Chi-Squared test; visualized are the transformed residuals that highlight enrichment or depletion by performing pairwise hierarchical clustering, the components and the samples that are most similar, cluster together. Interestingly, one of the results of this analysis supports our other findings that INF2, the patient with secondary azoospermia, is more similar to the adult controls than INF1, the idiopathic azoospermia patient.</code></pre>
+<p>Two heatmaps are utilized to identify signature/barcode patterns,
+annotating each component quantitatively. One heatmap is dedicated to
+positive cell scores, and the other to negative cell scores. A
+Chi-squared analysis is employed to assess the number of cells (positive
+or negative) per component, thus identifying the enrichment of these
+cells per component.</p>
+<p>When contrasting by pathology (CNT, INF1, INF2, KS, JUV), an extra
+dimension is added to the enrichment analysis. The pair-wise
+hierarchical clustering, which can be toggled using the provided radio
+buttons, identifies similar enrichment patterns for positively or
+negatively scored cells. Users can choose from available metadata
+options via radio buttons, such as cell types, donors, pathology,
+etc.</p>
+<p>The columns of the heatmap represent the SDA components, while the
+rows correspond to the experimental conditions. By defining thresholds
+on the cell score matrix, the number of cells scored positively or
+negatively is enumerated and subjected to a Chi-Squared test. Visualized
+are the transformed residuals that highlight enrichment or depletion.
+Pairwise hierarchical clustering is applied, revealing components and
+samples that are most similar, clustering together.</p>
+<p>An interesting result of this analysis supports previous findings
+that INF2, the patient with secondary azoospermia, is more similar to
+the adult controls than INF1, the idiopathic azoospermia patient.</p>
 </div>
-<div id="gene-expression-per-pathology-boxplot" class="section level3">
+<div id="gene-expression-per-pathology-boxplot-1" class="section level3">
 <h3>Gene Expression per pathology (boxplot):</h3>
-<pre><code>        Gene expression boxplots of a searched gene across pathology (CNT, INF1, INF2, KS, JUV) with Wilcox testing, with the ability to subset by cell type. Specifically, to test if the expression of a single gene is distributed similarly (computing p-value via Wilcox-rank-sum test) between the available experimental conditions in HISTA (CNT, KS, JUV, etc.); additionally, through the available radio buttons, it is possible to focus the hypothesis testing by cell type. For example, we can search XIST across all cell types and find it is significantly enriched in Klinefelter Syndrome (KS) (p&lt;2.22e-16 compared to controls). Next, by selecting Sertoli cells (SC), we find that this significant enrichment is lost, as previously reported1.</code></pre>
+<p>Gene expression boxplots depict the expression profile of a searched
+gene across different pathologies (CNT, INF1, INF2, KS, JUV). These
+boxplots are accompanied by Wilcox testing, assessing the distributional
+similarity of a single gene’s expression between the available
+experimental conditions in HISTA (e.g., CNT, KS, JUV). The p-value is
+computed via the Wilcox rank-sum test.</p>
+<p>Additionally, users have the ability to subset the analysis by cell
+type using available radio buttons. For example, searching for the XIST
+gene across all cell types may reveal its significant enrichment in
+Klinefelter Syndrome (KS) (p &lt; 2.22e-16 compared to controls).
+Further refinement is possible by selecting specific cell types, such as
+Sertoli cells (SC), where the previously observed significant enrichment
+may be lost, as reported previously1.</p>
 </div>
-<div id="gene-expression-per-cell-type-boxplot" class="section level3">
+<div id="gene-expression-per-cell-type-boxplot-1" class="section level3">
 <h3>Gene Expression per cell type (boxplot):</h3>
-<pre><code>        Gene expression boxplots of a searched gene, across cell types, with the ability to subset by pathology (All, CNT, INF1, INF2, KS, JUV). This tab enables the user to quantify the expression of a specific gene across all cell types. Unlike the per pathology boxplots, statistics are not provided due to minimizing the complexity of the figure. For example, we can observe that the Sertoli cell marker SOX9 is exclusively expressed in Sertoli cells. This approach is powerful at rapidly visualizing expression distribution across the available cell types.
-        </code></pre>
+<p>Gene expression boxplots illustrate the expression pattern of a
+searched gene across various cell types, with the option to subset by
+pathology (All, CNT, INF1, INF2, KS, JUV). This tab allows users to
+quantify the expression of a specific gene across all available cell
+types.</p>
+<p>Unlike the per pathology boxplots, statistics are not provided in
+this case, aiming to minimize the complexity of the figure. For
+instance, this visualization approach enables a quick observation, such
+as noting that the Sertoli cell marker SOX9 is exclusively expressed in
+Sertoli cells. This method proves powerful in rapidly visualizing the
+distribution of gene expression across the available cell types.</p>
 </div>
-<div id="gene-expression-per-cell-type-2d" class="section level3">
-<h3>Gene Expression per cell type (2D):</h3>
-<pre><code>        Gene expression of a searched gene, batch-corrected, mapped on the t-SNE projection, with the ability to subset by cell type. Additional radio buttons allow selecting which 2D plot to show, e.g., t-SNE or UMAP, on various scopes of our data.</code></pre>
+<div id="gene-expression-per-cell-type-2d-1" class="section level3">
+<h3>Gene Expression per Cell Type (2D):</h3>
+<p>This tab displays the gene expression of a searched gene,
+batch-corrected and mapped onto the t-SNE projection. Users have the
+flexibility to subset the analysis by cell type. Additional radio
+buttons offer the choice of displaying the 2D plot on various scopes of
+the data, such as t-SNE or UMAP.</p>
+<p>This visualization provides insights into the spatial distribution of
+gene expression in a 2D projection, allowing users to observe how the
+expression of a specific gene varies across different cell types. The
+option to select different 2D plots enhances the exploration of the gene
+expression landscape in the context of the chosen dimensionality
+reduction method.</p>
 </div>
-<div id="cell-scores-per-cell-type-boxplot" class="section level3">
-<h3>Cell scores per cell type (boxplot):</h3>
-<pre><code>        Scores of a searched component, mapped on the defined cell types, with the ability to subset donor sets. This enables to explore the scoring of each component relative to the cell types. combined with Gene Expression per cell type (boxplot) each cell type can be deeply investigated.</code></pre>
+<div id="cell-scores-per-cell-type-boxplot-1" class="section level3">
+<h3>Cell Scores per Cell Type (boxplot):</h3>
+<p>This tab visualizes scores of a searched component, mapped onto
+defined cell types, with the option to subset donor sets. It facilitates
+exploration into the scoring patterns of each component relative to the
+specified cell types.</p>
+<p>Combined with the Gene Expression per Cell Type (Boxplot) feature,
+users can deeply investigate each cell type. The parallel visualization
+of cell scores and gene expression allows for a comprehensive
+understanding of how the searched component behaves across different
+cell types and donor sets.</p>
 </div>
-<div id="cell-scores-per-cell-type-2d" class="section level3">
-<h3>Cell scores per cell type (2D):</h3>
-<pre><code>        Scores of a searched component, mapped on the 2D (t-SNE or UMAP) projection, with the ability to subset by cell type. To provide a deeper scope of visualizing the cell scores projected on the pre-computed 2D representation. In this tab, it is possible to subset the figure by cell type using the available radio buttons. For example, SDA component 1 demonstrates that the highest absolute scores are found in the spermatid population of the germ cells. By zooming in on these cells, we can better observe the distinct banding pattern that positively scores the last and early spermatids but negatively scores the spermatids between them. Digging into the gene loadings of this component, we observe specific gene regulation patterns that explain the banding observed in the cell scores; for example, the top positively loaded genes contain SPRR4 and PRM1, whereas the top negatively loaded genes contain FSCN3 and PRM3 supporting the regulation of spermiogenesis as the spermatids finish their maturation.
-        </code></pre>
+<div id="cell-scores-per-cell-type-2d-1" class="section level3">
+<h3>Cell Scores per Cell Type (2D):</h3>
+<p>This tab presents scores of a searched component mapped onto the 2D
+(t-SNE or UMAP) projection, offering the option to subset by cell type.
+The purpose is to provide a more in-depth visualization of cell scores
+projected onto the pre-computed 2D representation.</p>
+<p>Users can subset the figure by cell type using the available radio
+buttons. For instance, examination of SDA component 1 reveals that the
+highest absolute scores are concentrated in the spermatid population of
+germ cells. Zooming in on these cells allows for a closer observation of
+the distinct banding pattern, where last and early spermatids show
+positive scores while the spermatids between them exhibit negative
+scores.</p>
+<p>Digging into the gene loadings of this component unveils specific
+gene regulation patterns that explain the observed banding. For example,
+the top positively loaded genes include SPRR4 and PRM1, while the top
+negatively loaded genes consist of FSCN3 and PRM3, supporting the
+regulation of spermiogenesis as spermatids conclude their
+maturation.</p>
 </div>
-<div id="metadata-per-cell-type-2d" class="section level3">
+<div id="metadata-per-cell-type-2d-1" class="section level3">
 <h3>Metadata per cell type (2D):</h3>
-<pre><code>        In this tab, available metadata (selectable) are mapped on a 2D projection which can be subset by cell type (selectable). This tab enables the user to create parallel visualization to the focused t-SNE or UMAP of the cell score or gene expression 2D tabs, but with metadata, providing a closer look at the origin and background of each cell.
-        </code></pre>
+<p>This tab allows users to map available metadata (selectable) onto a
+2D projection, with the option to subset by cell type. It enables users
+to create a parallel visualization to the focused t-SNE or UMAP of the
+cell score or gene expression 2D tabs. The inclusion of metadata
+provides a closer look at the origin and background of each cell,
+enhancing the understanding of the characteristics associated with
+different cell types.</p>
 </div>
-<div id="gene-correlations" class="section level3">
+<div id="gene-correlations-1" class="section level3">
 <h3>Gene correlations:</h3>
-<pre><code>        In this tab, the user can input a set of genes and select a cell type via the radio buttons, which visualize a heatmap of gene-gene correlations within the selected cells. </code></pre>
+<p>This tab allows users to input a set of genes and select a cell type
+via radio buttons. The visualization consists of a heatmap displaying
+gene-gene correlations within the selected cells. Users can explore the
+relationships and patterns of expression among the specified set of
+genes within the chosen cell type.</p>
 </div>
-<div id="component-correlations" class="section level3">
+<div id="component-correlations-1" class="section level3">
 <h3>Component Correlations:</h3>
-<pre><code>        The top-loaded genes really are at the core of many assessments, including the translation of findings. We provide a way to explore and evaluate the relationship of the components narrowed by the number of top genes. First, select a component of interest (numeric input). Then use the slider to select how many top genes to include in the correlation analysis. Visualized is a heatmap of component-component correlation. For convenience, the top-loaded genes used are shown. </code></pre>
+<p>The top-loaded genes play a crucial role in various assessments,
+influencing the translation of findings. This tab offers a way to
+explore and evaluate the relationship of the components, narrowed down
+by the number of top genes.</p>
+<p>To begin, select a component of interest using numeric input. Then,
+use the slider to choose how many top genes to include in the
+correlation analysis. The result is visualized in a heatmap illustrating
+component-component correlations. For convenience, the top-loaded genes
+used in the analysis are displayed.</p>
 </div>
-<div id="pseudotime-meta-germ-only" class="section level3">
+<div id="pseudotime-meta-germ-only-1" class="section level3">
 <h3>Pseudotime Meta (germ only):</h3>
-<pre><code>      A pseudotime trajectory, as previously described, was inferred on the t-SNE 2D projection of the germ cells, giving order to cells driven by the transcriptomic landscape that also parallels the known spermatogenesis trajectory. Plotting the cell scores of SDA components (y-axis) pertaining to germ cells across the cells ordered by pseudotime (x-axis), we commonly see &quot;wave&quot; patterns that translate to transcriptional kinetics of that component relative to the affected cells. There is an additional ability to select available metadata to identify correlating scoring patterns.</code></pre>
+<p>In this tab, a pseudotime trajectory is inferred on the t-SNE 2D
+projection of germ cells. This trajectory provides order to cells driven
+by the transcriptomic landscape, parallel to the known spermatogenesis
+trajectory.</p>
+<p>The cell scores of SDA components (y-axis) related to germ cells are
+plotted across cells ordered by pseudotime (x-axis). Commonly observed
+“wave” patterns translate to transcriptional kinetics of that component
+relative to the affected cells.</p>
+<p>Additionally, users have the ability to select available metadata,
+aiding in the identification of correlating scoring patterns within the
+pseudotime trajectory.</p>
 </div>
-<div id="pseudotime-gene-germ-only" class="section level3">
+<div id="pseudotime-gene-germ-only-1" class="section level3">
 <h3>Pseudotime Gene (germ only):</h3>
-<pre><code>        This tab allows users to type in a gene of interest to visualize the expression wave across our defined pseudotime. Additionally, metadata selection is available to visualize differential expression patterns. </code></pre>
+<p>This tab enables users to type in a gene of interest, visualizing the
+expression wave across our defined pseudotime for germ cells. The
+plotted expression wave provides insights into how the gene’s expression
+changes over the trajectory of pseudotime.</p>
+<p>Furthermore, users can select metadata options to visualize any
+differential expression patterns associated with the specified gene
+across the pseudotime trajectory. This feature enhances the exploration
+of gene expression dynamics within the context of pseudotime in germ
+cells.</p>
 </div>
-<div id="pseudotime-component-index" class="section level3">
+<div id="pseudotime-component-index-1" class="section level3">
 <h3>Pseudotime Component Index:</h3>
-<pre><code>        An index of the SDA components pertaining to germ cells and a summary of our observations. A key feature of this table is the order given to these components relative to the cells (i.e., stages of spermatogenesis) they score with the most magnitude. This ranking is found by identifying the main peak/maxima of the density curve that is fitted to the scores (y-axis) by pseudotime (x-axis) scatter via a peak finding algorithm; the position of this maxima defines the rank. For example, the third-ranked SDA component, SDA #149, splits early spermatogonial cells into 3 sections where the intermediate section is scored negatively opposite to the others, which we describe more in detail in the vignettes section.</code></pre>
+<p>This tab presents an index of the SDA components related to germ
+cells along with a summary of observations. A key feature of this table
+is the order assigned to these components relative to the cells,
+representing stages of spermatogenesis, where they score with the most
+magnitude.</p>
+<p>The ranking is determined by identifying the main peak/maxima of the
+density curve fitted to the scores (y-axis) by pseudotime (x-axis)
+scatter using a peak-finding algorithm. The position of this maxima
+defines the rank. For example, the third-ranked SDA component, SDA #149,
+splits early spermatogonial cells into three sections, where the
+intermediate section is scored negatively opposite to the others.
+Further details are provided in the vignettes section.</p>
 </div>
-<div id="enrichment-analysis" class="section level3">
+<div id="enrichment-analysis-1" class="section level3">
 <h3>Enrichment analysis:</h3>
-<pre><code>        Given a set of genes, hypergeometric testing (K=150) identifies which components are highly enriched with those genes. In application, we find an adjusted p-value less than 0.01 to find significant enrichments. However, the fold enrichment can also be highly informative when significance is not determined. This statistical approach is most appropriate for less than ~30 more than 3 genes.</code></pre>
+<p>This tab performs hypergeometric testing (K=150) given a set of genes
+to identify components that are highly enriched with those genes. The
+analysis considers an adjusted p-value less than 0.01 for determining
+significant enrichments. However, the fold enrichment can also provide
+valuable insights even in the absence of statistical significance.</p>
+<p>It’s important to note that this statistical approach is most
+suitable for sets with less than ~30 genes, and it is particularly
+informative when dealing with more than 3 genes.</p>
 </div>
-<div id="top-loaded-components" class="section level3">
+<div id="top-loaded-components-1" class="section level3">
 <h3>Top loaded components:</h3>
-<pre><code>        This tab is another statistical approach to identify key components that parallel enrichment analysis, although this method is best suited for larger sets of genes. As a default, the input is loaded with antisense genes. There are several figures in this tab. First, there is a histogram layered with a density plot comparing two distributions. Given a set of genes enriched in some biology of interest, e.g., antisense genes, we can compute the distribution of how many of these genes are found across the top positive and negative loaded components. This distribution is layered over a second distribution derived from an equal-length random sample of genes (computed dynamically). By comparing these distributions, we can evaluate components enriched for or depleted of our selected genes relative to a random sample. 
-        In the next plot, the components are ranked by how many genes of the input set are found in the top loaded components, split by positive and negative loading direction. Based on the first figure in this tab, we can use general statistics like the mean number of genes derived from a random set (~9 for the default gene set) to filter which components are more or less than average enriched or depleted respectively of the input gene set. 
-        The last figure is a correlation heatmap of the gene loading components filtered by the input gene. This identifies structural similarity amongst the components in the defined gene space. Each component is enriched with a certain pathology and cell type annotated on this heatmap&#39;s rows. </code></pre>
+<p>This tab employs a statistical approach to identify key components,
+particularly suitable for larger sets of genes. The default input is
+loaded with antisense genes. The tab includes several figures:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Histogram and Density Plot:</strong>
+<ul>
+<li>Compares two distributions, depicting how many genes from the input
+set (e.g., antisense genes) are found across the top positive and
+negative loaded components.</li>
+<li>The distribution is layered over a second distribution derived from
+an equal-length random sample of genes (computed dynamically).</li>
+</ul></li>
+<li><strong>Ranking of Components:</strong>
+<ul>
+<li>Components are ranked based on how many genes from the input set are
+found in the top loaded components, split by positive and negative
+loading direction.</li>
+<li>This ranking provides insights into components that are more or less
+enriched than the average for the input gene set.</li>
+</ul></li>
+<li><strong>Correlation Heatmap:</strong>
+<ul>
+<li>Displays a heatmap of gene loading components filtered by the input
+gene.</li>
+<li>Identifies structural similarity among the components in the defined
+gene space.</li>
+<li>Each component is annotated with enrichment information for certain
+pathology and cell type on the heatmap’s rows.</li>
+</ul></li>
+</ol>
 </div>
-<div id="lncrnas" class="section level3">
+<div id="degenes-1" class="section level3">
+<h3>DEgenes:</h3>
+<p>The DEgenes tab enables users to explore the Differentially Expressed
+(DE) Gene tables derived from the original analysis. Key features
+include:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Model Conditions Selection:</strong>
+<ul>
+<li>The top drop-down menu allows users to select model conditions for
+comparison (e.g., control vs infertiles - CNTL_vs_INF1, CNTL_vs_INF2,
+CNTL_vs_KS, etc.).</li>
+</ul></li>
+<li><strong>Unsupervised Clustering DE Selection:</strong>
+<ul>
+<li>Users can choose DE genes derived from unsupervised clustering
+within subclusters of each cell type.</li>
+<li>Selection is available through the second drop-down menu, allowing
+users to explore the DE landscape of transcripts within each cell
+type.</li>
+</ul></li>
+</ol>
+</div>
+<div id="lncrnas-1" class="section level3">
 <h3>lncRNAs:</h3>
-<pre><code>      As described in this manuscript&#39;s long non-coding RNA (lncRNA) vignette, we have reproduced some of these figures. Additionally, this tab yields the lncRNAs are provided by entering the component number interest in the input box.  On the top, a Venn diagram shows the overlap of Ensembl lncRNA annotated genes and all genes found in HISTA. As described in the &#39;top loaded components’ tab, we observe distribution overlap of the number of these genes found in the top loaded genes across components, compared to a random equal-length set of genes. Then the components are sorted and split by direction to identify lncRNA-enriched components. </code></pre>
+<p>The lncRNAs tab, described in this manuscript’s long non-coding RNA
+(lncRNA) vignette, offers insights into lncRNAs. Key features
+include:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Component Number Input:</strong>
+<ul>
+<li>Users can explore lncRNAs by entering the component number of
+interest in the input box.</li>
+</ul></li>
+<li><strong>Venn Diagram:</strong>
+<ul>
+<li>At the top, a Venn diagram illustrates the overlap between Ensembl
+lncRNA annotated genes and all genes found in HISTA.</li>
+</ul></li>
+<li><strong>Distribution Analysis:</strong>
+<ul>
+<li>Similar to the ‘Top Loaded Components’ tab, the tab observes the
+distribution overlap of the number of lncRNA genes found in the
+top-loaded genes across components.</li>
+<li>A comparison is made with a random equal-length set of genes.</li>
+</ul></li>
+<li><strong>Component Sorting:</strong>
+<ul>
+<li>Components are sorted and split by direction to identify
+lncRNA-enriched components.</li>
+</ul></li>
+</ol>
 </div>
-<div id="soma-only-w.-ln19" class="section level3">
+<div id="soma-only-w.-ln19-1" class="section level3">
 <h3>Soma only W. LN19:</h3>
-<pre><code>      In 2019 a new Klinefelter scRNA-Seq was made available through collaboration with Leurentino et al., but after our initial data freeze, the SDA-HISTA analysis. Furthermore, after integrating this new single KS donor using our customized Seurat pipelines, we found evidence for differences that we believe are correlated with the sampling procedure and the age and health of the donor. Therefore, we plan to combine this data in later releases of HISTA. However, we limited our analysis to only validating our results with this new data for the current scope and release. This tab is provided as support material for our KS manuscript 1.
-      
-Brief notes:
-
-* As with the existing KS donors, there were no germ cells in this new patient, so we could only focus on the somatic cells.
-* There is a single large cluster of Sertoli cells (SC) comprising at least 3 sub-clusters.
-*  The two smaller in diameter subclusters are enriched with JUV SC, but only one is enriched with the SC from other adults.
-*   The largest SC subcluster is mostly derived from LN19.
-* We previously defined 3 major subtypes of Leydig cells (LC); the progenitors (PLC), the immature (ILC), and the mature (MLC) groups.
-*   The LN19 LC are found mostly in PLC and MLC clusters.
-* LN19 contributes a distinct cluster of cells that we believed to be of myoid phenotype.</code></pre>
+<p>The “Soma only W. LN19” tab provides support material for the KS
+manuscript 1, focusing on the new Klinefelter scRNA-Seq data from
+Leurentino et al. (2019). Key points include:</p>
+<div id="brief-notes" class="section level4">
+<h4>Brief Notes:</h4>
+<ul>
+<li><strong>Germ Cell Absence:</strong>
+<ul>
+<li>As with the existing KS donors, there were no germ cells in this new
+patient. Therefore, the analysis focuses exclusively on somatic
+cells.</li>
+</ul></li>
+<li><strong>Sertoli Cell Clusters:</strong>
+<ul>
+<li>A single large cluster of Sertoli cells (SC) is identified,
+comprising at least 3 sub-clusters.</li>
+<li>Two smaller subclusters with a smaller diameter are enriched with
+juvenile Sertoli cells (JUV SC), with only one enriched with SC from
+other adults.</li>
+<li>The largest SC subcluster is mostly derived from LN19.</li>
+</ul></li>
+<li><strong>Leydig Cell Subtypes:</strong>
+<ul>
+<li>Three major subtypes of Leydig cells (LC) are defined: progenitors
+(PLC), immature (ILC), and mature (MLC) groups.</li>
+<li>LN19 LC are predominantly found in PLC and MLC clusters.</li>
+</ul></li>
+<li><strong>Distinct Cell Cluster:</strong>
+<ul>
+<li>LN19 contributes a distinct cluster of cells believed to be of a
+myoid phenotype.</li>
+</ul></li>
+</ul>
 </div>
-<div id="lc-only-w.-zhao21" class="section level3">
+<div id="data-integration" class="section level4">
+<h4>Data Integration:</h4>
+<ul>
+<li>The new single KS donor data is integrated using customized Seurat
+pipelines.</li>
+<li>Differences correlated with the sampling procedure, age, and health
+of the donor are identified.</li>
+<li>The plan is to combine this data in later releases of HISTA.</li>
+</ul>
+</div>
+<div id="limitation" class="section level4">
+<h4>Limitation:</h4>
+<ul>
+<li>The current analysis is limited to validating results with the new
+data, and comprehensive integration is planned for future releases.</li>
+</ul>
+</div>
+</div>
+<div id="lc-only-w.-zhao21-1" class="section level3">
 <h3>LC only W. Zhao21:</h3>
-<pre><code>        In 2021, a new scRNA-Seq dataset was published by Zhao et al. We plan to combine this data in later releases of HISTA; however, for the current scope and release, we limited our analysis to only validating our results with this new data. More recently, in attempts to download the raw sequencing files of this data, significant anomalies have been identified, which may limit our future integration of all of this data. Many of the samples from this dataset failed bioinformatics QC processes. Nonetheless, using their processed count data, we validated our Leydig cell findings as support material for our KS manuscript1. As mentioned above, we have previously defined 3 major subtypes of Leydig cells (LC); the progenitors (PLC), the immature (ILC), and the mature (MLC) groups. By combining the LN19 and Zhao21 data, we validate we find these clusters in an integrated dataset composed of cells from multiple donors, which is critical as these populations, such as the MLCs, are fairly infrequent relative to other cells of the testis, especially in normal conditions.</code></pre>
+<p>The “Zhao et al. Validation” tab provides validation support for the
+KS manuscript1 based on the 2021 scRNA-Seq dataset by Zhao et al.</p>
+<div id="data-overview" class="section level4">
+<h4>Data Overview:</h4>
+<ul>
+<li>A new scRNA-Seq dataset by Zhao et al. was published in 2021.</li>
+<li>Future releases of HISTA plan to integrate this data; however,
+current limitations restrict full integration due to anomalies and
+failed QC processes.</li>
+</ul>
+</div>
+<div id="analysis-scope" class="section level4">
+<h4>Analysis Scope:</h4>
+<ul>
+<li>The current release of HISTA is limited to validating results using
+processed count data from Zhao et al.’s dataset.</li>
+<li>Significant anomalies in raw sequencing files may limit future
+integration efforts.</li>
+</ul>
+</div>
+<div id="leydig-cell-findings-validation" class="section level4">
+<h4>Leydig Cell Findings Validation:</h4>
+<ul>
+<li>Leydig cells (LC) are categorized into three major subtypes:
+progenitors (PLC), immature (ILC), and mature (MLC) groups.</li>
+<li>Validation focuses on confirming the presence of these clusters in
+an integrated dataset that combines LN19 and Zhao21 data.</li>
+<li>Integration involves cells from multiple donors, providing critical
+validation, especially for infrequent populations like MLCs under normal
+conditions.</li>
+</ul>
+</div>
+<div id="limitations" class="section level4">
+<h4>Limitations:</h4>
+<ul>
+<li>Challenges in downloading raw sequencing files and failed QC
+processes in many samples may impact future data integration
+efforts.</li>
+<li>The validation is based on processed count data, acknowledging the
+limitations imposed by these constraints.</li>
+</ul>
+</div>
 </div>
 </div>
 <div id="hista-case-examples" class="section level2">
 <h2>HISTA Case Examples:</h2>
-<pre><code>Case example 1: You have one or more genes, and wish to learn more about them within HISTA.
-
-  * To look at the expression of each gene, search for the gene in the main tab
-
-  * The figure header of the 2D (t-SNE or UMAP) expression plot in the main tab also lists in order of the SDA components and the associated loading, which enables identifying gene sets that correlate with the gene of interest
-
-  * To test pathology differential expression, on specific cell type (or all cells), the &#39;gene expression per pathology’ tab visualizes this with Wilcox statistics.
-  *     To visualize expression across cell types but in specific pathologies, use the &#39;gene expression per cell type&#39; tab. 
-  * If this gene is a germ cell expressed gene, try the &#39;pseudotime expr’ tab to observe the expression pattern across pseudotime.
-  * If you have more than ~3 genes, you can use the &#39;Enrichment analysis’ tab to find which components they are enriched in and search those components for annotation and find additional correlating genes. You can also use the &#39;top loaded components’ tab if your set of genes is fairly large. </code></pre>
+<div id="case-1-gene-centric-exploration-in-hista" class="section level3">
+<h3>Case 1: Gene-Centric Exploration in HISTA</h3>
+<p>If you have one or more genes and want to learn more about them
+within HISTA, follow these steps:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Main Tab:</strong>
+<ul>
+<li>To examine the expression of each gene, search for the gene in the
+“Main” tab.</li>
+</ul></li>
+<li><strong>2D Expression Plot (t-SNE or UMAP) in Main Tab:</strong>
+<ul>
+<li>The figure header of the 2D expression plot in the “Main” tab
+provides information on SDA components and their loading.</li>
+<li>This information helps identify gene sets that correlate with the
+gene of interest.</li>
+</ul></li>
+<li><strong>Gene Expression Per Pathology Tab:</strong>
+<ul>
+<li>Use the ‘Gene Expression Per Pathology’ tab to visualize
+pathology-specific differential expression.</li>
+<li>This tab allows you to specify a particular cell type or analyze
+expression across all cells.</li>
+</ul></li>
+<li><strong>Gene Expression Per Cell Type Tab:</strong>
+<ul>
+<li>Explore expression across cell types within specific pathologies
+using the ‘Gene Expression Per Cell Type’ tab.</li>
+</ul></li>
+<li><strong>Pseudotime Expr Tab:</strong>
+<ul>
+<li>If the gene is expressed in germ cells, check the ‘Pseudotime Expr’
+tab to observe expression patterns across pseudotime.</li>
+</ul></li>
+<li><strong>Enrichment Analysis Tab:</strong>
+<ul>
+<li>For more than ~3 genes, use the ‘Enrichment Analysis’ tab to
+identify components enriched with these genes.</li>
+<li>Search these components for annotations and additional correlating
+genes.</li>
+</ul></li>
+<li><strong>Top Loaded Components Tab:</strong>
+<ul>
+<li>If your gene set is large, explore the ‘Top Loaded Components’ tab
+for a heatmap of component-component correlation.</li>
+</ul></li>
+</ol>
+<p>These steps allow comprehensive exploration of gene expression
+patterns and relationships within HISTA.</p>
+</div>
+<div id="case-2-exploring-differential-expression-patterns-in-hista" class="section level3">
+<h3>Case 2: Exploring Differential Expression Patterns in HISTA</h3>
+<p>Suppose you’re interested in understanding the differential
+expression patterns across various pathologies and cell types in HISTA.
+Here’s a step-by-step guide:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Main Tab:</strong>
+<ul>
+<li>Start in the “Main” tab to get an overview of available
+information.</li>
+<li>Explore the 2D (t-SNE or UMAP) expression plot to identify potential
+genes of interest.</li>
+</ul></li>
+<li><strong>Gene Expression Per Pathology Tab:</strong>
+<ul>
+<li>Navigate to the ‘Gene Expression Per Pathology’ tab.</li>
+<li>Choose a specific cell type or analyze expression across all
+cells.</li>
+<li>Utilize Wilcox statistics to visualize the differential expression
+of genes across different pathologies.</li>
+</ul></li>
+<li><strong>Gene Expression Per Cell Type Tab:</strong>
+<ul>
+<li>Move to the ‘Gene Expression Per Cell Type’ tab to focus on
+expression patterns within specific cell types.</li>
+<li>This provides a detailed view of how genes vary across different
+cell types within selected pathologies.</li>
+</ul></li>
+<li><strong>Pseudotime Expr Tab:</strong>
+<ul>
+<li>If interested in germ cell expression patterns, check the
+‘Pseudotime Expr’ tab.</li>
+<li>Observe how gene expression changes across pseudotime, gaining
+insights into developmental trajectories.</li>
+</ul></li>
+<li><strong>Enrichment Analysis Tab:</strong>
+<ul>
+<li>For a broader perspective, switch to the ‘Enrichment Analysis’
+tab.</li>
+<li>Identify components enriched with specific gene sets, helping to
+understand their functional relevance.</li>
+</ul></li>
+<li><strong>Top Loaded Components Tab:</strong>
+<ul>
+<li>Explore the ‘Top Loaded Components’ tab for a heatmap of
+component-component correlation.</li>
+<li>This step is particularly useful when dealing with a larger set of
+genes, revealing relationships and potential co-regulation.</li>
+</ul></li>
+</ol>
+<p>By following these steps, you can gain a comprehensive understanding
+of how genes are expressed and regulated across different conditions and
+cell types in HISTA.</p>
+</div>
+<div id="case-3-exploring-pseudotime-expression-dynamics-in-hista" class="section level3">
+<h3>Case 3: Exploring Pseudotime Expression Dynamics in HISTA</h3>
+<p>Let’s say you are interested in understanding how the expression of
+certain genes evolves across pseudotime, representing the progression of
+spermatogenesis. Here’s how you can explore this within HISTA: markdown
+Copy code * Start by searching for your genes of interest in the ‘Main’
+tab to observe their expression patterns in the 2D (t-SNE or UMAP)
+projection.</p>
+<ul>
+<li><p>Head to the ‘Pseudotime Expr’ tab to visualize the expression
+pattern of these genes along the pseudotime trajectory.</p></li>
+<li><p>To gain a comprehensive view, consider using the ‘Gene Expression
+Per Pathology’ tab to evaluate differential expression across different
+pathologies.</p></li>
+<li><p>If you have a set of genes, the ‘Enrichment Analysis’ tab can
+help identify which SDA components are enriched with these genes,
+providing deeper insights into their functional relevance.</p></li>
+</ul>
+</div>
 </div>
 </div>
 

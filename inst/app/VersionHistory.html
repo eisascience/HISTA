@@ -352,177 +352,138 @@ display: none;
 </div>
 
 
-<div id="hista" class="section level1">
-<h1>HISTA</h1>
-<div id="v2.9.7" class="section level2">
-<h2>V2.9.7 <current></h2>
-<div id="new-feature" class="section level3">
-<h3>new feature</h3>
-<p>Added new tab ‘SDA score per Cell types’ which allows selection of
-the SDA component and visualizes it by box plots relative to the cell
-types. This way, with the use of another similar tab called ‘Gene
-Expression per Cell Types’ one can rigoriously investigate the
-expression patterns of components and genes on each cell type;
-increasing transparency over the defined populations.</p>
+<div id="hista-version-history" class="section level1">
+<h1>HISTA Version History</h1>
+<div id="v2.9.7-current" class="section level2">
+<h2>V2.9.7 (Current)</h2>
+<div id="new-features" class="section level3">
+<h3>New Features</h3>
+<ul>
+<li><p>Introduced ‘SDA Score per Cell Types’ tab, enabling selection of
+SDA components and visualization through box plots relative to cell
+types. This complements the ‘Gene Expression per Cell Types’ tab for
+comprehensive investigation of expression patterns across
+populations.</p></li>
+<li><p>Added ‘DEgenes’ tab for searching differentially expressed genes
+in various modeling conditions, such as case-control and unsupervised
+clustering.</p></li>
+</ul>
 </div>
 <div id="bug-fixes" class="section level3">
-<h3>bug fixes</h3>
-<p>added download button for missing figs</p>
+<h3>Bug Fixes</h3>
+<ul>
+<li>Addressed missing figure download button.</li>
+</ul>
 </div>
 </div>
 <div id="v2.9.6" class="section level2">
 <h2>V2.9.6</h2>
-<p>download button for the gene-expression tSNE debugged and
-working.</p>
+<ul>
+<li>Resolved gene-expression t-SNE download button issue.</li>
+</ul>
 </div>
 <div id="v2.9.5" class="section level2">
 <h2>V2.9.5</h2>
 <div id="bug-fixes-1" class="section level3">
-<h3>bug fixes</h3>
-<p>tSNE - batch-removed imputed DGE was not loading, but now shows the
-tSNE is shown.</p>
+<h3>Bug Fixes</h3>
+<ul>
+<li>Fixed t-SNE batch-removed imputed DGE loading issue.</li>
+</ul>
 </div>
 <div id="updates" class="section level3">
-<h3>updates</h3>
-<p>Color set updated to remove ambigious colors in set</p>
-<p>UMAP is computed and added to the Main tab, selectable from the data
-origin selection. UMAP is added to various tabs that were only tSNE; now
-they show both and thus tab names are updated from (tSNE) to (2D)</p>
-<p>Fingerprinting tab is now interactive with capacity to select several
-metadata and to cluster or not (order comps numerically)</p>
-<p>The menu/tab items have been rearranged, grouping similar analyses
-together</p>
-<p>New tab, Gene correlations added to explore gene-gene correlations
-per cell type populations new tab, Component correlations to evaluate
-component - component relationships given N top loadings; this is
-because the top N loadings drive the correlation, you may desire strict
-local evaluation by reducing the N or global with higher N</p>
-<p>New tab, pseudotime Gene is designed to evaluate a gene expression
-across spermatogenesis pseudotime; although the pseudotime meta tab is
-also available to explore the mapping of metadata to this pseudotime,
-the pseudotime gene, also plots relative to the gene expression several
-metadata options</p>
+<h3>Updates</h3>
+<ul>
+<li>Updated color set to remove ambiguous colors.</li>
+<li>Computed UMAP in the Main tab, making it selectable from the data
+origin.</li>
+<li>Added UMAP to various tabs, updating names from (t-SNE) to
+(2D).</li>
+<li>Enhanced interactivity in the Fingerprinting tab.</li>
+<li>Reorganized menu/tab items for improved grouping.</li>
+</ul>
 </div>
 </div>
 <div id="v2.9.4" class="section level2">
 <h2>V2.9.4</h2>
-<div id="top-enriched-componnents-with-specific-gene-sets" class="section level3">
-<h3>Top enriched componnents with specific Gene sets</h3>
-<p>Similar to the lncRNA specific analysis, however you can input any
-gene set of interest to identify enrichment of the set in the top 200
-genes of each component; see the ‘Top Loaded Components’ tab.</p>
-<p>Note: There is already an enrichment analyis tab which uses a
-statistical method to formally test components enriched with a smaller
-gene set. However, in this tab, we can input large sets of genes of
-interest, as an example we have input the genes with -AS (antisense
-genes) to highlight this feature.</p>
-</div>
+<ul>
+<li>Introduced ‘Top Enriched Components with Specific Gene Sets’
+tab.</li>
+</ul>
 </div>
 <div id="v2.9.3" class="section level2">
 <h2>V2.9.3</h2>
-<div id="lncrna-analysis-added" class="section level3">
-<h3>lncRNA analysis added</h3>
-<p>Added a new tab that that include the lncRNA specific analysis; the
-“lncRNA - Expr of top-loaded” tab.</p>
-</div>
+<ul>
+<li>Added ‘lncRNA Analysis’ tab for specific analysis related to long
+non-coding RNAs.</li>
+</ul>
 </div>
 <div id="v2.9.2" class="section level2">
 <h2>V2.9.2</h2>
-<div id="pseudotime-pdf-download-button-fixed" class="section level3">
-<h3>Pseudotime pdf download button fixed</h3>
-<p>The original code had a bug which prevented download of the
-pseudotime plot as a pdf.</p>
-</div>
+<ul>
+<li>Fixed pseudotime PDF download button.</li>
+</ul>
 </div>
 <div id="v2.9.1" class="section level2">
 <h2>V2.9.1</h2>
-<div id="gene-expr-per-cell-type-boxplot-tab-bug-fix" class="section level3">
-<h3>Gene Expr per cell type (boxplot) tab bug fix</h3>
-<p>The original code had a bug which the metadata was not properly
-merged so wrong labels were shown.</p>
-</div>
+<ul>
+<li>Resolved bug in ‘Gene Expr per Cell Type (Boxplot)’ tab related to
+metadata merging.</li>
+</ul>
 </div>
 <div id="v2.9" class="section level2">
 <h2>V2.9</h2>
-<div id="computation-of-gene-expression-fliter-for-selected-cells-prior-to-dot-product-of-sda-matrices" class="section level3">
-<h3>Computation of Gene expression, fliter for selected cells prior to
-dot-product of SDA matrices</h3>
-<p>The original code in HISTA prior to this version, when selecting a
-subset of cells, it did not subset the SDA matrices prior to the
-dot-product, rather the dot-product was done on the entire matrix then
-subseting was done. see V2.8 GEX by cell type update.</p>
-</div>
-<div id="cell-cycle-labels" class="section level3">
-<h3>Cell cycle labels</h3>
-<p>Cell cycle (G1, G2M, or S phase) was inferred using Seurat methods on
-a Seurat-processed object of this data. This label is now available via
-the selection bottons as a meta feature.</p>
-</div>
-<div id="add-version-history" class="section level3">
-<h3>Add version history</h3>
-<p>Prior to this entry, the version history reflects major updates, as
-minor changes were not captured. However, going forward, all changes
-will be captured herein.</p>
+<div id="major-updates" class="section level3">
+<h3>Major Updates</h3>
+<ul>
+<li>Improved computation of gene expression, filtering selected cells
+prior to dot-product of SDA matrices.</li>
+<li>Added cell cycle labels (G1, G2M, or S phase).</li>
+<li>Initiated version history documentation.</li>
+</ul>
 </div>
 </div>
 <div id="v2.8" class="section level2">
 <h2>V2.8</h2>
-<div id="gex-by-cell-type" class="section level3">
-<h3>GEX by cell type</h3>
-<p>A new tab is added to show Gene expression of a select gene, but also
-allow for selecting which cells to filter, as oppse to the entire set of
-cells.</p>
-</div>
+<ul>
+<li>Added ‘GEX by Cell Type’ tab for gene expression of a select gene
+with cell type filtering.</li>
+</ul>
 </div>
 <div id="v2.7" class="section level2">
 <h2>V2.7</h2>
-<div id="fliter-for-removed-components" class="section level3">
-<h3>fliter for removed components</h3>
-<p>The original code in HISTA prior to this version, did not remove the
-“batch/removed” components prior to the dot-product, thus the gene
-expression shown was closer to the original GEX (Y), however with this
-fix, the expression is batch-removed and thus this estimate (Y’) is
-likely the more accurate signal.</p>
-</div>
-<div id="zhao-2020-tab-added" class="section level3">
-<h3>Zhao 2020 tab added</h3>
-<p>Parallel analysis with Laurentino et al. 2020 donors.</p>
-</div>
+<ul>
+<li>Implemented filtering for removed components.</li>
+<li>Added ‘Zhao 2020’ tab for parallel analysis with Laurentino et
+al. 2020 donors.</li>
+</ul>
 </div>
 <div id="v2.6" class="section level2">
 <h2>V2.6</h2>
-<div id="addition-of-index-tables" class="section level3">
-<h3>Addition of index tables</h3>
-<p>A new tab was added to house the metadata associated to the SDA
-components and our observations</p>
-</div>
-<div id="laurentino-2019-tab-added" class="section level3">
-<h3>Laurentino 2019 tab added</h3>
-<p>Parallel analysis with Laurentino et al. 2019 KS donor.</p>
-</div>
+<ul>
+<li>Introduced index tables tab housing metadata associated with SDA
+components and observations.</li>
+<li>Added ‘Laurentino 2019’ tab for parallel analysis with Laurentino et
+al. 2019 KS donor.</li>
+</ul>
 </div>
 <div id="v2.5" class="section level2">
 <h2>V2.5</h2>
-<div id="germ-cell-pseudotime-added" class="section level3">
-<h3>Germ cell pseudotime added</h3>
-<p>A new tab for the germ cell only pseudotime analysis is added.</p>
-</div>
+<ul>
+<li>Added ‘Germ Cell Pseudotime’ tab for germ cell-only pseudotime
+analysis.</li>
+</ul>
 </div>
 <div id="v2.0" class="section level2">
 <h2>V2.0</h2>
-<div id="shinyapps.io-modifications" class="section level3">
-<h3>ShinyApps.io modifications</h3>
-<p>To host this app on ShinyApps.io the code was slightly updated;
-mainly the input/output</p>
-</div>
+<ul>
+<li>Modified for ShinyApps.io hosting.</li>
+</ul>
 </div>
 <div id="v1.5" class="section level2">
 <h2>V1.5</h2>
-<div id="converted-to-rpackage" class="section level3">
-<h3>Converted to Rpackage</h3>
-<p>For easy depoyment in various situations, public and private, HISTA
-was made into an R package</p>
-</div>
+<ul>
+<li>Converted to R package for easy deployment.</li>
+</ul>
 </div>
 </div>
 

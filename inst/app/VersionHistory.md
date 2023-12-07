@@ -1,120 +1,76 @@
+# HISTA Version History
 
-# HISTA
+## V2.9.7 (Current)
 
-## V2.9.7 <current>
+### New Features
+- Introduced 'SDA Score per Cell Types' tab, enabling selection of SDA components and visualization through box plots relative to cell types. This complements the 'Gene Expression per Cell Types' tab for comprehensive investigation of expression patterns across populations.
 
-### new feature
+- Added 'DEgenes' tab for searching differentially expressed genes in various modeling conditions, such as case-control and unsupervised clustering.
 
-Added new tab 'SDA score per Cell types' which allows selection of the SDA component and visualizes it by box plots relative to the cell types. This way, with the use of another similar tab called 'Gene Expression per Cell Types' one can rigoriously investigate the expression patterns of components and genes on each cell type; increasing transparency over the defined populations. 
+### Bug Fixes
+- Addressed missing figure download button.
 
-### bug fixes
-
-added download button for missing figs
- 
 ## V2.9.6
 
-download button for the gene-expression tSNE debugged and working. 
+- Resolved gene-expression t-SNE download button issue.
 
 ## V2.9.5
 
-### bug fixes
+### Bug Fixes
+- Fixed t-SNE batch-removed imputed DGE loading issue.
 
-tSNE - batch-removed imputed DGE was not loading, but now shows the tSNE is shown.
-
-### updates
-
-Color set updated to remove ambigious colors in set
-
-UMAP is computed and added to the Main tab, selectable from the data origin selection.
-UMAP is added to various tabs that were only tSNE; now they show both and thus tab names are updated from (tSNE) to (2D)
-
-Fingerprinting tab is now interactive with capacity to select several metadata and to cluster or not (order comps numerically)
-
-The menu/tab items have been rearranged, grouping similar analyses together
-
-New tab, Gene correlations added to explore gene-gene correlations per cell type populations
-new tab, Component correlations to evaluate component - component relationships given N top loadings; this is because the top N loadings drive the correlation, you may desire strict local evaluation by 
-reducing the N or global with higher N
-
-New tab, pseudotime Gene is designed to evaluate a gene expression across spermatogenesis pseudotime; although the pseudotime meta tab is also available to explore the mapping of metadata to this pseudotime, the pseudotime gene, also plots relative to the gene expression several metadata options
-
-
+### Updates
+- Updated color set to remove ambiguous colors.
+- Computed UMAP in the Main tab, making it selectable from the data origin.
+- Added UMAP to various tabs, updating names from (t-SNE) to (2D).
+- Enhanced interactivity in the Fingerprinting tab.
+- Reorganized menu/tab items for improved grouping.
 
 ## V2.9.4
 
-### Top enriched componnents with specific Gene sets
-
-Similar to the lncRNA specific analysis, however you can input any gene set of interest to identify enrichment of the set in the top 200 genes of each component; see the 'Top Loaded Components' tab.
-
-Note: There is already an enrichment analyis tab which uses a statistical method to formally test components enriched with a smaller gene set. However, in this tab, we can input large sets of genes of interest, as an example we have input the genes with -AS (antisense genes) to highlight this feature. 
+- Introduced 'Top Enriched Components with Specific Gene Sets' tab.
 
 ## V2.9.3
 
-### lncRNA analysis added
-
-Added a new tab that that include the lncRNA specific analysis; the "lncRNA - Expr of top-loaded" tab. 
+- Added 'lncRNA Analysis' tab for specific analysis related to long non-coding RNAs.
 
 ## V2.9.2
 
-### Pseudotime pdf download button fixed
-
-The original code had a bug which prevented download of the pseudotime plot as a pdf.
-
+- Fixed pseudotime PDF download button.
 
 ## V2.9.1
 
-### Gene Expr per cell type (boxplot) tab bug fix
-
-The original code had a bug which the metadata was not properly merged so wrong labels were shown.
-
+- Resolved bug in 'Gene Expr per Cell Type (Boxplot)' tab related to metadata merging.
 
 ## V2.9
 
-### Computation of Gene expression, fliter for selected cells prior to dot-product of SDA matrices
-
-The original code in HISTA prior to this version, when selecting a subset of cells, it did not subset the SDA matrices prior to the dot-product, rather the dot-product was done on the entire matrix then subseting was done. see V2.8 GEX by cell type update.
-
-### Cell cycle labels
-Cell cycle (G1, G2M, or S phase) was inferred using Seurat methods on a Seurat-processed object of this data. This label is now available via the selection bottons as a meta feature. 
-
-### Add version history
-Prior to this entry, the version history reflects major updates, as minor changes were not captured. However, going forward, all changes will be captured herein.
+### Major Updates
+- Improved computation of gene expression, filtering selected cells prior to dot-product of SDA matrices.
+- Added cell cycle labels (G1, G2M, or S phase).
+- Initiated version history documentation.
 
 ## V2.8
 
-### GEX by cell type 
-A new tab is added to show Gene expression of a select gene, but also allow for selecting which cells to filter, as oppse to the entire set of cells. 
+- Added 'GEX by Cell Type' tab for gene expression of a select gene with cell type filtering.
 
 ## V2.7
 
-### fliter for removed components
-
-The original code in HISTA prior to this version, did not remove the "batch/removed" components prior to the dot-product, thus the gene expression shown was closer to the original GEX (Y), however with this fix, the expression is batch-removed and thus this estimate (Y') is likely the more accurate signal.
-
-### Zhao 2020 tab added
-Parallel analysis with Laurentino et al. 2020 donors. 
-
+- Implemented filtering for removed components.
+- Added 'Zhao 2020' tab for parallel analysis with Laurentino et al. 2020 donors.
 
 ## V2.6
 
-### Addition of index tables 
-A new tab was added to house the metadata associated to the SDA components and our observations
-
-### Laurentino 2019 tab added
-Parallel analysis with Laurentino et al. 2019 KS donor. 
+- Introduced index tables tab housing metadata associated with SDA components and observations.
+- Added 'Laurentino 2019' tab for parallel analysis with Laurentino et al. 2019 KS donor.
 
 ## V2.5
 
-### Germ cell pseudotime added
-A new tab for the germ cell only pseudotime analysis is added. 
+- Added 'Germ Cell Pseudotime' tab for germ cell-only pseudotime analysis.
 
-## V2.0 
+## V2.0
 
-### ShinyApps.io modifications
-To host this app on ShinyApps.io the code was slightly updated; mainly the input/output
-
+- Modified for ShinyApps.io hosting.
 
 ## V1.5
 
-### Converted to Rpackage 
-For easy depoyment in various situations, public and private, HISTA was made into an R package
+- Converted to R package for easy deployment.
